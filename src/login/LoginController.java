@@ -44,7 +44,7 @@ public class LoginController {
 				view.setVisible(false);
 				System.out.println("U: "+user);
 				if (user instanceof Lekarz)
-					new AppointmentController(user);
+					new AppointmentController((Lekarz)user);
 				else
 					view.displayError(moduleNotImplementedString);
 				

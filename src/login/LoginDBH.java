@@ -2,27 +2,32 @@ package login;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DBHandler;
+import people.Lekarz;
 import people.Pracownik;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
 
 public class LoginDBH {
 
-	//Connection conn = null;
-	DBHandler dbh;
+	Connection conn = null;
+	//String login;
+	//DBHandler dbh;
 	
 	public Pracownik tryToLog(String login, String pass) throws ConnectionException, BadDataException {
 		
+		//this.login=login;
 		Pracownik user=null;
 		
 		try {
 	      
 	        //dbh=new DBHandler(login, pass);
-	        dbh=DBHandler.createAndGetDatabaseHandler(login, pass);
-			user=dbh.getCurrentUser();
+	        conn=DBHandler.createAndGetDatabaseConnection(login, pass);
+			user=DBHandler.getCurrentUser();
 	        
 	        
 		} catch (SQLException ex) {
@@ -37,6 +42,7 @@ public class LoginDBH {
 		return user;	
 	}
 
+	
 	
 
 }

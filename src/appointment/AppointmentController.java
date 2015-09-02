@@ -18,8 +18,8 @@ public class AppointmentController {
 		// TODO Auto-generated constructor stub
 	}*/
 
-	public AppointmentController(Pracownik user) {
-		doctor=(Lekarz) user;
+	public AppointmentController(Lekarz user) {
+		doctor=user;
 		am=new AppointmentDBH();
 		av=new AppointmentView();
 		getAppointments();

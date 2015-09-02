@@ -48,14 +48,14 @@ public class InsertDB {
 		     //insertTypes();
 		    // insertEmployees();
 		     //insertPatients();
-		     insertApps();
+		     /*insertApps();
 		     System.out.println("Done apps.");
 		     insertInterviews();
 		     System.out.println("Done int.");
 		     insertPrescriptions();
 		     System.out.println("Done pre.");
-		     insertRequests();
-		     
+		     insertRequests();*/
+		     insertDuplicateConstantIllness();
 		     System.out.println("Done all.");
 		     
 		   
@@ -67,6 +67,18 @@ public class InsertDB {
 		}
 	}
 	
+	private void insertDuplicateConstantIllness() {
+		// TODO Auto-generated method stubINSERT INTO `chorobyprzewlek³e`(`IdPacjenta`, `IdChoroby`) VALUES (6,15897), (3,15897)
+		//1062 DUPLICATE KEY
+		String query="INSERT INTO `chorobyprzewlek³e`(`IdPacjenta`, `IdChoroby`) VALUES (6,15897), (3,15897)";//"INSERT INTO osoby (imiê,nazwisko,pesel,telefon,ulica,nrdomu,nrmieszkania,kodpocztowy,miejscowoœæ) VALUES ('"+s[0]+"', '"+s[1]+"', '"+s[2]+"', '"+s[3]+"', '"+s[4]+"', '"+s[5]+"', '"+s[6]+"', '"+s[7]+"', '"+s[8]+"')";
+        try {
+            Statement st=conn.createStatement();
+            st.executeUpdate(query);
+        }
+        catch(SQLException e) {System.out.println("whats up?"+e.getErrorCode()); e.printStackTrace(); return; }
+        
+	}
+
 	private void insertRequests() {
 
 		String query="SELECT idWizyty, data FROM wizytyArchiwum";
@@ -984,6 +996,8 @@ public class InsertDB {
 		return typy;
 	}
 
+	
+	
 	public static void main(String[] args) {
 		new InsertDB();
 	}

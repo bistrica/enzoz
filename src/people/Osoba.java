@@ -3,7 +3,7 @@ package people;
 public class Osoba {
 	
 	int id;
-	String imie, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, telefon;
+	String imie, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, miejscowosc, kod, telefon;
 
 	
 	public Osoba(int id, String imie, String nazwisko, String pESEL) {
@@ -15,15 +15,17 @@ public class Osoba {
 	}
 
 	public Osoba(int id, String imie, String nazwisko, String pESEL, String ulica,
-			String nrDomu, String nrMieszkania, String telefon) {
+			String nrDomu, String nrMieszkania, String miejscowosc, String kod, String telefon) {
 		
 		this.id=id;
 		this.imie = imie;
 		this.nazwisko = nazwisko;
-		PESEL = pESEL;
+		this.PESEL = pESEL;
 		this.ulica = ulica;
 		this.nrDomu = nrDomu;
 		this.nrMieszkania = nrMieszkania;
+		this.miejscowosc=miejscowosc;
+		this.kod=kod;
 		this.telefon = telefon;
 	}
 
@@ -62,5 +64,11 @@ public class Osoba {
 	public int getId() {
 		return id;
 	}
+
+	public String getMiejscowosc() {
+		return miejscowosc;
+	}
+
+	
 
 }
