@@ -10,6 +10,11 @@ public class Pracownik extends Osoba {
 	public Pracownik(int id, String imie, String nazwisko, String pESEL) {
 		super(id, imie, nazwisko, pESEL);
 	}
+	
+	@Override
+	public String toString() {
+		return "Pracownik: " + super.toString();
+	}
 
 	//GeorgianCalendar dataZatrudnienia;
 }

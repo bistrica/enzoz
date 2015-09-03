@@ -4,7 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import people.Lekarz;
+import people.Pacjent;
 import database.DBHandler;
 import items.Choroba;
 import items.Wizyta;
@@ -12,16 +21,69 @@ import items.Wizyta;
 public class WizytaDAO {
 
 	private static Connection conn;
+	private PacjentDAO patientDAO;
 	
-	public static Wizyta getAppointmentData(int id){
-		
+	public WizytaDAO() {
+		patientDAO=new PacjentDAO();
 		conn=DBHandler.getDatabaseConnection();
-
-//		Wizyta app=new Wizyta();
-		return null;
 	}
 	
-	public static boolean writeAppointmentData(Wizyta app){
+	
+	//private ArrayList<Wizyta> getAppointments(Lekarz doct)
+	
+	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor) {
+		ArrayList<Wizyta> apps=new ArrayList<Wizyta>();
+		PreparedStatement st;
+		String queryString="SELECT idWizyty, idPacjenta, data FROM wizytyDzis WHERE idLekarza=?";	
+		
+		try {
+			System.out.println("c "+conn);
+			st = conn.prepareStatement(queryString);
+			st.setInt(1, doctor.getId());
+			ResultSet rs = st.executeQuery();//Update();
+			while (rs.next()){
+				int appId=rs.getInt("idWizyty");
+				Pacjent patient=patientDAO.getPatientData(rs.getInt(2));
+				GregorianCalendar appDate=convertToDate(rs.getString(3));
+				Wizyta app=new Wizyta(appId, appDate);
+				app.setLekarz(doctor);
+				app.setPacjent(patient);
+				apps.add(app);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return apps;
+	}
+	
+	
+	private GregorianCalendar convertToDate(String dateString) {
+		
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		Date date=null;
+		try {
+			date = format.parse(dateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		GregorianCalendar appDate = new GregorianCalendar();
+		appDate.setTime(date);
+		return appDate;
+	}
+
+
+	/*private Wizyta getAppointmentData(int id){
+		
+		conn=DBHandler.getDatabaseConnection();
+		
+		Wizyta app=new Wizyta(id,appDate, );
+		return null;
+	}*/
+	
+	private boolean writeAppointmentData(Wizyta app){
 		return false;
 	}
 

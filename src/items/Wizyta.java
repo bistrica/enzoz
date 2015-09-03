@@ -1,5 +1,6 @@
 package items;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,15 +10,20 @@ import people.Pacjent;
 
 public class Wizyta {
 	
-	GregorianCalendar data;
-	Pacjent pacjent;
-	Lekarz lekarz;
-	ArrayList<Choroba> rozpoznaneChoroby;
+	private GregorianCalendar data;
+	private Pacjent pacjent;
+	private Lekarz lekarz;
+	private ArrayList<Choroba> rozpoznaneChoroby;
+	private int id;
 	//int id;
 	
 	/*public String danePacjenta() {
 		return pacjent.getImie()+" "+pacjent.getNazwisko();
 	}*/
+	public Wizyta(int id, GregorianCalendar data) {
+		this.id=id;
+		this.data=data;
+	}
 	
 	public Wizyta(GregorianCalendar data, Pacjent pacjent) {
 		this.data=data;
@@ -25,6 +31,13 @@ public class Wizyta {
 	}
 	
 	public Wizyta(GregorianCalendar data, Pacjent pacjent, Lekarz lekarz) {
+		this.data=data;
+		this.pacjent=pacjent;
+		this.lekarz=lekarz;
+	}
+	
+	public Wizyta(int id, GregorianCalendar data, Pacjent pacjent, Lekarz lekarz) {
+		this.id=id;
 		this.data=data;
 		this.pacjent=pacjent;
 		this.lekarz=lekarz;
@@ -39,7 +52,17 @@ public class Wizyta {
 	}
 
 	public String getHourToString() {
-		return data.get(Calendar.HOUR)+":"+data.get(Calendar.MINUTE);
+		//SDF przyjmuje tylko Date!
+		/*DateFormat outputFormat = new SimpleDateFormat("MM/yyyy");
+		DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+		String inputText = "2012-11-17T00:00:00.000-05:00";
+		Date date = inputFormat.parse(inputText);
+		String outputText = outputFormat.format(date);*/
+		//SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+		//return format.format(data); 
+		String zero=data.get(Calendar.MINUTE)>=10 ? "" : "0";
+		return data.get(Calendar.HOUR_OF_DAY)+":"+zero+data.get(Calendar.MINUTE);
 	}
 
 	public Lekarz getLekarz() {
@@ -57,6 +80,17 @@ public class Wizyta {
 	public int getId() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public void setPacjent(Pacjent pacjent) {
+		this.pacjent=pacjent;
+	}
+
+	@Override
+	public String toString() {
+		return "Wizyta [data=" + data + ", pacjent=" + pacjent + ", lekarz="
+				+ lekarz + ", rozpoznaneChoroby=" + rozpoznaneChoroby + ", id="
+				+ id + "]";
 	}
 	
 

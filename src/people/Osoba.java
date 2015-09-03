@@ -69,6 +69,14 @@ public class Osoba {
 		return miejscowosc;
 	}
 
+	@Override
+	public String toString() {
+		return "Osoba [id=" + id + ", imie=" + imie + ", nazwisko=" + nazwisko
+				+ ", PESEL=" + PESEL + ", ulica=" + ulica + ", nrDomu="
+				+ nrDomu + ", nrMieszkania=" + nrMieszkania + ", miejscowosc="
+				+ miejscowosc + ", kod=" + kod + ", telefon=" + telefon + "]";
+	}
+
 	
 
 }

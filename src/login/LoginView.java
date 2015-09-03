@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import database.DBHandler;
+
 
 public class LoginView extends JFrame {
 	
@@ -87,8 +89,8 @@ public class LoginView extends JFrame {
 	public static void main(String[] args) {
 		LoginView view=new LoginView();
 		LoginDBH model=new LoginDBH();
-		LoginController controller=new LoginController(view,model);
-		
+		//DBHandler dbh=new DBHandler();
+		LoginController controller=new LoginController(view,model);		
 		view.setVisible(true);
 		
 	}

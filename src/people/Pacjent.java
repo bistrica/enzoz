@@ -33,6 +33,12 @@ public class Pacjent extends Osoba {
 		this.chorobyPrzewlek쿮 = chorobyPrzewlek쿮;
 	}
 
+	@Override
+	public String toString() {
+		return "Pacjent [lekarzProwadzacy=" + lekarzProwadzacy
+				+ ", chorobyPrzewlek쿮=" + chorobyPrzewlek쿮 + "]" + super.toString();
+	}
+
 	
 
 }

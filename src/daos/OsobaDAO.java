@@ -21,7 +21,7 @@ public class OsobaDAO {
 			String imie="",nazwisko="",PESEL="",nrDomu="",nrMieszkania="",kod="",ulica="",miejscowosc="",telefon="";
 				
 		//	try {	
-				queryString="SELECT imiê, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kod, miejscowosc, telefon FROM Osoby WHERE idOsoby=?";
+				queryString="SELECT imiê, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowoœæ, telefon FROM Osoby WHERE idOsoby=?";
 				st = conn.prepareStatement(queryString);
 				st.setInt(1, idOsoby);
 				ResultSet rs = st.executeQuery();
@@ -32,8 +32,8 @@ public class OsobaDAO {
 					ulica=rs.getString("ulica");
 					nrDomu=rs.getString("nrDomu");
 					nrMieszkania=rs.getString("nrMieszkania");
-					kod=rs.getString("kod");
-					miejscowosc=rs.getString("miejscowosc");
+					kod=rs.getString("kodPocztowy");
+					miejscowosc=rs.getString("miejscowoœæ");
 					telefon=rs.getString("telefon");
 					
 					break;

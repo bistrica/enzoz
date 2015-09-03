@@ -15,7 +15,7 @@ public class DBHandler {
 
 	private Pracownik currentUser;
 	private Connection conn;
-	private String host="localhost", login;
+	private String host="192.168.56.1", login;
 	private static DBHandler dbh=null;
 	
 	/*public DBHandler(Connection conn) {

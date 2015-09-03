@@ -3,6 +3,7 @@ package login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import database.DBHandler;
 import appointment.AppointmentController;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
@@ -13,6 +14,8 @@ public class LoginController {
 	
 	private LoginView view;
 	private LoginDBH model;
+	//private DBHandler dbh;
+	
 	
 	private String emptyFieldString="Pola nie mog¹ byæ puste!", moduleNotImplementedString="U¿ytkownik nie jest lekarzem. Modu³ nie zosta³ zaimplementowany.";
 

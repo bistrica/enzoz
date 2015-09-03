@@ -14,35 +14,23 @@ import database.DBHandler;
 public class AppointmentDBH {
 
 	Connection conn=null;
+	WizytaDAO appDAO;
+	
+	
 	
 	public AppointmentDBH() {
 		conn=DBHandler.getDatabaseConnection();
+		appDAO=new WizytaDAO();
+		
 	}
 
 
 
 	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor) {
 		
-		ArrayList<Wizyta> apps=new ArrayList<Wizyta>();
-		PreparedStatement st;
-		String queryString="SELECT idWizyty FROM wizytyDzis WHERE Lekarz=?";	
-		
-		try {
-			st = conn.prepareStatement(queryString);
-			st.setInt(1, doctor.getId());
-			ResultSet rs = st.executeQuery();//Update();
-			while (rs.next()){
-				int appId=rs.getInt("idWizyty");
-				//int patientId=rs.getInt("idPacjenta");
-				Wizyta app=WizytaDAO.getAppointmentData(appId);
-				apps.add(app);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ArrayList<Wizyta> apps=appDAO.getTodayAppointments(doctor);
 
-
+		return apps;
 	}
 	
 	

@@ -25,6 +25,11 @@ public class Lekarz extends Pracownik {
 		this(person.id,person.imie,person.nazwisko,person.PESEL, person.ulica,person.nrDomu,person.nrMieszkania,person.miejscowosc,person.kod,person.telefon, PWZ);
 	}
 	
+	@Override
+	public String toString() {
+		return "Lekarz: " + super.toString();
+	}
+	
 	/*public void setPWZ(int PWZ) {
 		this.PWZ=PWZ;
 	}*/

@@ -18,9 +18,13 @@ public class PacjentDAO {
 
 	Connection conn;
 	
+	//?
+	//OsobaDAO personDAO;
+	//
+	
 	public Pacjent getPatientData(int id) throws SQLException {
 
-		 conn=DBHandler.getDatabaseConnection();
+		conn=DBHandler.getDatabaseConnection();
 		
 		Osoba person=OsobaDAO.getPersonData(id);
 		ArrayList<Choroba> illnesses=getPatientConstantIllnesses(id); 
