@@ -153,6 +153,32 @@ public class ChorobaDAO {
 		
 		 return true;
 	}
+
+
+	public ArrayList<Choroba> getAllIllnesses() throws SQLException  {
+		
+		conn=DBHandler.getDatabaseConnection();
+		
+		PreparedStatement st;
+		String queryString="SELECT idChoroby, kod, nazwa FROM choroby";
+		ArrayList<Choroba> illnesses=new ArrayList<Choroba>();	
+		st = conn.prepareStatement(queryString);
+		
+		ResultSet rs = st.executeQuery();
+		String code="", name="";
+		int id=-1;
+		Choroba illness=null;
+		
+		while (rs.next()){
+			id=rs.getInt("idChoroby");
+			code=rs.getString("kod");
+			name=rs.getString("nazwa");
+			illness=new Choroba(id,code,name);
+			illnesses.add(illness);
+		}
+		
+		return illnesses;
+	}
 	
 	
 	

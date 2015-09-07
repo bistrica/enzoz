@@ -87,11 +87,15 @@ public class LoginView extends JFrame {
 	}
 
 	public static void main(String[] args) {
+	
 		LoginView view=new LoginView();
 		LoginDBH model=new LoginDBH();
-		//DBHandler dbh=new DBHandler();
 		LoginController controller=new LoginController(view,model);		
-		view.setVisible(true);
+		//view.setVisible(true);
+		
+		
+		
+		
 		
 	}
 

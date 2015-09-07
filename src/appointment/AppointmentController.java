@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import individualApp.IndividualAppController;
 import items.Wizyta;
 import people.Lekarz;
 import people.Pacjent;
@@ -44,8 +45,12 @@ public class AppointmentController {
 		av.setVisible(true);
 	}
 	
-	private void createAppointment(Wizyta wizyta) {
-		System.out.println("Nowa: "+wizyta.toString());
+	private void createAppointment(Wizyta app) {
+		System.out.println("Nowa: "+app.toString());
+		
+		new IndividualAppController(app);
+		
+		
 	}
 
 	private String[] getColumnsNames() {

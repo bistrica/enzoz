@@ -12,7 +12,7 @@ public class Choroba {
 
 	public Choroba(int id, String kod, String nazwa) {
 		this.kod = kod;
-		this.nazwa = nazwa;
+		this.nazwa = nazwa.trim();
 		this.id=id;
 	}
 
@@ -20,4 +20,8 @@ public class Choroba {
 		return id;
 	}
 
+	@Override
+	public String toString() {
+		return kod+"  "+nazwa;
+	}
 }

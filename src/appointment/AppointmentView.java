@@ -36,8 +36,8 @@ public class AppointmentView extends JFrame {
 		appPanel.add(appTable);
 		tabbedPanel.add(todayAppString, appPanel);
 		getContentPane().add(tabbedPanel);
-		
-		pack();
+		setSize(700,600);
+		//pack();
 	}
 	
 	public void setOpenButtonListener(ActionListener al) {
