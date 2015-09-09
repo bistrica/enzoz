@@ -42,7 +42,11 @@ public class AppointmentController {
 
 		});
 		
-		av.setVisible(true);
+		//TODO: odkomentowaæ
+		//av.setVisible(true);
+		
+		//TODO:usun¹æ
+		createAppointment(appointments.get(0));
 	}
 	
 	private void createAppointment(Wizyta app) {

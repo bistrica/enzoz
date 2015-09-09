@@ -14,6 +14,10 @@ public class Wizyta {
 	private Pacjent pacjent;
 	private Lekarz lekarz;
 	private ArrayList<Choroba> rozpoznaneChoroby;
+	private Recepta recepta;
+	private ArrayList<Skierowanie> skierowania;
+	private Konsultacja konsultacja;
+	
 	private int id;
 	//int id;
 	

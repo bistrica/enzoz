@@ -50,16 +50,12 @@ public class IllnessesPanel extends JPanel {
 	
 	boolean temporaryWindow;
 	private JScrollPane scrollAll;
-	//private JScrollPane temporaryScroll;
-	//private JScrollPane constantScroll;
+
 	
 	public IllnessesPanel() {
-		//tempSet=new HashSet<Choroba>();
-		//constSet=new HashSet<Choroba>();
-		
-		//JList<Choroba> 
+
+
 		temporary=new JList<Choroba>();
-		//JList<Choroba> 
 		constant=new JList<Choroba>();
 		
 		temporaryModel=new DefaultListModel<Choroba>();
@@ -138,7 +134,7 @@ public class IllnessesPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				//TODO: potwierdzenie
 				temporaryWindow=true;
-				openIllnessDialog(temporary);
+				openIllnessDialog();
 			}
 
 		});
@@ -149,7 +145,7 @@ public class IllnessesPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				//TODO: potwierdzenie
 				temporaryWindow=false;
-				openIllnessDialog(constant);
+				openIllnessDialog();
 			}
 		});
 		
@@ -176,13 +172,6 @@ public class IllnessesPanel extends JPanel {
 	
 	private void filter() {
 		String searchedPhrase=searchField.getText().trim();
-		System.out.println("filter "+searchedPhrase);
-		/*if (searchedPhrase.isEmpty())
-			refreshAll();
-		else
-			refreshFiltered(searchedPhrase);	*/
-		
-//		repaintRefreshed();
 		refresh(searchedPhrase);
 	}
 	
@@ -190,9 +179,7 @@ public class IllnessesPanel extends JPanel {
 		illnessDialog=new JDialog();
 		illnesses=new JPanel();
 		illnesses.setLayout(new BorderLayout());
-		//all.setSize(300,200);
 		scrollAll=new JScrollPane(all);
-		//scrollPane.setSize(300, 200);
 		illnesses.add(scrollAll,BorderLayout.CENTER);
 		
 		//Szukanie po frazie
@@ -221,12 +208,7 @@ public class IllnessesPanel extends JPanel {
 					}
 					
 					temporaryModel.addElement(newIll);
-					//DefaultListModetemporary.getModel().;
-					/*tempSet.add(newIll);
 					
-					Choroba[] ill=new Choroba[tempSet.size()];
-					ill=tempSet.toArray(ill);
-					setTemporary((Choroba[])(ill));*/
 					
 				}
 				else {
@@ -236,11 +218,7 @@ public class IllnessesPanel extends JPanel {
 					}
 					
 					constantModel.addElement(newIll);
-					/*constSet.add(newIll);
 					
-					Choroba[] ill=new Choroba[constSet.size()];
-					ill=constSet.toArray(ill);
-					setConstant(ill);*/
 				}
 				
 				
@@ -252,14 +230,12 @@ public class IllnessesPanel extends JPanel {
 		illnesses.add(addIllness,BorderLayout.SOUTH);
 		
 		illnessDialog.add(illnesses);
-		
-		//illnessDialog.setSize(300,200);
 		illnessDialog.pack(); //check?
 	}
 	
 	
 	
-	private void openIllnessDialog(JList<Choroba> temporary) {
+	private void openIllnessDialog() {
 		searchField.setText("");
 		illnessDialog.setVisible(true);
 		
@@ -270,51 +246,23 @@ public class IllnessesPanel extends JPanel {
 		return temporary;
 	}
 
-	/*public void setTemporary(Choroba[] temporary) {
-		this.temporary = new JList<Choroba>(temporary);
-	}*/
 
 	public JList<Choroba> getConstant() {
 		return constant;
 	}
 
-	/*public void setConstant(Choroba[] constant) {
-		this.constant = new JList<Choroba>(constant);
-	}*/
-	
-	public void setAll(Choroba[] all) {
+	public void setAll(ArrayList<Choroba> all) {
 		
 		this.allSet=new HashSet<Choroba>();
 		for (Choroba i: all)
 			this.allSet.add(i);
-		this.all = new JList<Choroba>(all);
+		
+		Choroba[] ill=new Choroba[all.size()];
+		ill=all.toArray(ill);
+		
+		this.all = new JList<Choroba>(ill);
 		createIllnessDialog();
 	}
-	
-	
-	/*private void refreshAll() {
-		Choroba[] all=new Choroba[allSet.size()];
-		
-		all=allSet.toArray(all);
-		//repaintRefreshed(all);
-		//createIllnessDialog();
-	}
-	
-	private void refreshFiltered(String phrase) {
-		ArrayList<Choroba> ill=new ArrayList<Choroba>();
-		for (Choroba i: allSet)
-			if (i.toString().contains(phrase))
-				ill.add(i);
-
-		Choroba[] all=new Choroba[ill.size()];
-		all=ill.toArray(all);
-		//repaintRefreshed(all);
-	}
-	
-	private void repaintRefreshed(Choroba[] all) {
-		this.all = new JList<Choroba>(all);
-		illnessDialog.repaint();
-	}*/
 	
 	private void refresh(String phrase) {
 		
@@ -339,8 +287,23 @@ public class IllnessesPanel extends JPanel {
 		this.scrollAll=new JScrollPane(this.all);
 		this.illnesses.add(this.scrollAll,BorderLayout.CENTER);
 		
-		//this.illnesses.repaint();
 		illnessDialog.revalidate();
+		
+	}
+
+	public void setTemporary(ArrayList<Choroba> list) {
+		temporaryModel=new DefaultListModel<Choroba>(); //zbêdne raczej
+		
+		for (Choroba ill: list)
+			temporaryModel.addElement(ill);
+		
+	}
+
+	public void setConstant(ArrayList<Choroba> list) {
+		constantModel=new DefaultListModel<Choroba>(); //zbêdne raczej
+		
+		for (Choroba ill: list)
+			constantModel.addElement(ill);
 		
 	}
 	

@@ -24,4 +24,9 @@ public class Choroba {
 	public String toString() {
 		return kod+"  "+nazwa;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return toString().equals(obj.toString());
+	}
 }

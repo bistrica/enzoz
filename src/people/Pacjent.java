@@ -39,6 +39,15 @@ public class Pacjent extends Osoba {
 				+ ", chorobyPrzewlek³e=" + chorobyPrzewlek³e + "]" + super.toString();
 	}
 
+	public String getAddressInfo() {
+		String lokal= nrMieszkania==null ? "" : "m. "+nrMieszkania;
+		return ulica+" "+nrDomu+" "+lokal+", "+kod+" "+miejscowosc;
+	}
+
+	public String getMainInfo() {
+		return imie+" "+nazwisko+" "+PESEL;
+	}
+
 	
 
 }

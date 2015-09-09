@@ -13,10 +13,21 @@ public class IndividualAppController {
 	
 	public IndividualAppController(Wizyta app) {
 		this.appointment=app;
-		iav=new IndividualAppView();
+		
 		iam=new IndividualAppDBH();
-		iav.setIllnessesList(iam.getAllIllnesses());
-		iav.setVisible(true);
+		java.awt.EventQueue.invokeLater(new Runnable() {
+		    public void run() {
+		    	iav=new IndividualAppView();
+				
+				iav.setIllnessesList(iam.getAllIllnesses());
+				iav.setAllMedicinesList(iam.getAllMedicines());
+				iav.setClinicsList(iam.getAllClinics());
+				iav.setInfo(appointment.getPacjent().getMainInfo(), appointment.getPacjent().getAddressInfo());
+				
+				iav.setVisible(true);
+		    }
+		} );
+		
 	}
 	
 }
