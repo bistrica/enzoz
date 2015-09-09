@@ -15,9 +15,13 @@ public class ChorobaDAO {
 
 	private static Connection conn;
 	
-	public static Choroba getIllnessData(int id) throws SQLException {
-
+	public ChorobaDAO() {
 		conn=DBHandler.getDatabaseConnection();
+	}
+	
+	public Choroba getIllnessData(int id) throws SQLException {
+
+		
 		
 		PreparedStatement st;
 		String queryString="SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -39,9 +43,8 @@ public class ChorobaDAO {
 	}
 
 	
-	public static ArrayList<Choroba> getIllnessData(ArrayList<Integer> ids) throws SQLException {
+	public ArrayList<Choroba> getIllnessData(ArrayList<Integer> ids) throws SQLException {
 
-		conn=DBHandler.getDatabaseConnection();
 		
 		PreparedStatement st;
 		String queryString="SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -157,7 +160,6 @@ public class ChorobaDAO {
 
 	public ArrayList<Choroba> getAllIllnesses() throws SQLException  {
 		
-		conn=DBHandler.getDatabaseConnection();
 		
 		PreparedStatement st;
 		String queryString="SELECT idChoroby, kod, nazwa FROM choroby";

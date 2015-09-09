@@ -16,15 +16,29 @@ import people.Lekarz;
 import people.Pacjent;
 import database.DBHandler;
 import items.Choroba;
+import items.Konsultacja;
+import items.Recepta;
+import items.Skierowanie;
 import items.Wizyta;
 
 public class WizytaDAO {
 
 	private static Connection conn;
-	private PacjentDAO patientDAO;
+	private PacjentDAO patientDAO;	
+	private OsobaDAO personDAO;
+	private KonsultacjaDAO interviewDAO;
+	private ReceptaDAO prescriptionDAO;
+	private SkierowanieDAO examinationDAO;
+	private ChorobaDAO illnessDAO;
+	
 	
 	public WizytaDAO() {
 		patientDAO=new PacjentDAO();
+		personDAO=new OsobaDAO();
+		interviewDAO=new KonsultacjaDAO();
+		prescriptionDAO=new ReceptaDAO();
+		examinationDAO=new SkierowanieDAO();
+		illnessDAO=new ChorobaDAO();
 		conn=DBHandler.getDatabaseConnection();
 	}
 	
@@ -113,6 +127,81 @@ public class WizytaDAO {
 		return appId;
 		
 		
+		
+	}
+
+
+	public boolean checkAndChangeStatus(Wizyta app) {
+
+		int appId=app.getId();
+		PreparedStatement st;
+		//SELECT idWizyty, data FROM wizytyDzis WHERE idPacjenta = 299 AND idLekarza = 303 ORDER BY data desc LIMIT 1 
+		String status="realizowana";
+		String queryString="UPDATE wizytyArchiwum SET status = ? WHERE idWizyty = ? AND status != ? ";//"SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
+		int updatedRecords=-1;
+		try {
+			st = conn.prepareStatement(queryString);
+		
+			st.setString(1, status);
+			st.setInt(2, appId);
+			st.setString(3, status);
+			updatedRecords = st.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace(); //TODO: ?
+		}
+		
+		return updatedRecords>0;
+	}
+
+
+	public void updateData(Wizyta app) {
+		int appId=app.getId();
+		
+		Konsultacja interview=interviewDAO.getInterview(appId);
+		app.setKonsultacja(interview);
+		
+		Recepta prescription=prescriptionDAO.getPrescription(appId);
+		app.setRecepta(prescription);
+		
+		ArrayList<Skierowanie> examinations=examinationDAO.getExaminations(appId);
+		app.setSkierowania(examinations);
+		
+		ArrayList<Choroba> tempIllnesses=illnessDAO.getTemporaryIllnesses(appId, app.getPacjent().getChorobyPrzewlek³e());
+		app.setRozpoznaneChoroby(tempIllnesses);
+		//"SELECT treœæ FROM konsultacje WHERE idWizyty= ? ORDER BY data DESC LIMIT 1 "
+		//SELECT idRecepty FROM recepty WHERE idWizyty=62626 order by data DESC LIMIT 1 
+		//SELECT treœæ FROM `konsultacje` WHERE idWizyty=62626 order by data DESC LIMIT 1 
+		
+	}
+
+
+	public ArrayList<Wizyta> getArchiveAppointments() {
+
+		ArrayList<Wizyta> apps=new ArrayList<Wizyta>();
+		PreparedStatement st;
+		String queryString="SELECT idWizyty, idPacjenta, idLekarza, data FROM wizytyArchiwum";	
+		
+		try {
+			
+			st = conn.prepareStatement(queryString);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()){
+				int appId=rs.getInt("idWizyty");
+				Pacjent patient=patientDAO.getPatientData(rs.getInt("idPacjenta"));
+				Lekarz doctor=new Lekarz(personDAO.getPersonData(rs.getInt("idLekarza"))); //TODO: check, czy wystarczy osobaDAO || make doctorDAO
+				GregorianCalendar appDate=convertToDate(rs.getString("data"));
+				Wizyta app=new Wizyta(appId, appDate);
+				app.setLekarz(doctor);
+				app.setPacjent(patient);
+				apps.add(app);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return apps;
 		
 	}
 	

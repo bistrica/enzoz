@@ -11,13 +11,13 @@ public class IndividualAppController {
 	IndividualAppDBH iam;
 	IndividualAppView iav;
 	
-	public IndividualAppController(Wizyta app) {
+	public IndividualAppController(Wizyta app, boolean isEditable) {
 		this.appointment=app;
 		
 		iam=new IndividualAppDBH();
 		java.awt.EventQueue.invokeLater(new Runnable() {
 		    public void run() {
-		    	iav=new IndividualAppView();
+		    	iav=new IndividualAppView(isEditable);
 				
 				iav.setIllnessesList(iam.getAllIllnesses());
 				iav.setAllMedicinesList(iam.getAllMedicines());

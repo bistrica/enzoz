@@ -19,14 +19,18 @@ public class PacjentDAO {
 	Connection conn;
 	
 	//?
-	//OsobaDAO personDAO;
+	OsobaDAO personDAO;
+	ChorobaDAO illnessDAO;
 	//
+	public PacjentDAO() {
+		conn=DBHandler.getDatabaseConnection();
+		personDAO=new OsobaDAO();
+		illnessDAO=new ChorobaDAO();
+	}
 	
 	public Pacjent getPatientData(int id) throws SQLException {
 
-		conn=DBHandler.getDatabaseConnection();
-		
-		Osoba person=OsobaDAO.getPersonData(id);
+		Osoba person=personDAO.getPersonData(id);
 		ArrayList<Choroba> illnesses=getPatientConstantIllnesses(id); 
 				
 		return new Pacjent(person,illnesses);
@@ -45,7 +49,7 @@ public class PacjentDAO {
 			int illId;
 			while (rs.next()){
 				illId=rs.getInt("idChoroby");
-				Choroba illness=ChorobaDAO.getIllnessData(illId);
+				Choroba illness=illnessDAO.getIllnessData(illId);
 				illnesses.add(illness);
 			}
 			return illnesses;

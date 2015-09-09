@@ -33,5 +33,25 @@ public class AppointmentDBH {
 		return apps;
 	}
 	
+	public ArrayList<Wizyta> getArchiveAppointments() {
+		
+		ArrayList<Wizyta> apps=appDAO.getArchiveAppointments();
+
+		return apps;
+	}
+
+
+
+	public boolean statusAllowsEditing(Wizyta app) {
+		return appDAO.checkAndChangeStatus(app);
+	}
+
+
+
+	public void updateAppData(Wizyta app) {
+		// TODO Auto-generated method stub
+		appDAO.updateData(app);
+	}
+	
 	
 }

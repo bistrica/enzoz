@@ -47,8 +47,9 @@ public class DBHandler {
 	
 	public static Pracownik getCurrentUser() throws SQLException {
 		
+		PracownikDAO employeeDAO=new PracownikDAO();
 		if (dbh.currentUser==null)
-			dbh.currentUser=PracownikDAO.getEmployeeData(dbh.login);
+			dbh.currentUser=employeeDAO.getEmployeeData(dbh.login);
 		
 		
 		return dbh.currentUser;

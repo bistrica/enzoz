@@ -76,6 +76,10 @@ public class Osoba {
 				+ nrDomu + ", nrMieszkania=" + nrMieszkania + ", miejscowosc="
 				+ miejscowosc + ", kod=" + kod + ", telefon=" + telefon + "]";
 	}
+	
+	public String getName() {
+		return imie+" "+nazwisko;
+	}
 
 	
 

@@ -11,7 +11,7 @@ import people.Osoba;
 
 public class OsobaDAO {
 
-	public static Osoba getPersonData(int idOsoby) throws SQLException {
+	public Osoba getPersonData(int idOsoby) throws SQLException {
 
 			Connection conn=DBHandler.getDatabaseConnection();
 			Osoba person=null;
@@ -46,4 +46,6 @@ public class OsobaDAO {
 			}*/	
 			return person;
 	}
+	
+	
 }

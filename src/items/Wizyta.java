@@ -96,6 +96,38 @@ public class Wizyta {
 				+ lekarz + ", rozpoznaneChoroby=" + rozpoznaneChoroby + ", id="
 				+ id + "]";
 	}
+
+	public String getDataToString() {
+		return  data.get(Calendar.YEAR)+"/"+data.get(Calendar.MONTH)+"/"+data.get(Calendar.DATE)+", "+getHourToString();
+	}
+
+	public Recepta getRecepta() {
+		return recepta;
+	}
+
+	public void setRecepta(Recepta recepta) {
+		this.recepta = recepta;
+	}
+
+	public ArrayList<Skierowanie> getSkierowania() {
+		return skierowania;
+	}
+
+	public void setSkierowania(ArrayList<Skierowanie> skierowania) {
+		this.skierowania = skierowania;
+	}
+
+	public Konsultacja getKonsultacja() {
+		return konsultacja;
+	}
+
+	public void setKonsultacja(Konsultacja konsultacja) {
+		this.konsultacja = konsultacja;
+	}
+
+	public void setRozpoznaneChoroby(ArrayList<Choroba> rozpoznaneChoroby) {
+		this.rozpoznaneChoroby = rozpoznaneChoroby;
+	}
 	
 
 	

@@ -25,6 +25,10 @@ public class Lekarz extends Pracownik {
 		this(person.id,person.imie,person.nazwisko,person.PESEL, person.ulica,person.nrDomu,person.nrMieszkania,person.miejscowosc,person.kod,person.telefon, PWZ);
 	}
 	
+	public Lekarz(Osoba person) {
+		this(person, -1); //TODO: zaznaczyæ,¿e dla testu
+	}
+	
 	@Override
 	public String toString() {
 		return "Lekarz: " + super.toString();

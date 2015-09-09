@@ -31,7 +31,7 @@ public class IndividualAppView extends JFrame {
 	String interviewPaneString="Wywiad", illnessesPaneString="Choroby", prescriptionPaneString="Recepty", examinationPaneString="Skierowania", archivesPaneString="Historia wizyt";
 	
 	
-	public IndividualAppView() {
+	public IndividualAppView(boolean isEditable) {
 		
 		mainInfo=new JLabel();
 		mainInfo.setFont(new Font("Arial", Font.BOLD, 20));
@@ -54,7 +54,16 @@ public class IndividualAppView extends JFrame {
 		tabbedPanel.add(illnessesPaneString, illnessesPane);
 		tabbedPanel.add(prescriptionPaneString, prescriptionPane);
 		tabbedPanel.add(examinationPaneString, new JScrollPane(examinationPane));
-		tabbedPanel.add(archivesPaneString, archivesPane);
+		
+		if (!isEditable)
+			tabbedPanel.add(archivesPaneString, archivesPane);
+		
+		
+		interviewPane.setEnabled(isEditable);
+		illnessesPane.setEnabled(isEditable);
+		prescriptionPane.setEnabled(isEditable);
+		examinationPane.setEnabled(isEditable);
+		
 		
 		setLayout(new BorderLayout());//new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		//namePanel.setBackground(Color.BLUE);
