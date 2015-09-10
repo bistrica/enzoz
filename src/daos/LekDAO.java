@@ -57,18 +57,17 @@ public class LekDAO {
 		
 		ResultSet rs = st.executeQuery();
 		String type="", name="", dose="", pckg="";
-		int id=-1;
+		
 		Lek drug=null;
 		
 		while (rs.next()){
-			id=rs.getInt("idLeku");
 			name=rs.getString("nazwa");
 			type=rs.getString("postaæ");
 			dose=rs.getString("dawka");
 			pckg=rs.getString("opakowanie");
 			break;
 		}
-		drug=new Lek(id,name,type,dose,pckg);
+		drug=new Lek(drugId,name,type,dose,pckg);
 		return drug;
 
 		

@@ -181,7 +181,64 @@ public class ChorobaDAO {
 		
 		return illnesses;
 	}
+
+	public ArrayList<Choroba> getTemporaryIllnesses(int appId,
+			ArrayList<Choroba> constIllnesses) {
+
+		PreparedStatement st;
+		String queryString="SELECT idChoroby FROM rozpoznaneChoroby WHERE idWizyty = ?";
+		if (constIllnesses!=null && !constIllnesses.isEmpty())
+			queryString+=" AND idChoroby NOT IN "+illnessesIDs(constIllnesses);
+		
+		ArrayList<Choroba> illnesses=new ArrayList<Choroba>();	
+		
+		int id=-1;
+		Choroba illness=null;
+		
+		
+		try {
+			st = conn.prepareStatement(queryString);
+			st.setInt(1, appId);
+			ResultSet rs = st.executeQuery();
+			
+			while (rs.next()){
+				id=rs.getInt("idChoroby");
 	
+				queryString="SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";
+				
+				st = conn.prepareStatement(queryString);
+				st.setInt(1, id);
+				ResultSet rs2 = st.executeQuery();
+				String code="", name="";
+				code=rs2.getString("kod");
+				name=rs2.getString("nazwa");
+				
+				illness=new Choroba(id,code,name);
+				illnesses.add(illness);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return illnesses;
+		
+		
+	}
 	
+	private String illnessesIDs(ArrayList<Choroba> constIllnesses) {
+		String ids="(";
+		
+		int lastIndex=constIllnesses.size()-1;
+		for (int i=0;i<=lastIndex;i++) {//Choroba ill: constIllnesses){
+			ids+=constIllnesses.get(i).getId();
+			if (i!=lastIndex) ids+=",";
+			//ill.getId()
+		}
+		ids+=")";
+		System.out.println(ids);
+		return ids;
+		
+	}
 	
 }

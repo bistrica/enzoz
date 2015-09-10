@@ -15,9 +15,11 @@ public class PoradniaDAO {
 
 	Connection conn;
 	
-	public ArrayList<Poradnia> getAllClinics() throws SQLException {
-		
+	public PoradniaDAO() {
 		conn=DBHandler.getDatabaseConnection();
+	}
+	
+	public ArrayList<Poradnia> getAllClinics() throws SQLException {
 		
 		PreparedStatement st;
 		String queryString="SELECT idPoradni, nazwa FROM poradnie";
@@ -40,6 +42,27 @@ public class PoradniaDAO {
 		
 		return clinics;
 		
+	}
+
+	public Poradnia getClinic(int id) throws SQLException {
+
+		PreparedStatement st;
+		String queryString="SELECT nazwa FROM poradnie WHERE idPoradni = ?";
+		Poradnia clinic=null;
+		st = conn.prepareStatement(queryString);
+		st.setInt(1,id);
+		ResultSet rs = st.executeQuery();
+		String name="";
+		
+		while (rs.next()){
+			name=rs.getString("nazwa");
+			
+			clinic=new Poradnia(id,name);
+			break;
+		}
+		
+		return clinic;
+
 	}
 
 }

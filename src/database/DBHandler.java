@@ -40,7 +40,7 @@ public class DBHandler {
 	private DBHandler(String login, String pass) throws SQLException {
 
 		  this.conn=DriverManager.getConnection(
-		            "jdbc:mysql://"+host+"/enzoz?useUnicode=true&characterEncoding=UTF-8", login, pass);
+		            "jdbc:mysql://"+host+"/enzoz?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true", login, pass);
 		  this.login=login;
 	}
 	

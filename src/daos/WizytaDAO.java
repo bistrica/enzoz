@@ -137,7 +137,8 @@ public class WizytaDAO {
 		PreparedStatement st;
 		//SELECT idWizyty, data FROM wizytyDzis WHERE idPacjenta = 299 AND idLekarza = 303 ORDER BY data desc LIMIT 1 
 		String status="realizowana";
-		String queryString="UPDATE wizytyArchiwum SET status = ? WHERE idWizyty = ? AND status != ? ";//"SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
+		System.out.println(">"+appId);
+		String queryString="UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";//"SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
 		int updatedRecords=-1;
 		try {
 			st = conn.prepareStatement(queryString);
@@ -146,7 +147,7 @@ public class WizytaDAO {
 			st.setInt(2, appId);
 			st.setString(3, status);
 			updatedRecords = st.executeUpdate();
-			
+			System.out.println(updatedRecords);
 		} catch (SQLException e) {
 			e.printStackTrace(); //TODO: ?
 		}
@@ -191,7 +192,9 @@ public class WizytaDAO {
 				Pacjent patient=patientDAO.getPatientData(rs.getInt("idPacjenta"));
 				Lekarz doctor=new Lekarz(personDAO.getPersonData(rs.getInt("idLekarza"))); //TODO: check, czy wystarczy osobaDAO || make doctorDAO
 				GregorianCalendar appDate=convertToDate(rs.getString("data"));
+				
 				Wizyta app=new Wizyta(appId, appDate);
+				
 				app.setLekarz(doctor);
 				app.setPacjent(patient);
 				apps.add(app);

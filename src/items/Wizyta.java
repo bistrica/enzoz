@@ -82,8 +82,7 @@ public class Wizyta {
 	}
 
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.id;
 	}
 
 	public void setPacjent(Pacjent pacjent) {

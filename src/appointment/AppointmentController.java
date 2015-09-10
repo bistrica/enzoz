@@ -72,7 +72,7 @@ public class AppointmentController {
 	}
 	
 	private void getArchiveAppointments() {
-		// TODO Auto-generated method stub
+		appointmentsArchive=am.getArchiveAppointments();
 		
 	}
 

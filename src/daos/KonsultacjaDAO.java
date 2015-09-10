@@ -25,7 +25,7 @@ public class KonsultacjaDAO {
 		try {
 			
 			st = conn.prepareStatement(queryString);
-			st.setInt(appId, 1);
+			st.setInt(1,appId);
 			ResultSet rs = st.executeQuery();
 			while (rs.next()){
 				interview=rs.getString("treœæ");
