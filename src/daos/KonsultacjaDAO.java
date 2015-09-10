@@ -17,12 +17,12 @@ public class KonsultacjaDAO {
 		conn=DBHandler.getDatabaseConnection();
 	}
 	
-	public Konsultacja getInterview(int appId) {
+	public Konsultacja getInterview(int appId) throws SQLException {
 		
 		PreparedStatement st;
 		String queryString="SELECT treœæ FROM konsultacje WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
 		String interview="";
-		try {
+		//try {
 			
 			st = conn.prepareStatement(queryString);
 			st.setInt(1,appId);
@@ -31,12 +31,13 @@ public class KonsultacjaDAO {
 				interview=rs.getString("treœæ");
 				break;
 			}
-		}
+		/*}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
-		
-		
+		}*/
+		//System.out.println("COunter:  "+DBHandler.counter);	
+		//if (DBHandler.counter++%4!=0) throw new SQLException();
+		//System.out.println("Classic return");
 		return new Konsultacja(interview);
 	}
 	

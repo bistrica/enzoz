@@ -2,8 +2,12 @@ package appointment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import exceptions.ArchiveException;
+import exceptions.PreviewCannotBeCreatedException;
+import exceptions.TodayException;
 import individualApp.IndividualAppController;
 import items.Wizyta;
 import people.Lekarz;
@@ -13,7 +17,7 @@ import people.Pracownik;
 public class AppointmentController {
 
 	
-	AppointmentDBH am;//WizytaDAO wystarczy?
+	AppointmentDBH am;
 	AppointmentView av;
 	Lekarz doctor;
 	
@@ -24,6 +28,7 @@ public class AppointmentController {
 	String[] columnNames={"Data","Pacjent","Lekarz"};
 	private String notEditableString="Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
 	private String titleBarString="Wizyta w trakcie edycji";
+	private String errorString="Wyst¹pi³ b³¹d";
 	
 	/*public AppointmentController(String login) {
 		// TODO Auto-generated constructor stub
@@ -72,8 +77,13 @@ public class AppointmentController {
 	}
 	
 	private void getArchiveAppointments() {
-		appointmentsArchive=am.getArchiveAppointments();
-		
+		appointmentsArchive=new ArrayList<Wizyta>();
+		try {
+			appointmentsArchive=am.getArchiveAppointments();
+		}
+		catch(ArchiveException e){
+			av.displayInfo(e.getMessage(), errorString);
+		}
 	}
 
 	private void createAppointment(Wizyta app, boolean editable) {
@@ -83,21 +93,51 @@ public class AppointmentController {
 	}
 
 	private void tryToCreateArchiveAppointmentPreview(Wizyta app) {
-		if (am.statusAllowsEditing(app)) {
-			am.updateAppData(app);
-			boolean editable=false;
-			createAppointment(app, editable);
+		/*boolean allowed=false;
+		try {
+			allowed = am.statusAllowsEditing(app); 
+		}
+		catch (SQLException e) {
+			throw new PreviewCannotBeCreatedException();
+		}
+		
+		if (allowed){
+			try {
+				am.updateAppData(app);
+				boolean editable=false;
+				createAppointment(app, editable);
+			}
+			catch(SQLException e) {
+				
+			}
 		}
 		else
 			av.displayInfo(notEditableString, titleBarString);
 			
+		*/
+		
+		
+		try {
+			
+			//if (am.statusAllowsEditing(app)) {
+			//	am.updateAppData(app);
+			if (am.openPreviewIfPossible(app)){
+				boolean editable=false;
+				createAppointment(app, editable);
+			}
+			else
+				av.displayInfo(notEditableString, titleBarString);
+		}
+		catch(PreviewCannotBeCreatedException e) {
+			av.displayInfo(e.getMessage(), errorString);
+		}
 		
 	}
 	
-	private String[] getColumnsNames() {
+	/*private String[] getColumnsNames() {
 		return colNames;
 
-	}
+	}*/
 
 	private Object[][] convertAppointments() {
 		Object[][] converted=new Object[appointmentsToday.size()][colNames.length];
@@ -124,8 +164,13 @@ public class AppointmentController {
 	}
 
 	private void getAppointments() {
-		appointmentsToday=am.getTodayAppointments(doctor);
-		
+		appointmentsToday=new ArrayList<Wizyta>();
+		try {
+			appointmentsToday=am.getTodayAppointments(doctor);
+		}
+		catch(TodayException e) {
+			av.displayInfo(e.getMessage(), errorString);
+		}
 	}
 
 }

@@ -183,7 +183,7 @@ public class ChorobaDAO {
 	}
 
 	public ArrayList<Choroba> getTemporaryIllnesses(int appId,
-			ArrayList<Choroba> constIllnesses) {
+			ArrayList<Choroba> constIllnesses) throws SQLException {
 
 		PreparedStatement st;
 		String queryString="SELECT idChoroby FROM rozpoznaneChoroby WHERE idWizyty = ?";
@@ -196,7 +196,7 @@ public class ChorobaDAO {
 		Choroba illness=null;
 		
 		
-		try {
+		//try {
 			st = conn.prepareStatement(queryString);
 			st.setInt(1, appId);
 			ResultSet rs = st.executeQuery();
@@ -216,10 +216,10 @@ public class ChorobaDAO {
 				illness=new Choroba(id,code,name);
 				illnesses.add(illness);
 			}
-		}
+		/*}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		return illnesses;
 		

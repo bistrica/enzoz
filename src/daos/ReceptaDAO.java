@@ -22,14 +22,14 @@ public class ReceptaDAO {
 		prescriptionPositionDAO=new PozycjaNaRecepcieDAO();
 	}
 	
-	public Recepta getPrescription (int appId) {
+	public Recepta getPrescription (int appId) throws SQLException {
 		
 		PreparedStatement st;
 		String queryString="SELECT idRecepty FROM recepty WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
 		int idPresc=-1;
 		ArrayList<PozycjaNaRecepcie> positions=new ArrayList<PozycjaNaRecepcie>();
 		
-		try {
+		//try {
 			
 			st = conn.prepareStatement(queryString);
 			st.setInt(1,appId);
@@ -42,10 +42,10 @@ public class ReceptaDAO {
 			positions=prescriptionPositionDAO.getPrescriptedPositions(idPresc);
 			
 			
-		}
+		/*}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 				
 				
 		return new Recepta(positions);

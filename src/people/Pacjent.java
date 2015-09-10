@@ -25,6 +25,10 @@ public class Pacjent extends Osoba {
 		chorobyPrzewlek³e=illnesses;
 	}
 
+	public Pacjent(Osoba person) {
+		this(person, null);
+	}
+
 	public ArrayList<Choroba> getChorobyPrzewlek³e() {
 		return chorobyPrzewlek³e;
 	}

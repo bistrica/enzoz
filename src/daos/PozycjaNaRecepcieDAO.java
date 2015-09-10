@@ -21,7 +21,7 @@ public class PozycjaNaRecepcieDAO {
 		drugDAO=new LekDAO();
 	}
 
-	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(int idPresc) {
+	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(int idPresc) throws SQLException {
 
 		// IdLeku 	iloœæOpakowañ 	iloœæDawek 	PrzyjêciaNaDzieñ 	ProcentRefundacji 
 		
@@ -29,7 +29,7 @@ public class PozycjaNaRecepcieDAO {
 		String queryString="SELECT idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji FROM pozycjeNaReceptach";
 		ArrayList<PozycjaNaRecepcie> positions=new ArrayList<PozycjaNaRecepcie>();
 		
-		try {
+		//try {
 			st = conn.prepareStatement(queryString);
 			
 			ResultSet rs = st.executeQuery();
@@ -48,10 +48,10 @@ public class PozycjaNaRecepcieDAO {
 				PozycjaNaRecepcie position=new PozycjaNaRecepcie(drug, pckgNo, dosesNo, ingestionNo, discPrcnt);
 				positions.add(position);
 			}
-		}
+		/*}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		return positions;
 		

@@ -18,10 +18,10 @@ public class PacjentDAO {
 
 	Connection conn;
 	
-	//?
+	
 	OsobaDAO personDAO;
 	ChorobaDAO illnessDAO;
-	//
+	
 	public PacjentDAO() {
 		conn=DBHandler.getDatabaseConnection();
 		personDAO=new OsobaDAO();

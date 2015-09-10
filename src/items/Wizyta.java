@@ -97,7 +97,7 @@ public class Wizyta {
 	}
 
 	public String getDataToString() {
-		return  data.get(Calendar.YEAR)+"/"+data.get(Calendar.MONTH)+"/"+data.get(Calendar.DATE)+", "+getHourToString();
+		return  data.get(Calendar.YEAR)+"-"+(data.get(Calendar.MONTH)+1)+"-"+data.get(Calendar.DATE)+", "+getHourToString();
 	}
 
 	public Recepta getRecepta() {

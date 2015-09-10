@@ -23,7 +23,7 @@ public class SkierowanieDAO {
 		clinicsDAO=new PoradniaDAO();
 	}
 
-	public ArrayList<Skierowanie> getExaminations(int appId) {
+	public ArrayList<Skierowanie> getExaminations(int appId) throws SQLException {
 		ArrayList<Skierowanie> examinations=new ArrayList<Skierowanie>();
 		
 		PreparedStatement st;
@@ -31,7 +31,7 @@ public class SkierowanieDAO {
 		int idExam=-1;
 		ArrayList<Skierowanie> positions=new ArrayList<Skierowanie>();
 		
-		try {
+		//try {
 			st = conn.prepareStatement(queryString);
 			st.setInt(1, appId);
 			ResultSet rs = st.executeQuery();
@@ -54,10 +54,10 @@ public class SkierowanieDAO {
 				positions.add(examination);
 			}
 			
-		}
+		/*}
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		
 		return examinations;

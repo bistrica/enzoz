@@ -45,12 +45,12 @@ public class WizytaDAO {
 	
 	//private ArrayList<Wizyta> getAppointments(Lekarz doct)
 	
-	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor) {
+	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor)  throws SQLException {
 		ArrayList<Wizyta> apps=new ArrayList<Wizyta>();
 		PreparedStatement st;
 		String queryString="SELECT idWizyty, idPacjenta, data FROM wizytyDzis WHERE idLekarza=?";	
 		
-		try {
+		//try {
 			System.out.println("c "+conn);
 			st = conn.prepareStatement(queryString);
 			st.setInt(1, doctor.getId());
@@ -58,16 +58,18 @@ public class WizytaDAO {
 			while (rs.next()){
 				int appId=rs.getInt("idWizyty");
 				Pacjent patient=patientDAO.getPatientData(rs.getInt(2));
+				
 				GregorianCalendar appDate=convertToDate(rs.getString(3));
+				
 				Wizyta app=new Wizyta(appId, appDate);
 				app.setLekarz(doctor);
 				app.setPacjent(patient);
 				apps.add(app);
 			}
 			
-		} catch (SQLException e) {
+		/*} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 	
 		return apps;
 	}
@@ -75,16 +77,18 @@ public class WizytaDAO {
 	
 	private GregorianCalendar convertToDate(String dateString) {
 		
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date=null;
+		GregorianCalendar appDate = new GregorianCalendar();
 		try {
 			date = format.parse(dateString);
+			appDate.setTime(date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		}
-		GregorianCalendar appDate = new GregorianCalendar();
-		appDate.setTime(date);
+		
 		return appDate;
 	}
 
@@ -131,33 +135,56 @@ public class WizytaDAO {
 	}
 
 
-	public boolean checkAndChangeStatus(Wizyta app) {
+	public boolean checkAndChangeStatus(Wizyta app)  throws SQLException {
 
+		//conn=DBHandler.getDatabaseConnection();
+	//	conn.setAutoCommit(false);
+		
 		int appId=app.getId();
 		PreparedStatement st;
 		//SELECT idWizyty, data FROM wizytyDzis WHERE idPacjenta = 299 AND idLekarza = 303 ORDER BY data desc LIMIT 1 
 		String status="realizowana";
-		System.out.println(">"+appId);
+		//System.out.println(">"+appId);
 		String queryString="UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";//"SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
 		int updatedRecords=-1;
-		try {
+		//try {
 			st = conn.prepareStatement(queryString);
-		
+			//st.setInt(1, 1);
 			st.setString(1, status);
 			st.setInt(2, appId);
 			st.setString(3, status);
 			updatedRecords = st.executeUpdate();
 			System.out.println(updatedRecords);
-		} catch (SQLException e) {
+		/*} catch (SQLException e) {
 			e.printStackTrace(); //TODO: ?
-		}
+			
+			System.out.println(">>>>"+DBHandler.getDatabaseConnection());
+		}*/
 		
+			if (updatedRecords > 0) {
+				/*try {
+					updateData(app);
+		//			conn.commit();
+				}
+				catch(SQLException e){
+					System.out.println("rollback");
+					//e.printStackTrace();
+		//			conn.rollback();
+		//			conn.setAutoCommit(true);
+					throw e;
+				}*/
+				
+			}
+		//conn.setAutoCommit(true);
 		return updatedRecords>0;
 	}
 
 
-	public void updateData(Wizyta app) {
+	public void updateData(Wizyta app) throws SQLException {
 		int appId=app.getId();
+		
+		Pacjent patient=patientDAO.getPatientData(app.getPacjent().getId());
+		app.setPacjent(patient);
 		
 		Konsultacja interview=interviewDAO.getInterview(appId);
 		app.setKonsultacja(interview);
@@ -170,39 +197,35 @@ public class WizytaDAO {
 		
 		ArrayList<Choroba> tempIllnesses=illnessDAO.getTemporaryIllnesses(appId, app.getPacjent().getChorobyPrzewlek³e());
 		app.setRozpoznaneChoroby(tempIllnesses);
-		//"SELECT treœæ FROM konsultacje WHERE idWizyty= ? ORDER BY data DESC LIMIT 1 "
-		//SELECT idRecepty FROM recepty WHERE idWizyty=62626 order by data DESC LIMIT 1 
-		//SELECT treœæ FROM `konsultacje` WHERE idWizyty=62626 order by data DESC LIMIT 1 
+
 		
 	}
 
 
-	public ArrayList<Wizyta> getArchiveAppointments() {
+	public ArrayList<Wizyta> getArchiveAppointments() throws SQLException {
 
 		ArrayList<Wizyta> apps=new ArrayList<Wizyta>();
 		PreparedStatement st;
-		String queryString="SELECT idWizyty, idPacjenta, idLekarza, data FROM wizytyArchiwum";	
+		String queryString="SELECT idWizyty, idPacjenta, idLekarza, data FROM wizytyArchiwum ORDER BY data DESC";	
 		
-		try {
+		//try {
 			
 			st = conn.prepareStatement(queryString);
 			ResultSet rs = st.executeQuery();
 			while (rs.next()){
 				int appId=rs.getInt("idWizyty");
-				Pacjent patient=patientDAO.getPatientData(rs.getInt("idPacjenta"));
-				Lekarz doctor=new Lekarz(personDAO.getPersonData(rs.getInt("idLekarza"))); //TODO: check, czy wystarczy osobaDAO || make doctorDAO
+				Pacjent patient=new Pacjent(personDAO.getShortPersonData(rs.getInt("idPacjenta")));//patientDAO.getShortPatientData(rs.getInt("idPacjenta"));
+				Lekarz doctor=new Lekarz(personDAO.getShortPersonData(rs.getInt("idLekarza"))); //TODO: check, czy wystarczy osobaDAO || make doctorDAO
 				GregorianCalendar appDate=convertToDate(rs.getString("data"));
-				
-				Wizyta app=new Wizyta(appId, appDate);
-				
+				Wizyta app=new Wizyta(appId, appDate);			
 				app.setLekarz(doctor);
 				app.setPacjent(patient);
 				apps.add(app);
 			}
 			
-		} catch (SQLException e) {
+		/*} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 	
 		return apps;
 		
