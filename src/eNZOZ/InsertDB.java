@@ -48,14 +48,15 @@ public class InsertDB {
 		     //insertTypes();
 		    // insertEmployees();
 		     //insertPatients();
-		     /*insertApps();
+		     /*deleteApps();
+		     insertApps();
 		     System.out.println("Done apps.");
 		     insertInterviews();
 		     System.out.println("Done int.");
 		     insertPrescriptions();
 		     System.out.println("Done pre.");
 		     insertRequests();*/
-		     insertDuplicateConstantIllness();
+//		     insertDuplicateConstantIllness();
 		     System.out.println("Done all.");
 		     
 		   
@@ -65,6 +66,29 @@ public class InsertDB {
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
+	}
+	
+	private void deleteApps() {
+		String[] queries={
+				"DELETE FROM konsultacje",
+				"DELETE FROM pozycjeNaReceptach",
+				"DELETE FROM recepty",
+				"DELETE FROM pozycjeNaSkierowaniach",
+				"DELETE FROM skierowania",
+				"DELETE FROM rozpoznaneChoroby",
+				"DELETE FROM wizyty"
+				};
+        try {
+        	conn.setAutoCommit(false);
+            Statement st=conn.createStatement();
+            for (String q: queries)
+            	st.addBatch(q);
+            st.executeBatch();
+            conn.commit();
+            conn.setAutoCommit(true);
+        }
+        catch(SQLException e) {System.out.println("whats up?"+e.getErrorCode()); e.printStackTrace(); return; }
+        
 	}
 	
 	private void insertDuplicateConstantIllness() {
@@ -886,7 +910,7 @@ public class InsertDB {
 		
 		int lekarzeSize=lekarze.size(), pacjenciSize=pacjenci.size();
 		int idPacjenta, idLekarza;
-		String termin, query="INSERT INTO wizyty (idPacjenta, idLekarza, data) VALUES (?,?, ?)";
+		String termin, query="INSERT INTO wizyty (idPacjenta, idLekarza, data, status) VALUES (?,?,?,?)";
 		Random random = new Random();
 		
 		ArrayList<TempWizyta> dane=new ArrayList<TempWizyta>();
@@ -922,6 +946,7 @@ public class InsertDB {
 				st.setInt(1, o.getIdPacjenta());//(Integer)o[0]);
 				st.setInt(2, o.getIdLekarza());//(Integer)o[1]);
 				st.setString(3, o.getTermin());//(String)o[2]);
+				st.setString(4, "oczekuj¹ca");
 				st.executeUpdate();
 			}
 			catch (SQLException e) {

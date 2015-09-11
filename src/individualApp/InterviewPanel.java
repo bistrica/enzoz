@@ -26,6 +26,11 @@ public class InterviewPanel extends JPanel {
 		add(interviewScroll);
 		
 	}
+
+	public void setInterview(String interview2) {
+		interview.setText(interview2);
+		
+	}
 	
 	
 }

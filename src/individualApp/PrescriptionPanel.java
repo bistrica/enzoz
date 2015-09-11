@@ -233,9 +233,19 @@ public class PrescriptionPanel extends JPanel {
 		
 	}
 
-	public void setPrescriptionData(ArrayList<Lek> list) {
-		// TODO Auto-generated method stub
+
+
+	public void setPrescription(ArrayList<PozycjaNaRecepcie> positions) {
+		for (PozycjaNaRecepcie pos: positions)
+			prescriptedMedicines.add(pos);
+		repaint();
+		
 		
 	}
+
+	/*public void setPrescriptionData(ArrayList<Lek> list) {
+		// TODO Auto-generated method stub
+		
+	}*/
 	
 }

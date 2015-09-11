@@ -18,6 +18,8 @@ public class AppointmentDBH {
 
 	Connection conn=null;
 	WizytaDAO appDAO;
+	private int trialsNo=0;
+	private int criticalNo=5;
 	
 	
 	
@@ -38,14 +40,18 @@ public class AppointmentDBH {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			/*if (!DBHandler.reconnect())
+			
+			if (!DBHandler.reconnect() || trialsNo==criticalNo){
+				trialsNo=0;
 				throw new TodayException(); 
+			}
 			else{
 				System.out.println("ONCE MORE");
-				getTodayAppointments(doctor);
-			}*/
+				trialsNo++;
+				apps=getTodayAppointments(doctor);
+			}
 		}
-		
+		trialsNo=0;
 		return apps;
 	}
 	
@@ -56,9 +62,20 @@ public class AppointmentDBH {
 			apps=appDAO.getArchiveAppointments();
 		}
 		catch (SQLException e) {
-			throw new ArchiveException(); 
+			e.printStackTrace();
+			
+			if (!DBHandler.reconnect() || trialsNo==criticalNo){
+				trialsNo=0;
+				throw new ArchiveException(); 
+			}
+			else{
+				System.out.println("ONCE MORE");
+				trialsNo++;
+				apps=getArchiveAppointments();
+			}
+			//throw new ArchiveException(); 
 		}
-		
+		trialsNo=0;
 		return apps;
 	}
 
@@ -68,16 +85,23 @@ public class AppointmentDBH {
 		try {
 			isPossible=appDAO.checkAndChangeStatus(app);
 		} catch (SQLException e) {
-			/*if (!DBHandler.reconnect())
-				throw new PreviewCannotBeCreatedException(); 
-			else{
-				System.out.println("ONCE MORE");
-				openPreviewIfPossible(app);
-			}*/
 			
 			e.printStackTrace();
 			
+			if (!DBHandler.reconnect() || trialsNo==criticalNo){
+				trialsNo=0;
+				throw new PreviewCannotBeCreatedException(); 
+			}
+			else{
+				System.out.println("ONCE MORE");
+				trialsNo++;
+				isPossible=openPreviewIfPossible(app);
+			}
+			
+			
+			
 		}
+		trialsNo=0;
 		return isPossible;
 	}
 

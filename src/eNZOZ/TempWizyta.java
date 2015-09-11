@@ -1,6 +1,6 @@
 package eNZOZ;
 
-public class TempWizyta implements Comparable {
+public class TempWizyta implements Comparable<TempWizyta> {
 
 	private int idPacjenta;
 	private int idLekarza;
@@ -37,8 +37,9 @@ public class TempWizyta implements Comparable {
 		this.termin = termin;
 	}
 
+	
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(TempWizyta o) {
 		return termin.compareTo(((TempWizyta)o).termin);
 	}
 

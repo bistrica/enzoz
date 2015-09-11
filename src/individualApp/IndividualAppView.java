@@ -9,6 +9,8 @@ import items.Choroba;
 import items.Konsultacja;
 import items.Lek;
 import items.Poradnia;
+import items.PozycjaNaRecepcie;
+import items.Skierowanie;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -55,15 +57,15 @@ public class IndividualAppView extends JFrame {
 		tabbedPanel.add(prescriptionPaneString, prescriptionPane);
 		tabbedPanel.add(examinationPaneString, new JScrollPane(examinationPane));
 		
-		if (!isEditable)
+		if (isEditable)
 			tabbedPanel.add(archivesPaneString, archivesPane);
 		
 		
-		interviewPane.setEnabled(isEditable);
+		/*interviewPane.setEnabled(isEditable);
 		illnessesPane.setEnabled(isEditable);
 		prescriptionPane.setEnabled(isEditable);
 		examinationPane.setEnabled(isEditable);
-		
+		*/
 		
 		setLayout(new BorderLayout());//new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		//namePanel.setBackground(Color.BLUE);
@@ -86,10 +88,12 @@ public class IndividualAppView extends JFrame {
 	
 	public void setTemporaryIllnesses(ArrayList<Choroba> list){
 		illnessesPane.setTemporary(list);
+		illnessesPane.revalidate();
 	}
 	
 	public void setConstantIllnesses(ArrayList<Choroba> list){
 		illnessesPane.setConstant(list);
+		illnessesPane.revalidate();
 	}
 	
 	public void setInfo(String name, String address) {
@@ -97,10 +101,31 @@ public class IndividualAppView extends JFrame {
 		additionalInfo.setText(address);
 	}
 	
-	/*public void setInterview(Konsultacja interview) {
-		interviewPanel.setInterview(interview);
+	public void setInterview(String interview) {
+		interviewPane.setInterview(interview);
+		interviewPane.revalidate();
 	}
 	
+	/*public void setTempIllnesses(ArrayList<Choroba> ill) {
+		illnessesPane.setTemporary(ill);
+		illnessesPane.revalidate();
+	}
+	
+	public void setConstIllnesses(ArrayList<Choroba> ill) {
+		illnessesPane.setConstant(ill);
+		illnessesPane.revalidate();
+	}*/
+	
+	public void setPrescription(ArrayList<PozycjaNaRecepcie> pos) {
+		prescriptionPane.setPrescription(pos);
+		prescriptionPane.revalidate();
+	}
+	
+	public void setExaminations(ArrayList<Skierowanie> exams) {
+		examinationPane.setExaminations(exams);
+		examinationPane.revalidate();
+	}
+	/*
 	public String getInterview() {
 		interviewPanel.getInterview().get();
 	}*/
@@ -110,9 +135,9 @@ public class IndividualAppView extends JFrame {
 		prescriptionPane.setAll(list);
 	}
 	
-	public void setMedicinesList(ArrayList<Lek> list){
+	/*public void setMedicinesList(ArrayList<Lek> list){
 		prescriptionPane.setPrescriptionData(list);
-	}
+	}*/
 
 	
 	

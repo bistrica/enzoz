@@ -88,5 +88,19 @@ public class ExamPanel extends JPanel {
 	public void setPosition(Skierowanie position) {
 		this.position = position;
 	}
+
+
+
+
+	public void setClinic(Poradnia clinic) {
+		this.clinics.setSelectedItem(clinic);
+	}
+
+
+
+
+	public void setDescription(String desc) {
+		this.description.setText(desc);
+	}
 	
 }

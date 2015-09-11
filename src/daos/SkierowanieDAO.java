@@ -29,7 +29,6 @@ public class SkierowanieDAO {
 		PreparedStatement st;
 		String queryString="SELECT idSkierowania FROM skierowania WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
 		int idExam=-1;
-		ArrayList<Skierowanie> positions=new ArrayList<Skierowanie>();
 		
 		//try {
 			st = conn.prepareStatement(queryString);
@@ -51,7 +50,8 @@ public class SkierowanieDAO {
 			while (rs.next()){
 				Poradnia clinic=clinicsDAO.getClinic(rs.getInt("idPoradni"));
 				Skierowanie examination=new Skierowanie(clinic, rs.getString("komentarz"));
-				positions.add(examination);
+				System.out.println("::>"+examination.getOpisBadan());
+				examinations.add(examination);
 			}
 			
 		/*}

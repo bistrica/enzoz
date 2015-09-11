@@ -45,6 +45,23 @@ public class ExaminationPanel extends JPanel {
 		items=clinics.toArray(items);
 		this.clinics=items;
 	}
+
+	public void setExaminations(ArrayList<Skierowanie> exams) {
+		System.out.println("SET");
+		
+		for (Skierowanie exam: exams){
+			System.out.println("::"+exam.getOpisBadan());
+			ExamPanel examPane=new ExamPanel(clinics);
+			examPane.setPosition(exam);
+			examPane.setClinic(exam.getPoradnia());
+			examPane.setDescription(exam.getOpisBadan());
+			examPane.revalidate();
+			add(examPane);
+			
+		}
+		revalidate();
+		
+	}
 	
 	/*public void add(Skierowanie pos) {
 		

@@ -51,6 +51,7 @@ public class PacjentDAO {
 				illId=rs.getInt("idChoroby");
 				Choroba illness=illnessDAO.getIllnessData(illId);
 				illnesses.add(illness);
+				System.out.println("const: "+illness.getId());
 			}
 			return illnesses;
 

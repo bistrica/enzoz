@@ -10,4 +10,12 @@ public class Recepta {
 	public Recepta(ArrayList<PozycjaNaRecepcie> pozycje) {
 		this.pozycje=pozycje;
 	}
+
+	public ArrayList<PozycjaNaRecepcie> getPozycje() {
+		return pozycje;
+	}
+
+	public void setPozycje(ArrayList<PozycjaNaRecepcie> pozycje) {
+		this.pozycje = pozycje;
+	}
 }

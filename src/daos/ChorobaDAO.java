@@ -210,9 +210,12 @@ public class ChorobaDAO {
 				st.setInt(1, id);
 				ResultSet rs2 = st.executeQuery();
 				String code="", name="";
-				code=rs2.getString("kod");
-				name=rs2.getString("nazwa");
-				
+				while (rs2.next()){
+					code=rs2.getString("kod");
+					name=rs2.getString("nazwa");
+					break;
+				}
+				System.out.println("temp: "+id+","+code+","+name);
 				illness=new Choroba(id,code,name);
 				illnesses.add(illness);
 			}

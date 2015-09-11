@@ -67,6 +67,10 @@ public class DrugPanel extends JPanel {
 		 discountVal=new JTextField(3);
 		 ingestionCount=new JTextField(3);
 		
+		 dosesCount.setText(""+pos.getIloscDawekNaPrzyjecie());
+		 packageCount.setText(""+pos.getIloscOpakowan());
+		 discountVal.setText((int)(pos.getProcentRefundacji()*100)+"%");
+		 ingestionCount.setText(""+pos.getIloscPrzyjec());
 		
 		JLabel dosesCountLabel=new JLabel(dosesString);
 		JLabel packageCountLabel=new JLabel(packageString);

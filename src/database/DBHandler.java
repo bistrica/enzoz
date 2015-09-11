@@ -48,25 +48,31 @@ public class DBHandler {
 	}
 	
 	public static boolean reconnect() {
+		System.out.println("RECONNECT");
 		boolean valid=false;
 		try {
 			valid=dbh.conn.isValid(0);
+			System.out.println("VA: "+valid);
 		} catch (SQLException e) {
 			System.out.println(">>>Not valid");
 		}
 		int counter=0;
 		while (!valid && counter++<5){
 			try{
-			dbh.conn=DriverManager.getConnection(
-		            "jdbc:mysql://"+dbh.host+"/enzoz?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true", dbh.login, dbh.password);
-		
-			valid=dbh.conn.isValid(0);
-			Thread.sleep(1000);
+				Thread.sleep(1000);
+				dbh.conn=DriverManager.getConnection(
+			            "jdbc:mysql://"+dbh.host+"/enzoz?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true", dbh.login, dbh.password);
+			
+				valid=dbh.conn.isValid(0);
+			
 			}
 			catch(SQLException e){
+				System.out.println("SQL T");
+				e.printStackTrace();
 				break;
 			} 
 			catch (InterruptedException e) {
+				System.out.println("INTER T");
 				e.printStackTrace();
 				break;
 			}

@@ -26,12 +26,12 @@ public class PozycjaNaRecepcieDAO {
 		// IdLeku 	iloœæOpakowañ 	iloœæDawek 	PrzyjêciaNaDzieñ 	ProcentRefundacji 
 		
 		PreparedStatement st;
-		String queryString="SELECT idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji FROM pozycjeNaReceptach";
+		String queryString="SELECT idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji FROM pozycjeNaReceptach WHERE idRecepty = ?";
 		ArrayList<PozycjaNaRecepcie> positions=new ArrayList<PozycjaNaRecepcie>();
 		
 		//try {
 			st = conn.prepareStatement(queryString);
-			
+			st.setInt(1, idPresc);
 			ResultSet rs = st.executeQuery();
 			int drugId=-1, pckgNo=-1, ingestionNo=-1;
 			double dosesNo=-1.0, discPrcnt=-1.0;

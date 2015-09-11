@@ -292,20 +292,23 @@ public class IllnessesPanel extends JPanel {
 	}
 
 	public void setTemporary(ArrayList<Choroba> list) {
-		temporaryModel=new DefaultListModel<Choroba>(); //zbêdne raczej
+		//temporaryModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 		
 		for (Choroba ill: list)
 			temporaryModel.addElement(ill);
 		
+		repaint();
 	}
 
 	public void setConstant(ArrayList<Choroba> list) {
-		constantModel=new DefaultListModel<Choroba>(); //zbêdne raczej
+		//constantModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 		
 		for (Choroba ill: list)
 			constantModel.addElement(ill);
 		
 	}
+
+	
 	
 }
 

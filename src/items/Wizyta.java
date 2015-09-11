@@ -19,6 +19,7 @@ public class Wizyta {
 	private Konsultacja konsultacja;
 	
 	private int id;
+	private boolean isArchive=false;
 	//int id;
 	
 	/*public String danePacjenta() {
@@ -126,6 +127,14 @@ public class Wizyta {
 
 	public void setRozpoznaneChoroby(ArrayList<Choroba> rozpoznaneChoroby) {
 		this.rozpoznaneChoroby = rozpoznaneChoroby;
+	}
+
+	public boolean isArchiveAppointment() {
+		return isArchive;
+	}
+
+	public void setArchive(boolean isArchive) {
+		this.isArchive = isArchive;
 	}
 	
 

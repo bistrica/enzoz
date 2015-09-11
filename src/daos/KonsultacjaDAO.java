@@ -35,9 +35,9 @@ public class KonsultacjaDAO {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}*/
-		//System.out.println("COunter:  "+DBHandler.counter);	
-		//if (DBHandler.counter++%4!=0) throw new SQLException();
-		//System.out.println("Classic return");
+		/*System.out.println("COunter:  "+DBHandler.counter);	
+		if (DBHandler.counter++%4!=0) throw new SQLException();
+		System.out.println("Classic return");*/
 		return new Konsultacja(interview);
 	}
 	

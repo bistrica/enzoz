@@ -138,7 +138,7 @@ public class WizytaDAO {
 	public boolean checkAndChangeStatus(Wizyta app)  throws SQLException {
 
 		//conn=DBHandler.getDatabaseConnection();
-	//	conn.setAutoCommit(false);
+		conn.setAutoCommit(false);
 		
 		int appId=app.getId();
 		PreparedStatement st;
@@ -162,20 +162,20 @@ public class WizytaDAO {
 		}*/
 		
 			if (updatedRecords > 0) {
-				/*try {
+				try {
 					updateData(app);
-		//			conn.commit();
+					conn.commit();
 				}
 				catch(SQLException e){
 					System.out.println("rollback");
 					//e.printStackTrace();
-		//			conn.rollback();
-		//			conn.setAutoCommit(true);
+					conn.rollback();
+					conn.setAutoCommit(true);
 					throw e;
-				}*/
+				}
 				
 			}
-		//conn.setAutoCommit(true);
+		conn.setAutoCommit(true);
 		return updatedRecords>0;
 	}
 
@@ -198,7 +198,7 @@ public class WizytaDAO {
 		ArrayList<Choroba> tempIllnesses=illnessDAO.getTemporaryIllnesses(appId, app.getPacjent().getChorobyPrzewlek³e());
 		app.setRozpoznaneChoroby(tempIllnesses);
 
-		
+		app.setArchive(true);
 	}
 
 
