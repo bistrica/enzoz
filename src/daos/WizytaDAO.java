@@ -46,6 +46,7 @@ public class WizytaDAO {
 	//private ArrayList<Wizyta> getAppointments(Lekarz doct)
 	
 	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor)  throws SQLException {
+		System.out.println("GTA");
 		ArrayList<Wizyta> apps=new ArrayList<Wizyta>();
 		PreparedStatement st;
 		String queryString="SELECT idWizyty, idPacjenta, data FROM wizytyDzis WHERE idLekarza=?";	
@@ -57,9 +58,9 @@ public class WizytaDAO {
 			ResultSet rs = st.executeQuery();//Update();
 			while (rs.next()){
 				int appId=rs.getInt("idWizyty");
-				Pacjent patient=patientDAO.getPatientData(rs.getInt(2));
-				
-				GregorianCalendar appDate=convertToDate(rs.getString(3));
+				Pacjent patient=patientDAO.getPatientData(rs.getInt("idPacjenta"));
+				System.out.println("P: "+patient);
+				GregorianCalendar appDate=convertToDate(rs.getString("data"));
 				
 				Wizyta app=new Wizyta(appId, appDate);
 				app.setLekarz(doctor);

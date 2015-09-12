@@ -17,12 +17,19 @@ public class DBHandler {
 	private Connection conn;
 	private String host="192.168.56.1", login, password; //has³o? ??
 	private static DBHandler dbh=null;
+	private static int trialsNo=0;
+	private static int criticalNo=5;
+	
 	
 	public static int counter=1;
 	/*public DBHandler(Connection conn) {
 		this.conn=conn;
 	}*/
 
+	public static void resetTrialsNo() {
+		trialsNo=0;
+	}
+	
 	public static Connection createAndGetDatabaseConnection(String login, String pass)  throws SQLException {
 		if (dbh==null) {
 			dbh=new DBHandler(login,pass);
@@ -106,6 +113,14 @@ public class DBHandler {
 		
 		
 		return dbh.currentUser;
+	}
+
+	public static boolean isCriticalNoExceeded() {
+		return trialsNo==criticalNo;
+	}
+
+	public static void incrementTrialsNo() {
+		trialsNo++;
 	}
 
 	

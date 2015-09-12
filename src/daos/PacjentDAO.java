@@ -32,13 +32,13 @@ public class PacjentDAO {
 
 		Osoba person=personDAO.getPersonData(id);
 		ArrayList<Choroba> illnesses=getPatientConstantIllnesses(id); 
-				
+		System.out.println("ill: "+illnesses);		
 		return new Pacjent(person,illnesses);
 	
 	}
 
 	private ArrayList<Choroba> getPatientConstantIllnesses(int id) throws SQLException {
-
+		System.out.println("GPCI");
 			ArrayList<Choroba> illnesses=new ArrayList<Choroba>();
 			PreparedStatement st;
 			String queryString="SELECT idChoroby FROM chorobyPrzewlek³e WHERE idPacjenta = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -49,9 +49,11 @@ public class PacjentDAO {
 			int illId;
 			while (rs.next()){
 				illId=rs.getInt("idChoroby");
-				Choroba illness=illnessDAO.getIllnessData(illId);
+				Choroba illness=null;
+				illness=illnessDAO.getIllnessData(illId);
+				System.out.println("CH "+illness);
 				illnesses.add(illness);
-				System.out.println("const: "+illness.getId());
+				//System.out.println("const: "+illness.getId());
 			}
 			return illnesses;
 

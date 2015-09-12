@@ -21,7 +21,7 @@ public class ChorobaDAO {
 	
 	public Choroba getIllnessData(int id) throws SQLException {
 
-		
+		System.out.println("GID");
 		
 		PreparedStatement st;
 		String queryString="SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -39,12 +39,18 @@ public class ChorobaDAO {
 			break;
 		}
 		
+		//if (true) throw new SQLException();
+		/*if (DBHandler.counter++%4!=0) throw new SQLException();
+		System.out.println("Classic return");
+		*/
+		
 		return illness;
 	}
 
 	
 	public ArrayList<Choroba> getIllnessData(ArrayList<Integer> ids) throws SQLException {
 
+		System.out.println("GIDD");
 		
 		PreparedStatement st;
 		String queryString="SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -54,7 +60,7 @@ public class ChorobaDAO {
 		st = conn.prepareStatement(queryString);
 		String idList=convertIds(ids);
 		st.setString(1, idList);
-		ResultSet rs = st.executeQuery();//Update();
+		ResultSet rs = st.executeQuery();
 		String code="", name="";
 		
 		Choroba illness=null;
@@ -65,6 +71,8 @@ public class ChorobaDAO {
 			illness=new Choroba(ids.get(i++),code,name);
 			illnesses.add(illness);
 		}
+		
+		//if (true) throw new SQLException();
 		
 		return illnesses;
 	}
@@ -178,6 +186,8 @@ public class ChorobaDAO {
 			illness=new Choroba(id,code,name);
 			illnesses.add(illness);
 		}
+		
+		//if (true) throw new SQLException();
 		
 		return illnesses;
 	}

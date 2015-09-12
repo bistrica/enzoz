@@ -18,9 +18,6 @@ public class AppointmentDBH {
 
 	Connection conn=null;
 	WizytaDAO appDAO;
-	private int trialsNo=0;
-	private int criticalNo=5;
-	
 	
 	
 	public AppointmentDBH() {
@@ -41,17 +38,17 @@ public class AppointmentDBH {
 		catch (SQLException e) {
 			e.printStackTrace();
 			
-			if (!DBHandler.reconnect() || trialsNo==criticalNo){
-				trialsNo=0;
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()){
+				DBHandler.resetTrialsNo();
 				throw new TodayException(); 
 			}
 			else{
 				System.out.println("ONCE MORE");
-				trialsNo++;
+				DBHandler.incrementTrialsNo();
 				apps=getTodayAppointments(doctor);
 			}
 		}
-		trialsNo=0;
+		DBHandler.resetTrialsNo();
 		return apps;
 	}
 	
@@ -64,18 +61,18 @@ public class AppointmentDBH {
 		catch (SQLException e) {
 			e.printStackTrace();
 			
-			if (!DBHandler.reconnect() || trialsNo==criticalNo){
-				trialsNo=0;
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()){
+				DBHandler.resetTrialsNo();
 				throw new ArchiveException(); 
 			}
 			else{
 				System.out.println("ONCE MORE");
-				trialsNo++;
+				DBHandler.incrementTrialsNo();
 				apps=getArchiveAppointments();
 			}
 			//throw new ArchiveException(); 
 		}
-		trialsNo=0;
+		DBHandler.resetTrialsNo();
 		return apps;
 	}
 
@@ -88,20 +85,20 @@ public class AppointmentDBH {
 			
 			e.printStackTrace();
 			
-			if (!DBHandler.reconnect() || trialsNo==criticalNo){
-				trialsNo=0;
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()){
+				DBHandler.resetTrialsNo();
 				throw new PreviewCannotBeCreatedException(); 
 			}
 			else{
 				System.out.println("ONCE MORE");
-				trialsNo++;
+				DBHandler.incrementTrialsNo();
 				isPossible=openPreviewIfPossible(app);
 			}
 			
 			
 			
 		}
-		trialsNo=0;
+		DBHandler.resetTrialsNo();
 		return isPossible;
 	}
 

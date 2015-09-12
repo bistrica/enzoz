@@ -26,6 +26,9 @@ public class SkierowanieDAO {
 	public ArrayList<Skierowanie> getExaminations(int appId) throws SQLException {
 		ArrayList<Skierowanie> examinations=new ArrayList<Skierowanie>();
 		
+		//if (true) throw new SQLException();
+		
+		
 		PreparedStatement st;
 		String queryString="SELECT idSkierowania FROM skierowania WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
 		int idExam=-1;

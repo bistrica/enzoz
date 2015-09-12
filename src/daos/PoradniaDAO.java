@@ -21,6 +21,7 @@ public class PoradniaDAO {
 	
 	public ArrayList<Poradnia> getAllClinics() throws SQLException {
 		
+		
 		PreparedStatement st;
 		String queryString="SELECT idPoradni, nazwa FROM poradnie";
 		ArrayList<Poradnia> clinics=new ArrayList<Poradnia>();	
@@ -46,6 +47,8 @@ public class PoradniaDAO {
 
 	public Poradnia getClinic(int id) throws SQLException {
 
+		//if (true) throw new SQLException();
+		
 		PreparedStatement st;
 		String queryString="SELECT nazwa FROM poradnie WHERE idPoradni = ?";
 		Poradnia clinic=null;

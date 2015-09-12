@@ -15,6 +15,7 @@ import items.Skierowanie;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -133,6 +134,10 @@ public class IndividualAppView extends JFrame {
 	//³aduje wszystkie leki z bazy
 	public void setAllMedicinesList(ArrayList<Lek> list){
 		prescriptionPane.setAll(list);
+	}
+
+	public void displayInfo(String message, String titleBar) {
+		 JOptionPane.showMessageDialog(null, message, titleBar, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	/*public void setMedicinesList(ArrayList<Lek> list){
