@@ -15,46 +15,46 @@ public class PozycjaNaRecepcieDAO {
 
 	Connection conn;
 	LekDAO drugDAO;
-	
-	public PozycjaNaRecepcieDAO(){
-		conn=DBHandler.getDatabaseConnection();
-		drugDAO=new LekDAO();
+
+	public PozycjaNaRecepcieDAO() {
+		conn = DBHandler.getDatabaseConnection();
+		drugDAO = new LekDAO();
 	}
 
-	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(int idPresc) throws SQLException {
+	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(int idPresc)
+			throws SQLException {
 
-		// IdLeku 	iloœæOpakowañ 	iloœæDawek 	PrzyjêciaNaDzieñ 	ProcentRefundacji 
-		
+		// IdLeku iloœæOpakowañ iloœæDawek PrzyjêciaNaDzieñ ProcentRefundacji
+
 		PreparedStatement st;
-		String queryString="SELECT idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji FROM pozycjeNaReceptach WHERE idRecepty = ?";
-		ArrayList<PozycjaNaRecepcie> positions=new ArrayList<PozycjaNaRecepcie>();
-		
-		//try {
-			st = conn.prepareStatement(queryString);
-			st.setInt(1, idPresc);
-			ResultSet rs = st.executeQuery();
-			int drugId=-1, pckgNo=-1, ingestionNo=-1;
-			double dosesNo=-1.0, discPrcnt=-1.0;
-			Lek drug=null;
-			
-			while (rs.next()){
-				drugId=rs.getInt("idLeku");
-				pckgNo=rs.getInt("iloœæOpakowañ");
-				dosesNo=rs.getDouble("iloœæDawek");
-				ingestionNo=rs.getInt("przyjêciaNaDzieñ");
-				discPrcnt=rs.getDouble("procentRefundacji");
-				
-				drug=drugDAO.getDrug(drugId);//new Lek(id,name,type,dose,pckg);
-				PozycjaNaRecepcie position=new PozycjaNaRecepcie(drug, pckgNo, dosesNo, ingestionNo, discPrcnt);
-				positions.add(position);
-			}
-		/*}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}*/
-		
+		String queryString = "SELECT idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji FROM pozycjeNaReceptach WHERE idRecepty = ?";
+		ArrayList<PozycjaNaRecepcie> positions = new ArrayList<PozycjaNaRecepcie>();
+
+		// try {
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, idPresc);
+		ResultSet rs = st.executeQuery();
+		int drugId = -1, pckgNo = -1, ingestionNo = -1;
+		double dosesNo = -1.0, discPrcnt = -1.0;
+		Lek drug = null;
+
+		while (rs.next()) {
+			drugId = rs.getInt("idLeku");
+			pckgNo = rs.getInt("iloœæOpakowañ");
+			dosesNo = rs.getDouble("iloœæDawek");
+			ingestionNo = rs.getInt("przyjêciaNaDzieñ");
+			discPrcnt = rs.getDouble("procentRefundacji");
+
+			drug = drugDAO.getDrug(drugId);// new Lek(id,name,type,dose,pckg);
+			PozycjaNaRecepcie position = new PozycjaNaRecepcie(drug, pckgNo,
+					dosesNo, ingestionNo, discPrcnt);
+			positions.add(position);
+		}
+		/*
+		 * } catch (SQLException e) { e.printStackTrace(); }
+		 */
+
 		return positions;
-		
-		
+
 	}
 }

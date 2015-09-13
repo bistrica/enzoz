@@ -1,6 +1,5 @@
 package daos;
 
-import items.Lek;
 import items.Poradnia;
 
 import java.sql.Connection;
@@ -14,56 +13,54 @@ import database.DBHandler;
 public class PoradniaDAO {
 
 	Connection conn;
-	
+
 	public PoradniaDAO() {
-		conn=DBHandler.getDatabaseConnection();
+		conn = DBHandler.getDatabaseConnection();
 	}
-	
+
 	public ArrayList<Poradnia> getAllClinics() throws SQLException {
-		
-		
+
 		PreparedStatement st;
-		String queryString="SELECT idPoradni, nazwa FROM poradnie";
-		ArrayList<Poradnia> clinics=new ArrayList<Poradnia>();	
+		String queryString = "SELECT idPoradni, nazwa FROM poradnie";
+		ArrayList<Poradnia> clinics = new ArrayList<Poradnia>();
 		st = conn.prepareStatement(queryString);
-		
+
 		ResultSet rs = st.executeQuery();
-		String name="";
-		int id=-1;
-		Poradnia clinic=null;
-		
-		while (rs.next()){
-			id=rs.getInt("idPoradni");
-			name=rs.getString("nazwa");
-			
-			
-			clinic=new Poradnia(id,name);
+		String name = "";
+		int id = -1;
+		Poradnia clinic = null;
+
+		while (rs.next()) {
+			id = rs.getInt("idPoradni");
+			name = rs.getString("nazwa");
+
+			clinic = new Poradnia(id, name);
 			clinics.add(clinic);
 		}
-		
+
 		return clinics;
-		
+
 	}
 
 	public Poradnia getClinic(int id) throws SQLException {
 
-		//if (true) throw new SQLException();
-		
+		// if (true) throw new SQLException();
+
 		PreparedStatement st;
-		String queryString="SELECT nazwa FROM poradnie WHERE idPoradni = ?";
-		Poradnia clinic=null;
+		String queryString = "SELECT nazwa FROM poradnie WHERE idPoradni = ?";
+		Poradnia clinic = null;
 		st = conn.prepareStatement(queryString);
-		st.setInt(1,id);
+		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
-		String name="";
-		
-		while (rs.next()){
-			name=rs.getString("nazwa");
-			
-			clinic=new Poradnia(id,name);
+		String name = "";
+
+		while (rs.next()) {
+			name = rs.getString("nazwa");
+
+			clinic = new Poradnia(id, name);
 			break;
 		}
-		
+
 		return clinic;
 
 	}
