@@ -4,14 +4,18 @@ public class Poradnia {
 
 	String nazwa;
 	int id;
-	
+
 	public Poradnia(int id, String nazwa) {
-		this.id=id;
-		this.nazwa=nazwa;
+		this.id = id;
+		this.nazwa = nazwa;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return nazwa;
 	}
 

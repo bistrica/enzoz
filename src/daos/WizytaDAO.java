@@ -48,7 +48,7 @@ public class WizytaDAO {
 		System.out.println("GTA");
 		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
 		PreparedStatement st;
-		String queryString = "SELECT idWizyty, idPacjenta, data FROM wizytyDzis WHERE idLekarza=?";
+		String queryString = "SELECT idWizyty, idPacjenta, data FROM wizytyDzis WHERE idLekarza=? ORDER BY data ASC";
 
 		// try {
 		System.out.println("c " + conn);
@@ -67,10 +67,8 @@ public class WizytaDAO {
 			app.setPacjent(patient);
 			apps.add(app);
 		}
-
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
+		rs.close();
+		st.close();
 
 		return apps;
 	}
@@ -125,6 +123,8 @@ public class WizytaDAO {
 				appId = rs.getInt("idWizyty");
 				break;
 			}
+			rs.close();
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace(); // TODO: ?
 		}
@@ -173,6 +173,25 @@ public class WizytaDAO {
 
 		}
 		conn.setAutoCommit(true);
+		st.close();
+		return updatedRecords > 0;
+	}
+
+	public boolean changeStatus(Wizyta app) throws SQLException {
+
+		conn.setAutoCommit(false);
+		int appId = app.getId();
+		PreparedStatement st;
+		String status = "realizowana";
+		String queryString = "UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";// "SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
+		int updatedRecords = -1;
+		st = conn.prepareStatement(queryString);
+		st.setString(1, status);
+		st.setInt(2, appId);
+		st.setString(3, status);
+		updatedRecords = st.executeUpdate();
+
+		st.close();
 		return updatedRecords > 0;
 	}
 
@@ -223,12 +242,49 @@ public class WizytaDAO {
 			apps.add(app);
 		}
 
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
+		rs.close();
+		st.close();
 
 		return apps;
 
 	}
 
+	/*
+	 * public boolean checkStatus(Wizyta app) { // TODO Auto-generated method
+	 * stub return false; }
+	 */
+
+	public void writeToDatabase(Wizyta app) throws SQLException {
+
+		boolean autoCommit = conn.getAutoCommit();
+		conn.setAutoCommit(false);
+		int appId = app.getId();
+
+		try {
+			Konsultacja interview = app.getKonsultacja();
+			if (interview != null)
+				interviewDAO.writeToDatabase(appId, interview);
+
+			Recepta prescription = app.getRecepta();
+			if (prescription != null)
+				prescriptionDAO.writeToDatabase(appId, prescription);
+
+			ArrayList<Skierowanie> exams = app.getSkierowania();
+			if (exams != null)
+				examinationDAO.writeToDatabase(appId, exams);
+
+			ArrayList<Choroba> tempIllnesses = app.getRozpoznaneChoroby();
+			if (tempIllnesses != null)
+				illnessDAO.writeCurrentIllnesses(appId, tempIllnesses);
+
+			patientDAO.writePatientConstantIllnesses(app.getPacjent());
+
+			conn.commit();
+		} catch (SQLException e) {
+			conn.rollback();
+			throw e;
+		} finally {
+			conn.setAutoCommit(autoCommit);
+		}
+	}
 }

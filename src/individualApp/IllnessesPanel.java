@@ -50,11 +50,15 @@ public class IllnessesPanel extends JPanel {
 
 	boolean temporaryWindow;
 	private JScrollPane scrollAll;
+	private ArrayList<Choroba> constantIllnesses;
+	private ArrayList<Choroba> temporaryIllnesses;
 
 	public IllnessesPanel() {
 
 		temporary = new JList<Choroba>();
 		constant = new JList<Choroba>();
+		temporaryIllnesses = new ArrayList<Choroba>();
+		constantIllnesses = new ArrayList<Choroba>();
 
 		temporaryModel = new DefaultListModel<Choroba>();
 		constantModel = new DefaultListModel<Choroba>();
@@ -281,6 +285,7 @@ public class IllnessesPanel extends JPanel {
 
 	public void setTemporary(ArrayList<Choroba> list) {
 		// temporaryModel=new DefaultListModel<Choroba>(); //zbêdne raczej
+		temporaryIllnesses = list;
 
 		for (Choroba ill : list)
 			temporaryModel.addElement(ill);
@@ -291,9 +296,66 @@ public class IllnessesPanel extends JPanel {
 	public void setConstant(ArrayList<Choroba> list) {
 		// constantModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 
+		constantIllnesses = list;
+
 		for (Choroba ill : list)
 			constantModel.addElement(ill);
 
+	}
+
+	/*
+	 * public ArrayList<Choroba> getTemporaryIllnesses() {
+	 * 
+	 * ArrayList<Choroba> temp = new ArrayList<Choroba>();//
+	 * Arrays.asList(temporaryModel.toArray(array)); int size =
+	 * temporaryModel.getSize(); for (int i = 0; i < size; i++)
+	 * temp.add(temporaryModel.getElementAt(i)); if (temp.isEmpty()) temp =
+	 * null; return temp; }
+	 */
+
+	public ArrayList<Choroba> getConstantIllnesses(boolean onlyIfEdited) {
+
+		boolean changes = false;
+		int size = constantModel.getSize();
+		if (size != constantModel.size())
+			changes = true;
+
+		ArrayList<Choroba> cons = new ArrayList<Choroba>();// Arrays.asList(temporaryModel.toArray(array));
+
+		for (int i = 0; i < size; i++) {
+			Choroba illness = constantModel.getElementAt(i);
+			if (!changes && !constantIllnesses.contains(illness))
+				changes = true;
+			cons.add(illness);
+		}
+		if (cons.isEmpty() || (onlyIfEdited && !changes))
+			cons = null;
+		return cons;
+	}
+
+	public ArrayList<Choroba> getAllCurrentIllnesses(boolean onlyIfEdited) {
+
+		boolean changes = false;
+		int size = temporaryModel.getSize();
+		if (size != temporaryModel.size())
+			changes = true;
+
+		ArrayList<Choroba> illnesses = getConstantIllnesses(onlyIfEdited);
+		if (illnesses == null)
+			illnesses = new ArrayList<Choroba>();
+		else
+			changes = true;
+
+		for (int i = 0; i < size; i++) {
+			Choroba illness = temporaryModel.getElementAt(i);
+			if (!changes && !temporaryIllnesses.contains(illness))
+				changes = true;
+			illnesses.add(illness);
+		}
+
+		if (illnesses.isEmpty() || (onlyIfEdited && !changes))
+			illnesses = null;
+		return illnesses;
 	}
 
 	@Override

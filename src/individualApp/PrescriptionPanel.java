@@ -26,6 +26,7 @@ import javax.swing.event.DocumentListener;
 
 import rendering.DrugTableModel;
 import GUI_items.DrugListPanel;
+import GUI_items.DrugPanel;
 
 public class PrescriptionPanel extends JPanel {
 
@@ -236,6 +237,30 @@ public class PrescriptionPanel extends JPanel {
 			panel.setEnabled(state); // get DrugPanels, overriden setEnabled
 										// disables button in drugpanel
 		}
+	}
+
+	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(
+			boolean onlyIfChanged) throws NumberFormatException {
+
+		ArrayList<PozycjaNaRecepcie> positions = new ArrayList<PozycjaNaRecepcie>();
+
+		boolean allTheSame = true;
+
+		for (Component panel : prescriptedMedicines.getComponents()) {
+			if (panel instanceof DrugPanel) {
+				DrugPanel drugPanel = (DrugPanel) panel;
+				PozycjaNaRecepcie pos = drugPanel.retrievePrescribedPosition();
+				if (!pos.equals(drugPanel.getPosition()))
+					allTheSame = false;
+				positions.add(pos);
+			}
+		}
+
+		if (positions.isEmpty())
+			positions = null;
+
+		return (onlyIfChanged && allTheSame) ? null : positions;
+
 	}
 
 	/*

@@ -8,26 +8,37 @@ import items.Skierowanie;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+
+import exceptions.WrongInputException;
 
 public class IndividualAppView extends JFrame {
 
 	// tabbedPanel;
 	// JPanel interviewPane, illnessesPane, prescriptionPane, examinationPane,
 	// archivesPane;
+	Object options[] = { "Tak", "Nie" };
+
 	InterviewPanel interviewPane;
 	IllnessesPanel illnessesPane;
 	PrescriptionPanel prescriptionPane;
 	ExaminationPanel examinationPane;
 	ArchivesPanel archivesPane;
+
+	JMenuItem editItem;
 
 	JLabel mainInfo, additionalInfo;
 	String interviewPaneString = "Wywiad", illnessesPaneString = "Choroby",
@@ -35,15 +46,54 @@ public class IndividualAppView extends JFrame {
 			examinationPaneString = "Skierowania",
 			archivesPaneString = "Historia wizyt";
 
-	boolean isEditable;
+	boolean editMode;
+	private String confirmExitString = "Czy na pewno chcesz opuœciæ to okno?";
+	private String exitTitleBarString = "Wyjœcie";
 
-	public IndividualAppView(boolean isEditable) {
+	private String editMenuString = "Edycja";
+	private String editString = "Edytuj wizytê";
+
+	private JMenuItem saveItem;
+
+	private String saveString = "Zapisz zmiany";
+
+	private String appointmentString = "Dane wizyty";
+
+	public IndividualAppView(boolean isEnabled, boolean isEditingAllowed) {
 
 		/*
 		 * this.isEditable = isEditable; if (!isEditable) {
 		 * 
 		 * }
 		 */
+		editMode = isEnabled;
+
+		JMenu menu = null;
+		editItem = new JMenuItem(editString);
+		saveItem = new JMenuItem(saveString);
+
+		if (!isEnabled) { // wizyta jest archiwalna; archiwalna najpierw dostaje
+							// previewMode, czyli editMode==false
+			menu = new JMenu(editMenuString);
+			editItem.setEnabled(isEditingAllowed);
+
+			menu.add(editItem);
+
+			saveItem.setEnabled(false);
+
+			menu.add(editItem);
+			menu.add(saveItem);
+
+		} else {
+			menu = new JMenu(appointmentString);
+			saveItem.setEnabled(true);
+
+			menu.add(saveItem);
+		}
+
+		JMenuBar bar = new JMenuBar();
+		bar.add(menu);
+		setJMenuBar(bar);
 
 		mainInfo = new JLabel();
 		mainInfo.setFont(new Font("Arial", Font.BOLD, 20));
@@ -67,7 +117,7 @@ public class IndividualAppView extends JFrame {
 		tabbedPanel
 				.add(examinationPaneString, new JScrollPane(examinationPane));
 
-		if (isEditable)
+		if (isEnabled)
 			tabbedPanel.add(archivesPaneString, archivesPane);
 		/*
 		 * else disableComponents();
@@ -79,6 +129,7 @@ public class IndividualAppView extends JFrame {
 		getContentPane().add(namePanel, BorderLayout.NORTH);
 		getContentPane().add(tabbedPanel);
 
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
 
 	}
@@ -89,11 +140,23 @@ public class IndividualAppView extends JFrame {
 	 * private void enableComponents() { changeComponentsState(true); }
 	 */
 
+	public void setEditMode() {
+		this.editMode = true;
+		setComponentsState();
+	}
+
+	/*
+	 * public void setMode(boolean previewMode) { this.previewMode =
+	 * previewMode; setComponentsState(); }
+	 */
+
 	public void setComponentsState() {
-		interviewPane.setEnabled(isEditable);
-		illnessesPane.setEnabled(isEditable);
-		prescriptionPane.setEnabled(isEditable);
-		examinationPane.setEnabled(isEditable);
+		interviewPane.setEnabled(editMode);
+		illnessesPane.setEnabled(editMode);
+		prescriptionPane.setEnabled(editMode);
+		examinationPane.setEnabled(editMode);
+		saveItem.setEnabled(editMode);
+		editItem.setEnabled(!editMode);
 	}
 
 	public void setClinicsList(ArrayList<Poradnia> list) {
@@ -155,6 +218,62 @@ public class IndividualAppView extends JFrame {
 	public void displayInfo(String message, String titleBar) {
 		JOptionPane.showMessageDialog(null, message, titleBar,
 				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public void setWindowCloseListener(WindowAdapter windowAdapter) {
+		addWindowListener(windowAdapter);
+	}
+
+	public void setEditItemListener(ActionListener al) {
+		editItem.addActionListener(al);
+	}
+
+	public void setSaveItemListener(ActionListener al) {
+		saveItem.addActionListener(al);
+	}
+
+	public boolean sureToCloseWindow() {
+		return (JOptionPane.showOptionDialog(null, confirmExitString,
+				exitTitleBarString, JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
+	}
+
+	public void close() {
+		setVisible(false);
+		dispose();
+	}
+
+	public String getInterview() {
+		return interviewPane.getInterviewDescription();
+	}
+
+	public ArrayList<Skierowanie> getExaminations(boolean onlyEdited) {
+		return examinationPane.getExaminations(onlyEdited);
+
+	}
+
+	public ArrayList<PozycjaNaRecepcie> getPrescriptionData(boolean onlyEdited)
+			throws WrongInputException {
+		ArrayList<PozycjaNaRecepcie> positions = new ArrayList<PozycjaNaRecepcie>();
+		try {
+			positions = prescriptionPane.getPrescriptedPositions(onlyEdited);
+		} catch (NumberFormatException e) {
+			throw new WrongInputException();
+		}
+		return positions;
+	}
+
+	/*
+	 * public ArrayList<Choroba> getTemporaryIllnesses() { return
+	 * illnessesPane.getTemporaryIllnesses(); }
+	 */
+
+	public ArrayList<Choroba> getConstantIllnesses(boolean onlyIfEdited) {
+		return illnessesPane.getConstantIllnesses(onlyIfEdited);
+	}
+
+	public ArrayList<Choroba> getCurrentIllnesses(boolean onlyIfEdited) {
+		return illnessesPane.getAllCurrentIllnesses(onlyIfEdited);
 	}
 
 	/*

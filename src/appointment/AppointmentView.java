@@ -1,15 +1,22 @@
 package appointment;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import database.DBHandler;
 
 public class AppointmentView extends JFrame {
 
@@ -24,8 +31,18 @@ public class AppointmentView extends JFrame {
 	private JTable tableToday, tableArchive;
 	private ArchivePanel archivePanel;
 	private String archiveString = "Archiwum";
+	private JMenuItem refreshItem;
+	private String viewMenuString = "Widok";
+	private String refreshString = "Odœwie¿";
 
 	public AppointmentView() {
+
+		JMenu menu = new JMenu(viewMenuString);
+		refreshItem = new JMenuItem(refreshString);
+		menu.add(refreshItem);
+		JMenuBar bar = new JMenuBar();
+		bar.add(menu);
+		setJMenuBar(bar);
 
 		JTabbedPane tabbedPanel = new JTabbedPane();
 		appPanel = new JPanel();
@@ -39,11 +56,25 @@ public class AppointmentView extends JFrame {
 		tabbedPanel.add(archiveString, archivePanel);
 		getContentPane().add(tabbedPanel);
 		setSize(700, 600);
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				DBHandler.close();
+				System.out.println("closed");
+				System.exit(0);
+
+			}
+		});
 		// pack();
 	}
 
 	public void setOpenButtonListener(ActionListener al) {
 		openVisitButton.addActionListener(al);
+	}
+
+	public void setRefreshListener(ActionListener al) {
+		refreshItem.addActionListener(al);
 	}
 
 	/*

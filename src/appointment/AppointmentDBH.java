@@ -69,11 +69,35 @@ public class AppointmentDBH {
 		return apps;
 	}
 
-	public boolean openPreviewIfPossible(Wizyta app)
+	public void openPreview(Wizyta app) throws PreviewCannotBeCreatedException {
+		try {
+			appDAO.updateData(app);
+			// isPossible = appDAO.updateData(app);
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
+				DBHandler.resetTrialsNo();
+				throw new PreviewCannotBeCreatedException();
+			} else {
+				System.out.println("ONCE MORE");
+				DBHandler.incrementTrialsNo();
+				openPreviewIfPossible(app);
+			}
+
+		}
+		DBHandler.resetTrialsNo();
+
+	}
+
+	// TO REMOVE (?)
+	private boolean openPreviewIfPossible(Wizyta app)
 			throws PreviewCannotBeCreatedException {
 		boolean isPossible = false;
 		try {
 			isPossible = appDAO.checkAndChangeStatus(app);
+			// isPossible = appDAO.updateData(app);
 		} catch (SQLException e) {
 
 			e.printStackTrace();

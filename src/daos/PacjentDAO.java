@@ -53,7 +53,19 @@ public class PacjentDAO {
 			illnesses.add(illness);
 			// System.out.println("const: "+illness.getId());
 		}
+		rs.close();
+		st.close();
 		return illnesses;
 
 	}
+
+	public void writePatientConstantIllnesses(Pacjent patient)
+			throws SQLException {
+		if (patient == null)
+			return;
+		illnessDAO.writeConstantIllnesses(patient.getId(),
+				patient.getChorobyPrzewlek³e());
+
+	}
+
 }

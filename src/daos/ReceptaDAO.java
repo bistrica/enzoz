@@ -37,7 +37,8 @@ public class ReceptaDAO {
 			idPresc = rs.getInt(1);
 			break;
 		}
-
+		rs.close();
+		st.close();
 		positions = prescriptionPositionDAO.getPrescriptedPositions(idPresc);
 
 		/*
@@ -45,6 +46,47 @@ public class ReceptaDAO {
 		 */
 
 		return new Recepta(positions);
+	}
+
+	public void writeToDatabase(int appId, Recepta prescription)
+			throws SQLException {
+		if (prescription == null)
+			return;
+
+		// boolean autoCommit = conn.getAutoCommit();
+		// conn.setAutoCommit(false);
+
+		PreparedStatement st;
+		String queryString = "INSERT INTO recepty (idWizyty) VALUES (?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		st.executeUpdate();
+
+		queryString = "SELECT idRecepty FROM recepty WHERE idWizyty = ? ORDER BY data DESC LIMIT 1 ";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		ResultSet rs = st.executeQuery();
+
+		int prescId = -1;
+		while (rs.next()) {
+			prescId = rs.getInt(1);
+			break;
+		}
+
+		rs.close();
+		st.close();
+
+		ArrayList<PozycjaNaRecepcie> prescribedPositions = prescription
+				.getPozycje();
+		// try {
+		prescriptionPositionDAO.writePositions(prescId, prescribedPositions);
+		/*
+		 * } catch (SQLException e) { System.out.println("rollback");
+		 * conn.rollback(); e.printStackTrace(); throw e; } finally {
+		 * conn.setAutoCommit(autoCommit); }
+		 */
 	}
 
 }

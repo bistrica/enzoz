@@ -50,11 +50,42 @@ public class PozycjaNaRecepcieDAO {
 					dosesNo, ingestionNo, discPrcnt);
 			positions.add(position);
 		}
+		rs.close();
+		st.close();
 		/*
 		 * } catch (SQLException e) { e.printStackTrace(); }
 		 */
 
 		return positions;
+
+	}
+
+	public void writePositions(int prescriptionId,
+			ArrayList<PozycjaNaRecepcie> prescribedPositions)
+			throws SQLException {
+
+		// boolean autoCommit = conn.getAutoCommit();
+		// conn.setAutoCommit(false);
+
+		PreparedStatement st;
+		String queryString = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji) VALUES (?,?,?,?,?,?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, prescriptionId); // to check
+
+		for (PozycjaNaRecepcie pos : prescribedPositions) {
+			st.setInt(2, pos.getLek().getId());
+			st.setInt(3, pos.getIloscOpakowan());
+			st.setDouble(4, pos.getIloscDawekNaPrzyjecie());
+			st.setInt(5, pos.getIloscPrzyjec());
+			st.setDouble(6, pos.getProcentRefundacji());
+			st.addBatch();
+		}
+
+		st.executeBatch();
+		// conn.commit();
+		st.close();
+		// conn.setAutoCommit(autoCommit);
 
 	}
 }

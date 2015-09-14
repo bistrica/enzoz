@@ -56,11 +56,56 @@ public class SkierowanieDAO {
 			examinations.add(examination);
 		}
 
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
+		rs.close();
+		st.close();
 
 		return examinations;
+	}
+
+	public void writeToDatabase(int appId, ArrayList<Skierowanie> exams)
+			throws SQLException {
+		if (exams == null)
+			return;
+
+		// boolean autoCommit = conn.getAutoCommit();
+		// conn.setAutoCommit(false);
+
+		PreparedStatement st;
+		String queryString = "INSERT INTO skierowania (idWizyty) VALUES (?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		st.executeUpdate();
+
+		queryString = "SELECT idSkierowania FROM skierowania WHERE idWizyty = ? ORDER BY data DESC LIMIT 1 ";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		ResultSet rs = st.executeQuery();
+
+		int examId = -1;
+		while (rs.next()) {
+			examId = rs.getInt(1);
+			break;
+		}
+		rs.close();
+
+		queryString = "INSERT INTO pozycjeNaSkierowaniach (idSkierowania, idPoradni, komentarz) VALUES (?,?,?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, examId); // to check
+
+		for (Skierowanie pos : exams) {
+			st.setInt(2, pos.getPoradnia().getId());
+			st.setString(3, pos.getOpisBadan());
+			st.addBatch();
+		}
+
+		st.executeBatch();
+		// conn.commit();
+		st.close();
+		// conn.setAutoCommit(autoCommit);
+
 	}
 
 }

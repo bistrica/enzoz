@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import people.Lekarz;
 import people.Pacjent;
+import database.DBHandler;
 import exceptions.ArchiveException;
 import exceptions.PreviewCannotBeCreatedException;
 import exceptions.TodayException;
@@ -18,15 +19,18 @@ public class AppointmentController {
 	AppointmentDBH am;
 	AppointmentView av;
 	Lekarz doctor;
+	ArrayList<Wizyta> appsInChildWindows;
 
 	String[] colNames = { "Pacjent", "PESEL", "Godzina" };
 	ArrayList<Wizyta> appointmentsToday;
 	ArrayList<Wizyta> appointmentsArchive;
 
 	String[] columnNames = { "Data", "Pacjent", "Lekarz" };
-	private String notEditableString = "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
-	private String titleBarString = "Wizyta w trakcie edycji";
+	// private String notEditableString =
+	// "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
+	// private String titleBarString = "Wizyta w trakcie edycji";
 	private String errorString = "Wyst¹pi³ b³¹d";
+	protected long SLEEP_DURATION = 300000;
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
@@ -37,6 +41,7 @@ public class AppointmentController {
 		doctor = user;
 		am = new AppointmentDBH();
 		av = new AppointmentView();
+		appsInChildWindows = new ArrayList<Wizyta>();
 
 		Thread t = new Thread(new Runnable() {
 
@@ -44,14 +49,19 @@ public class AppointmentController {
 			public void run() {
 				boolean running = true;
 				while (running) {
+
+					if (DBHandler.isClosed())
+						break;
+
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(SLEEP_DURATION); // co 5 min
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						System.out.println("stop refreshing");
 						running = false;
 						e.printStackTrace();
 					}
+
+					// if (iav.)
 					refreshData();
 
 					System.out.println("refreshed");
@@ -61,7 +71,16 @@ public class AppointmentController {
 
 		refreshData();
 		t.start();
+		setListeners();
 
+		// TODO: odkomentowaæ
+		av.setVisible(true);
+
+		// TODO:usun¹æ
+		// createAppointment(appointments.get(0));
+	}
+
+	private void setListeners() {
 		av.setOpenButtonListener(new ActionListener() {
 
 			@Override
@@ -88,11 +107,13 @@ public class AppointmentController {
 
 		});
 
-		// TODO: odkomentowaæ
-		av.setVisible(true);
+		av.setRefreshListener(new ActionListener() {
 
-		// TODO:usun¹æ
-		// createAppointment(appointments.get(0));
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				refreshData();
+			}
+		});
 	}
 
 	private void refreshData() {
@@ -116,8 +137,11 @@ public class AppointmentController {
 
 	private void createAppointment(Wizyta app, boolean editable) {
 		System.out.println("Nowa: " + app.toString());
-
-		new IndividualAppController(app, editable);
+		System.out.println("CONTAINS " + appsInChildWindows.contains(app));
+		if (!appsInChildWindows.contains(app)) {
+			appsInChildWindows.add(app);
+			new IndividualAppController(this, app, editable);
+		}
 	}
 
 	private void tryToCreateArchiveAppointmentPreview(Wizyta app) {
@@ -134,13 +158,12 @@ public class AppointmentController {
 
 		try {
 
-			// if (am.statusAllowsEditing(app)) {
-			// am.updateAppData(app);
-			if (am.openPreviewIfPossible(app)) {
-				boolean editable = false;
-				createAppointment(app, editable);
-			} else
-				av.displayInfo(notEditableString, titleBarString);
+			// if (am.openPreviewIfPossible(app)) {
+			am.openPreview(app);
+			boolean editable = false;
+			createAppointment(app, editable);
+			// } else
+			// av.displayInfo(notEditableString, titleBarString);
 		} catch (PreviewCannotBeCreatedException e) {
 			av.displayInfo(e.getMessage(), errorString);
 		}
@@ -185,6 +208,12 @@ public class AppointmentController {
 			av.displayInfo(e.getMessage(), errorString);
 		}
 		appointmentsToday = tempAppToday;
+	}
+
+	public void removeChildWindow(Wizyta childWindowApp) {
+		System.out.println("SIZE PRE " + appsInChildWindows.size());
+		appsInChildWindows.remove(childWindowApp);
+		System.out.println("SIZE AFTER " + appsInChildWindows.size());
 	}
 
 }

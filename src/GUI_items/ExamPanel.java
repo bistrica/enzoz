@@ -97,4 +97,9 @@ public class ExamPanel extends JPanel {
 		clinics.setEnabled(state);
 	}
 
+	public Skierowanie retrieveExam() {
+		return new Skierowanie((Poradnia) (clinics.getSelectedItem()),
+				description.getText());
+	}
+
 }

@@ -36,6 +36,8 @@ public class OsobaDAO {
 			break;
 		}
 
+		rs.close();
+		st.close();
 		person = new Osoba(id, fname, lname, PESEL);
 
 		/*
@@ -70,6 +72,8 @@ public class OsobaDAO {
 
 			break;
 		}
+		rs.close();
+		st.close();
 
 		person = new Osoba(id, fname, lname, PESEL, street, homeNo, flatNo,
 				city, code, phone);

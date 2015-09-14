@@ -76,6 +76,7 @@ public class ExaminationPanel extends JPanel {
 			// disables button in exampanel
 		}
 	}
+
 	/*
 	 * public void add(Skierowanie pos) {
 	 * 
@@ -83,5 +84,25 @@ public class ExaminationPanel extends JPanel {
 	 * 
 	 * }
 	 */
+
+	public ArrayList<Skierowanie> getExaminations(boolean onlyIfChanged) {
+
+		ArrayList<Skierowanie> exams = new ArrayList<Skierowanie>();
+		boolean allTheSame = true;
+
+		for (Component panel : getComponents()) {
+			if (panel instanceof ExamPanel) {
+				ExamPanel examPanel = (ExamPanel) panel;
+				Skierowanie exam = examPanel.retrieveExam();
+				if (!exam.equals(examPanel.getPosition()))
+					allTheSame = false;
+				exams.add(exam);
+			}
+		}
+
+		if (exams.isEmpty())
+			exams = null;
+		return (onlyIfChanged && allTheSame) ? null : exams;
+	}
 
 }

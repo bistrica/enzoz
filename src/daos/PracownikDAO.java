@@ -60,9 +60,8 @@ public class PracownikDAO {
 			// TODO or not todo
 		}
 
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
+		rs.close();
+		st.close();
 
 		return employee;
 	}

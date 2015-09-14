@@ -170,4 +170,24 @@ public class DrugPanel extends JPanel {
 		ingestionCount.setEditable(state);
 	}
 
+	public PozycjaNaRecepcie retrievePrescribedPosition()
+			throws NumberFormatException {
+		PozycjaNaRecepcie pos = null;
+
+		// try {
+		double doses = Double.parseDouble(dosesCount.getText()
+				.replace(',', '.'));
+		double discount = Double.parseDouble(discountVal.getText()
+				.replace('%', ' ').trim()) * 0.01;
+		pos = new PozycjaNaRecepcie(position.getLek(),
+				Integer.parseInt(packageCount.getText()), doses,
+				Integer.parseInt(ingestionCount.getText()), discount);
+		/*
+		 * } catch (NumberFormatException e) { throw new WrongInputException();
+		 * }
+		 */
+		return pos;
+
+	}
+
 }

@@ -22,10 +22,8 @@ public class ChorobaDAO {
 
 	public Choroba getIllnessData(int id) throws SQLException {
 
-		System.out.println("GID");
-
 		PreparedStatement st;
-		String queryString = "SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
+		String queryString = "SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);
@@ -40,6 +38,9 @@ public class ChorobaDAO {
 			break;
 		}
 
+		rs.close();
+		st.close();
+
 		// if (true) throw new SQLException();
 		/*
 		 * if (DBHandler.counter++%4!=0) throw new SQLException();
@@ -51,8 +52,6 @@ public class ChorobaDAO {
 
 	public ArrayList<Choroba> getIllnessData(ArrayList<Integer> ids)
 			throws SQLException {
-
-		System.out.println("GIDD");
 
 		PreparedStatement st;
 		String queryString = "SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -73,6 +72,8 @@ public class ChorobaDAO {
 			illnesses.add(illness);
 		}
 
+		rs.close();
+		st.close();
 		// if (true) throw new SQLException();
 
 		return illnesses;
@@ -90,7 +91,7 @@ public class ChorobaDAO {
 
 		try {
 			conn.setAutoCommit(false);
-
+			// TODO: BATCH!!!!!
 			for (Choroba ill : illnesses) {
 				String query = "INSERT INTO chorobyPrzewlek³e (idPacjenta, idChoroby) VALUES (?,?)";
 				try {
@@ -98,6 +99,8 @@ public class ChorobaDAO {
 					st.setInt(1, patientId);
 					st.setInt(2, ill.getId());
 					st.executeUpdate();
+
+					st.close();
 				}
 				// TODO:
 				catch (SQLException e) {
@@ -137,6 +140,7 @@ public class ChorobaDAO {
 					st.setInt(1, appId);
 					st.setInt(2, ill.getId());
 					st.executeUpdate();
+					st.close();
 				}
 				// TODO:
 				catch (SQLException e) {
@@ -179,16 +183,30 @@ public class ChorobaDAO {
 			illnesses.add(illness);
 		}
 
+		rs.close();
+		st.close();
 		// if (true) throw new SQLException();
 
 		return illnesses;
 	}
 
+	// TODO :: !!!
 	public ArrayList<Choroba> getTemporaryIllnesses(int appId,
 			ArrayList<Choroba> constIllnesses) throws SQLException {
 
 		PreparedStatement st;
-		String queryString = "SELECT idChoroby FROM rozpoznaneChoroby WHERE idWizyty = ?";
+		String queryString = "SELECT idRozpoznania FROM rozpoznaneChoroby WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		int diagnosisId = -1;
+		ResultSet rs = st.executeQuery();
+		while (rs.next()) {
+			diagnosisId = rs.getInt("idRozpoznania");
+			break;
+		}
+
+		queryString = "SELECT idChoroby FROM pozycjeRozpoznan WHERE idRozpoznania = ?";
 		if (constIllnesses != null && !constIllnesses.isEmpty())
 			queryString += " AND idChoroby NOT IN "
 					+ illnessesIDs(constIllnesses);
@@ -200,8 +218,8 @@ public class ChorobaDAO {
 
 		// try {
 		st = conn.prepareStatement(queryString);
-		st.setInt(1, appId);
-		ResultSet rs = st.executeQuery();
+		st.setInt(1, diagnosisId);
+		rs = st.executeQuery();
 
 		while (rs.next()) {
 			id = rs.getInt("idChoroby");
@@ -217,6 +235,7 @@ public class ChorobaDAO {
 				name = rs2.getString("nazwa");
 				break;
 			}
+			rs2.close();
 			System.out.println("temp: " + id + "," + code + "," + name);
 			illness = new Choroba(id, code, name);
 			illnesses.add(illness);
@@ -224,6 +243,9 @@ public class ChorobaDAO {
 		/*
 		 * } catch (SQLException e) { e.printStackTrace(); }
 		 */
+
+		rs.close();
+		st.close();
 
 		return illnesses;
 
@@ -242,6 +264,72 @@ public class ChorobaDAO {
 		ids += ")";
 		System.out.println(ids);
 		return ids;
+
+	}
+
+	public void writeConstantIllnesses(int patientId,
+			ArrayList<Choroba> constIllnesses) throws SQLException {
+
+		if (constIllnesses == null || constIllnesses.isEmpty())
+			return;
+
+		PreparedStatement st;
+		String queryString = "INSERT INTO chorobyPrzewlek³e (idPacjenta, idChoroby) VALUES (?,?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, patientId); // to check
+
+		for (Choroba ill : constIllnesses) {
+			st.setInt(2, ill.getId());
+			st.addBatch();
+		}
+
+		st.executeBatch();
+
+		// conn.commit();
+		st.close();
+
+	}
+
+	public void writeCurrentIllnesses(int appId,
+			ArrayList<Choroba> tempIllnesses) throws SQLException {
+
+		if (tempIllnesses == null)
+			return;
+
+		PreparedStatement st;
+		String queryString = "INSERT INTO rozpoznaneChoroby (idWizyty) VALUES (?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		st.executeUpdate();
+
+		queryString = "SELECT idRozpoznania FROM rozpoznaneChoroby WHERE idWizyty = ? ORDER BY data DESC LIMIT 1 ";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		ResultSet rs = st.executeQuery();
+
+		int diagnosisId = -1;
+		while (rs.next()) {
+			diagnosisId = rs.getInt(1);
+			break;
+		}
+		rs.close();
+
+		queryString = "INSERT INTO pozycjeRozpoznan (idRozpoznania, idChoroby) VALUES (?,?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, diagnosisId); // to check
+
+		for (Choroba pos : tempIllnesses) {
+			st.setInt(2, pos.getId());
+			st.addBatch();
+		}
+
+		st.executeBatch();
+		// conn.commit();
+		st.close();
 
 	}
 

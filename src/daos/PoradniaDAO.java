@@ -38,6 +38,8 @@ public class PoradniaDAO {
 			clinics.add(clinic);
 		}
 
+		rs.close();
+		st.close();
 		return clinics;
 
 	}
@@ -61,6 +63,8 @@ public class PoradniaDAO {
 			break;
 		}
 
+		rs.close();
+		st.close();
 		return clinic;
 
 	}

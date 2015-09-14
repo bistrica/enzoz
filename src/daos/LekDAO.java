@@ -40,6 +40,8 @@ public class LekDAO {
 			drug = new Lek(id, name, type, dose, pckg);
 			medicines.add(drug);
 		}
+		rs.close();
+		st.close();
 
 		return medicines;
 
@@ -65,6 +67,8 @@ public class LekDAO {
 			pckg = rs.getString("opakowanie");
 			break;
 		}
+		rs.close();
+		st.close();
 		drug = new Lek(drugId, name, type, dose, pckg);
 		return drug;
 

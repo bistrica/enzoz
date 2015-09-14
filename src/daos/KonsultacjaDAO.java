@@ -22,7 +22,6 @@ public class KonsultacjaDAO {
 		PreparedStatement st;
 		String queryString = "SELECT treœæ FROM konsultacje WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
 		String interview = "";
-		// try {
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);
@@ -31,6 +30,8 @@ public class KonsultacjaDAO {
 			interview = rs.getString("treœæ");
 			break;
 		}
+		rs.close();
+		st.close();
 		/*
 		 * } catch (SQLException e) { e.printStackTrace(); }
 		 */
@@ -40,6 +41,23 @@ public class KonsultacjaDAO {
 		 * System.out.println("Classic return");
 		 */
 		return new Konsultacja(interview);
+	}
+
+	public void writeToDatabase(int appId, Konsultacja interview)
+			throws SQLException {
+
+		if (interview == null)
+			return;
+
+		PreparedStatement st;
+		String queryString = "INSERT INTO konsultacje (idWizyty, treœæ) VALUES (?,?)";
+
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, appId);
+		st.setString(2, interview.getTresc());
+		st.executeUpdate();
+		st.close();
+
 	}
 
 }

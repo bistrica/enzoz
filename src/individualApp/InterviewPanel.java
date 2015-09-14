@@ -39,4 +39,8 @@ public class InterviewPanel extends JPanel {
 		interview.setEditable(state);
 	}
 
+	public String getInterviewDescription() {
+		return interview.getText().trim();
+	}
+
 }

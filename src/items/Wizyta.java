@@ -1,6 +1,5 @@
 package items;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,7 +8,7 @@ import people.Lekarz;
 import people.Pacjent;
 
 public class Wizyta {
-	
+
 	private GregorianCalendar data;
 	private Pacjent pacjent;
 	private Lekarz lekarz;
@@ -17,57 +16,62 @@ public class Wizyta {
 	private Recepta recepta;
 	private ArrayList<Skierowanie> skierowania;
 	private Konsultacja konsultacja;
-	
+
 	private int id;
-	private boolean isArchive=false;
-	//int id;
-	
-	/*public String danePacjenta() {
-		return pacjent.getImie()+" "+pacjent.getNazwisko();
-	}*/
+	private boolean isArchive = false;
+
+	// int id;
+
+	/*
+	 * public String danePacjenta() { return
+	 * pacjent.getImie()+" "+pacjent.getNazwisko(); }
+	 */
 	public Wizyta(int id, GregorianCalendar data) {
-		this.id=id;
-		this.data=data;
+		this.id = id;
+		this.data = data;
 	}
-	
+
 	public Wizyta(GregorianCalendar data, Pacjent pacjent) {
-		this.data=data;
-		this.pacjent=pacjent;
+		this.data = data;
+		this.pacjent = pacjent;
 	}
-	
+
 	public Wizyta(GregorianCalendar data, Pacjent pacjent, Lekarz lekarz) {
-		this.data=data;
-		this.pacjent=pacjent;
-		this.lekarz=lekarz;
+		this.data = data;
+		this.pacjent = pacjent;
+		this.lekarz = lekarz;
 	}
-	
+
 	public Wizyta(int id, GregorianCalendar data, Pacjent pacjent, Lekarz lekarz) {
-		this.id=id;
-		this.data=data;
-		this.pacjent=pacjent;
-		this.lekarz=lekarz;
+		this.id = id;
+		this.data = data;
+		this.pacjent = pacjent;
+		this.lekarz = lekarz;
 	}
-	
+
 	public Pacjent getPacjent() {
 		return pacjent;
 	}
-	
+
 	public GregorianCalendar getData() {
 		return data;
 	}
 
 	public String getHourToString() {
-		//SDF przyjmuje tylko Date!
-		/*DateFormat outputFormat = new SimpleDateFormat("MM/yyyy");
-		DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-
-		String inputText = "2012-11-17T00:00:00.000-05:00";
-		Date date = inputFormat.parse(inputText);
-		String outputText = outputFormat.format(date);*/
-		//SimpleDateFormat format = new SimpleDateFormat("hh:mm");
-		//return format.format(data); 
-		String zero=data.get(Calendar.MINUTE)>=10 ? "" : "0";
-		return data.get(Calendar.HOUR_OF_DAY)+":"+zero+data.get(Calendar.MINUTE);
+		// SDF przyjmuje tylko Date!
+		/*
+		 * DateFormat outputFormat = new SimpleDateFormat("MM/yyyy"); DateFormat
+		 * inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+		 * 
+		 * String inputText = "2012-11-17T00:00:00.000-05:00"; Date date =
+		 * inputFormat.parse(inputText); String outputText =
+		 * outputFormat.format(date);
+		 */
+		// SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+		// return format.format(data);
+		String zero = data.get(Calendar.MINUTE) >= 10 ? "" : "0";
+		return data.get(Calendar.HOUR_OF_DAY) + ":" + zero
+				+ data.get(Calendar.MINUTE);
 	}
 
 	public Lekarz getLekarz() {
@@ -87,7 +91,7 @@ public class Wizyta {
 	}
 
 	public void setPacjent(Pacjent pacjent) {
-		this.pacjent=pacjent;
+		this.pacjent = pacjent;
 	}
 
 	@Override
@@ -98,7 +102,8 @@ public class Wizyta {
 	}
 
 	public String getDataToString() {
-		return  data.get(Calendar.YEAR)+"-"+(data.get(Calendar.MONTH)+1)+"-"+data.get(Calendar.DATE)+", "+getHourToString();
+		return data.get(Calendar.YEAR) + "-" + (data.get(Calendar.MONTH) + 1)
+				+ "-" + data.get(Calendar.DATE) + ", " + getHourToString();
 	}
 
 	public Recepta getRecepta() {
@@ -136,9 +141,19 @@ public class Wizyta {
 	public void setArchive(boolean isArchive) {
 		this.isArchive = isArchive;
 	}
-	
 
-	
-	
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Wizyta other = (Wizyta) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
 }
