@@ -53,7 +53,7 @@ public class IllnessesPanel extends JPanel {
 	private ArrayList<Choroba> constantIllnesses;
 	private ArrayList<Choroba> temporaryIllnesses;
 
-	public IllnessesPanel() {
+	public IllnessesPanel(boolean archive) {
 
 		temporary = new JList<Choroba>();
 		constant = new JList<Choroba>();
@@ -100,10 +100,12 @@ public class IllnessesPanel extends JPanel {
 		constantPane.add(constantScroll);
 		constantPane.add(constButtons);
 
-		setLayout(new GridLayout(1, 2));
-		add(temporaryPane);
-		add(constantPane);
+		if (!archive) {
+			setLayout(new GridLayout(1, 2));
+			add(constantPane);
+		}
 
+		add(temporaryPane);
 		searchField = new JTextField(30);
 
 		setListeners();

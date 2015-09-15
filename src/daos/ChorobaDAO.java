@@ -190,7 +190,7 @@ public class ChorobaDAO {
 		return illnesses;
 	}
 
-	// TODO :: !!!
+	//
 	public ArrayList<Choroba> getTemporaryIllnesses(int appId,
 			ArrayList<Choroba> constIllnesses) throws SQLException {
 
@@ -207,9 +207,9 @@ public class ChorobaDAO {
 		}
 
 		queryString = "SELECT idChoroby FROM pozycjeRozpoznan WHERE idRozpoznania = ?";
-		if (constIllnesses != null && !constIllnesses.isEmpty())
-			queryString += " AND idChoroby NOT IN "
-					+ illnessesIDs(constIllnesses);
+		// if (constIllnesses != null && !constIllnesses.isEmpty())
+		// queryString += " AND idChoroby NOT IN "
+		// + illnessesIDs(constIllnesses);
 
 		ArrayList<Choroba> illnesses = new ArrayList<Choroba>();
 
@@ -236,7 +236,7 @@ public class ChorobaDAO {
 				break;
 			}
 			rs2.close();
-			System.out.println("temp: " + id + "," + code + "," + name);
+			// System.out.println("temp: " + id + "," + code + "," + name);
 			illness = new Choroba(id, code, name);
 			illnesses.add(illness);
 		}
@@ -270,12 +270,12 @@ public class ChorobaDAO {
 	public void writeConstantIllnesses(int patientId,
 			ArrayList<Choroba> constIllnesses) throws SQLException {
 
-		System.out.println("CONST: " + constIllnesses);
+		// System.out.println("CONST: " + constIllnesses);
 
 		if (constIllnesses == null)
 			return;
 
-		System.out.println(">const size " + constIllnesses.size());
+		// System.out.println(">const size " + constIllnesses.size());
 		PreparedStatement st;
 
 		// if (constIllnesses.isEmpty()) { // DELETE, brak rozpoznañ

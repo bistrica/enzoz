@@ -59,7 +59,8 @@ public class IndividualAppView extends JFrame {
 
 	private String appointmentString = "Dane wizyty";
 
-	public IndividualAppView(boolean isEnabled, boolean isEditingAllowed) {
+	public IndividualAppView(boolean isEnabled, boolean isEditingAllowed,
+			boolean isArchive) {
 
 		/*
 		 * this.isEditable = isEditable; if (!isEditable) {
@@ -106,7 +107,7 @@ public class IndividualAppView extends JFrame {
 
 		JTabbedPane tabbedPanel = new JTabbedPane();
 		interviewPane = new InterviewPanel();
-		illnessesPane = new IllnessesPanel();
+		illnessesPane = new IllnessesPanel(isArchive);
 		prescriptionPane = new PrescriptionPanel();
 		examinationPane = new ExaminationPanel();
 		archivesPane = new ArchivesPanel();

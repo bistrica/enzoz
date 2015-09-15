@@ -279,7 +279,8 @@ public class WizytaDAO {
 			if (tempIllnesses != null)
 				illnessDAO.writeCurrentIllnesses(appId, tempIllnesses);
 
-			patientDAO.writePatientConstantIllnesses(app.getPacjent());
+			if (!app.isArchiveAppointment())
+				patientDAO.writePatientConstantIllnesses(app.getPacjent());
 
 			closeAppointment(app);
 

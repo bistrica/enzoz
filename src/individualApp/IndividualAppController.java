@@ -54,7 +54,8 @@ public class IndividualAppController {
 					e1.printStackTrace();
 				}
 
-				iav = new IndividualAppView(previewMode, userAllowedToEdit);
+				iav = new IndividualAppView(previewMode, userAllowedToEdit,
+						appointment.isArchiveAppointment());
 
 				try {
 					iav.setIllnessesList(iam.getAllIllnesses());
@@ -74,12 +75,16 @@ public class IndividualAppController {
 					iav.setInterview(appointment.getKonsultacja().getTresc());
 					iav.setTemporaryIllnesses(appointment
 							.getRozpoznaneChoroby());
-					iav.setConstantIllnesses(appointment.getPacjent()
-							.getChorobyPrzewlek쿮());
+					/*
+					 * iav.setConstantIllnesses(appointment.getPacjent()
+					 * .getChorobyPrzewlek쿮());
+					 */
 					iav.setPrescription(appointment.getRecepta().getPozycje());
 					iav.setExaminations(appointment.getSkierowania());
+				} else {
+					iav.setConstantIllnesses(appointment.getPacjent()
+							.getChorobyPrzewlek쿮());
 				}
-
 				iav.setComponentsState();
 
 				setListeners();
@@ -148,6 +153,8 @@ public class IndividualAppController {
 				appointment.getData(), appointment.getPacjent(),
 				appointment.getLekarz());
 
+		newOrEditedApp.setArchive(appointment.isArchiveAppointment());
+
 		Konsultacja interview = new Konsultacja(iav.getInterview());
 		if (isEdited && appointment.getKonsultacja().equals(interview))
 			newOrEditedApp.setKonsultacja(null);
@@ -173,9 +180,11 @@ public class IndividualAppController {
 		ArrayList<Choroba> tempIllnesses = iav.getCurrentIllnesses(isEdited);
 		newOrEditedApp.setRozpoznaneChoroby(tempIllnesses);
 
-		ArrayList<Choroba> constIllnesses = iav.getConstantIllnesses(isEdited);
-		newOrEditedApp.getPacjent().setChorobyPrzewlek쿮(constIllnesses);
-
+		if (!isEdited) {
+			ArrayList<Choroba> constIllnesses = iav
+					.getConstantIllnesses(isEdited);
+			newOrEditedApp.getPacjent().setChorobyPrzewlek쿮(constIllnesses);
+		}
 		try {
 			iam.saveAppointment(newOrEditedApp);
 		} catch (SaveDataException e) {
