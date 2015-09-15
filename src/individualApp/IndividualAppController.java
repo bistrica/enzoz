@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import appointment.AppointmentController;
 import database.DBHandler;
 import exceptions.DataCannotBeEditedException;
@@ -37,7 +39,8 @@ public class IndividualAppController {
 		this.parent = parent;
 
 		iam = new IndividualAppDBH();
-		java.awt.EventQueue.invokeLater(new Runnable() {
+		// java.awt.EventQueue.
+		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {

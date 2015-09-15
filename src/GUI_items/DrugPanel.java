@@ -179,6 +179,7 @@ public class DrugPanel extends JPanel {
 				.replace(',', '.'));
 		double discount = Double.parseDouble(discountVal.getText()
 				.replace('%', ' ').trim()) * 0.01;
+		System.out.println("d: " + doses + ", r: " + discount);
 		pos = new PozycjaNaRecepcie(position.getLek(),
 				Integer.parseInt(packageCount.getText()), doses,
 				Integer.parseInt(ingestionCount.getText()), discount);

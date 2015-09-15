@@ -270,11 +270,25 @@ public class ChorobaDAO {
 	public void writeConstantIllnesses(int patientId,
 			ArrayList<Choroba> constIllnesses) throws SQLException {
 
-		if (constIllnesses == null || constIllnesses.isEmpty())
+		System.out.println("CONST: " + constIllnesses);
+
+		if (constIllnesses == null)
 			return;
 
+		System.out.println(">const size " + constIllnesses.size());
 		PreparedStatement st;
-		String queryString = "INSERT INTO chorobyPrzewlek³e (idPacjenta, idChoroby) VALUES (?,?)";
+
+		// if (constIllnesses.isEmpty()) { // DELETE, brak rozpoznañ
+		String queryString = "DELETE FROM chorobyPrzewlek³e WHERE idPacjenta = ?";
+		st = conn.prepareStatement(queryString);
+		st.setInt(1, patientId);
+		st.executeUpdate();
+		// st.close();
+		// return;
+		// }
+
+		// String
+		queryString = "INSERT INTO chorobyPrzewlek³e (idPacjenta, idChoroby) VALUES (?,?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, patientId); // to check

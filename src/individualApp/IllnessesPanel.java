@@ -317,7 +317,7 @@ public class IllnessesPanel extends JPanel {
 
 		boolean changes = false;
 		int size = constantModel.getSize();
-		if (size != constantModel.size())
+		if (size != constantIllnesses.size())
 			changes = true;
 
 		ArrayList<Choroba> cons = new ArrayList<Choroba>();// Arrays.asList(temporaryModel.toArray(array));
@@ -328,7 +328,8 @@ public class IllnessesPanel extends JPanel {
 				changes = true;
 			cons.add(illness);
 		}
-		if (cons.isEmpty() || (onlyIfEdited && !changes))
+		if ((onlyIfEdited && !changes) || (!onlyIfEdited && cons.isEmpty()))
+			// nie by³o zmian w edycji || nowa wizyta bez rozpoznañ sta³ych
 			cons = null;
 		return cons;
 	}
@@ -337,7 +338,7 @@ public class IllnessesPanel extends JPanel {
 
 		boolean changes = false;
 		int size = temporaryModel.getSize();
-		if (size != temporaryModel.size())
+		if (size != temporaryIllnesses.size())
 			changes = true;
 
 		ArrayList<Choroba> illnesses = getConstantIllnesses(onlyIfEdited);

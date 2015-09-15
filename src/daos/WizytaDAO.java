@@ -179,7 +179,9 @@ public class WizytaDAO {
 
 	public boolean changeStatus(Wizyta app) throws SQLException {
 
-		conn.setAutoCommit(false);
+		// boolean
+		// conn.setAutoCommit(false);
+
 		int appId = app.getId();
 		PreparedStatement st;
 		String status = "realizowana";
@@ -255,7 +257,7 @@ public class WizytaDAO {
 	 */
 
 	public void writeToDatabase(Wizyta app) throws SQLException {
-
+		// TODO: update status
 		boolean autoCommit = conn.getAutoCommit();
 		conn.setAutoCommit(false);
 		int appId = app.getId();
@@ -279,12 +281,29 @@ public class WizytaDAO {
 
 			patientDAO.writePatientConstantIllnesses(app.getPacjent());
 
+			closeAppointment(app);
+
 			conn.commit();
 		} catch (SQLException e) {
 			conn.rollback();
 			throw e;
 		} finally {
 			conn.setAutoCommit(autoCommit);
+			System.out.println("AUTO: " + autoCommit);
 		}
+	}
+
+	private void closeAppointment(Wizyta app) throws SQLException {
+		int appId = app.getId();
+		PreparedStatement st;
+		String status = "zrealizowana";
+		String queryString = "UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";// "SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
+		st = conn.prepareStatement(queryString);
+		st.setString(1, status);
+		st.setInt(2, appId);
+		st.setString(3, status);
+		st.executeUpdate();
+
+		st.close();
 	}
 }

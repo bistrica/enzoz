@@ -7,101 +7,102 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import database.DBHandler;
-
+import javax.swing.SwingUtilities;
 
 public class LoginView extends JFrame {
-	
+
 	JTextField login, password;
 	JButton loginButton;
-	
-	String loginString="Login:", passwordString="Has³o:", loginButtonString="Zaloguj", titleBar="Wyst¹pi³ b³¹d";
-	
+
+	String loginString = "Login:", passwordString = "Has³o:",
+			loginButtonString = "Zaloguj", titleBar = "Wyst¹pi³ b³¹d";
+
 	public LoginView() {
-		
-		JPanel panel=new JPanel(), buttonPanel=new JPanel();
-		panel.setLayout(new GridLayout(2,2));
-		
-		JLabel loginLabel=new JLabel(loginString);
-		JLabel passwordLabel=new JLabel(passwordString);
-		
-		login=new JTextField(30);
-		password=new JTextField(30);
-		loginButton=new JButton(loginButtonString);
+
+		JPanel panel = new JPanel(), buttonPanel = new JPanel();
+		panel.setLayout(new GridLayout(2, 2));
+
+		JLabel loginLabel = new JLabel(loginString);
+		JLabel passwordLabel = new JLabel(passwordString);
+
+		login = new JTextField(30);
+		password = new JTextField(30);
+		loginButton = new JButton(loginButtonString);
 		buttonPanel.add(loginButton);
-		
+
 		panel.add(loginLabel);
 		panel.add(login);
 		panel.add(passwordLabel);
 		panel.add(password);
-		//panel.setAlignmentX(RIGHT_ALIGNMENT);
-		//panel.setAlignmentY(CENTER_ALIGNMENT);
-		
-		//panel.add(loguj);
+		// panel.setAlignmentX(RIGHT_ALIGNMENT);
+		// panel.setAlignmentY(CENTER_ALIGNMENT);
+
+		// panel.add(loguj);
 		GroupLayout layout = new GroupLayout(panel);
-		   panel.setLayout(layout);
+		panel.setLayout(layout);
 
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+		hGroup.addGroup(layout.createParallelGroup().addComponent(loginLabel)
+				.addComponent(passwordLabel));
+		hGroup.addGroup(layout.createParallelGroup().addComponent(login)
+				.addComponent(password));
+		layout.setHorizontalGroup(hGroup);
+		GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+		vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+				.addComponent(loginLabel).addComponent(login));
+		vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+				.addComponent(passwordLabel).addComponent(password));
+		layout.setVerticalGroup(vGroup);
 
-		   layout.setAutoCreateGaps(true);
-		   layout.setAutoCreateContainerGaps(true);
-		   GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-		   hGroup.addGroup(layout.createParallelGroup().
-		            addComponent(loginLabel).addComponent(passwordLabel));
-		   hGroup.addGroup(layout.createParallelGroup().
-		            addComponent(login).addComponent(password));
-		   layout.setHorizontalGroup(hGroup);
-		   GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-		   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
-		            addComponent(loginLabel).addComponent(login));
-		   vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
-		            addComponent(passwordLabel).addComponent(password));
-		   layout.setVerticalGroup(vGroup);
-		
-		
-		
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		
+		getContentPane().setLayout(
+				new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+
 		getContentPane().add(panel);
-		getContentPane().add(buttonPanel);//loguj);
-		pack(); //todo: maybe to change?
-		
+		getContentPane().add(buttonPanel);// loguj);
+		pack(); // todo: maybe to change?
+
 	}
-	
+
 	public String getLogin() {
 		return login.getText();
 	}
-	
+
 	public String getPassword() {
 		return password.getText();
 	}
-	
+
 	public void setLoginListener(ActionListener al) {
 		loginButton.addActionListener(al);
 	}
 
 	public static void main(String[] args) {
-	
-		LoginView view=new LoginView();
-		LoginDBH model=new LoginDBH();
-		LoginController controller=new LoginController(view,model);		
-		//view.setVisible(true);
-		
-		
-		
-		
-		
+
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+
+				LoginView view = new LoginView();
+				LoginDBH model = new LoginDBH();
+				LoginController controller = new LoginController(view, model);
+			}
+		});
+
+		// view.setVisible(true);
+
 	}
 
 	public void displayError(String message) {
-		 JOptionPane.showMessageDialog(null, message, titleBar, JOptionPane.INFORMATION_MESSAGE);
-		   
+		JOptionPane.showMessageDialog(null, message, titleBar,
+				JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
 }

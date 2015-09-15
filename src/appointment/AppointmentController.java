@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import people.Lekarz;
 import people.Pacjent;
 import database.DBHandler;
@@ -30,7 +32,7 @@ public class AppointmentController {
 	// "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
 	// private String titleBarString = "Wizyta w trakcie edycji";
 	private String errorString = "Wyst¹pi³ b³¹d";
-	protected long SLEEP_DURATION = 300000;
+	protected long SLEEP_DURATION = 6000;
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
@@ -40,7 +42,24 @@ public class AppointmentController {
 	public AppointmentController(Lekarz user) {
 		doctor = user;
 		am = new AppointmentDBH();
-		av = new AppointmentView();
+
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				av = new AppointmentView();
+				refreshData();
+
+				setListeners();
+
+				// TODO: odkomentowaæ
+				av.setVisible(true);
+
+				// TODO:usun¹æ
+				// createAppointment(appointments.get(0));
+			}
+		});
+
 		appsInChildWindows = new ArrayList<Wizyta>();
 
 		Thread t = new Thread(new Runnable() {
@@ -68,16 +87,8 @@ public class AppointmentController {
 				}
 			}
 		});
-
-		refreshData();
 		t.start();
-		setListeners();
 
-		// TODO: odkomentowaæ
-		av.setVisible(true);
-
-		// TODO:usun¹æ
-		// createAppointment(appointments.get(0));
 	}
 
 	private void setListeners() {
@@ -117,10 +128,16 @@ public class AppointmentController {
 	}
 
 	private void refreshData() {
-		getAppointments();
-		getArchiveAppointments();
-		av.setAppointments(colNames, convertAppointments());
-		av.setArchiveAppointments(columnNames, convertArchiveAppointments());
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				getAppointments();
+				getArchiveAppointments();
+				av.setAppointments(colNames, convertAppointments());
+				av.setArchiveAppointments(columnNames,
+						convertArchiveAppointments());
+			}
+		});
 	}
 
 	private void getArchiveAppointments() {

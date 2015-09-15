@@ -29,14 +29,14 @@ public class PacjentDAO {
 
 		Osoba person = personDAO.getPersonData(id);
 		ArrayList<Choroba> illnesses = getPatientConstantIllnesses(id);
-		System.out.println("ill: " + illnesses);
+		// System.out.println("ill: " + illnesses);
 		return new Pacjent(person, illnesses);
 
 	}
 
 	private ArrayList<Choroba> getPatientConstantIllnesses(int id)
 			throws SQLException {
-		System.out.println("GPCI");
+		// System.out.println("GPCI");
 		ArrayList<Choroba> illnesses = new ArrayList<Choroba>();
 		PreparedStatement st;
 		String queryString = "SELECT idChoroby FROM chorobyPrzewlek³e WHERE idPacjenta = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";

@@ -16,7 +16,7 @@ public class DrugListPanel extends JPanel {
 
 	public void add(PozycjaNaRecepcie pos) {
 		for (Component panel : getComponents()) {
-			if (((DrugPanel) panel).getPosition().equals(pos))
+			if (((DrugPanel) panel).getPosition().getLek().equals(pos.getLek()))
 				return;
 		}
 		add(new DrugPanel(pos));
