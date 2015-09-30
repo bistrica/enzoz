@@ -4,6 +4,7 @@ import items.Poradnia;
 import items.Skierowanie;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import GUI_items.ExamPanel;
 
@@ -19,6 +21,9 @@ public class ExaminationPanel extends JPanel {
 	Poradnia[] clinics;
 	private String addString = "Dodaj skierowanie";
 	JButton addButton;
+	JPanel examsPane;
+
+	// JScrollPane scrollPane;
 
 	public ExaminationPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,14 +34,25 @@ public class ExaminationPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				add(new ExamPanel(clinics));
+				examsPane.add(new ExamPanel(clinics));
 
 				revalidate();
 
 			}
 		});
 
-		add(addButton);
+		// setAutoscrolls(false);
+		examsPane = new JPanel();
+
+		examsPane.setLayout(new BoxLayout(examsPane, BoxLayout.Y_AXIS));
+		JScrollPane scrollPane = new JScrollPane(examsPane);
+		scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight()
+				- addButton.getHeight()));
+		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(addButton);// , BorderLayout.NORTH);
+		// JPanel pane = new JPanel();
+		// pane.add(scrollPane);
+		add(scrollPane);// , BorderLayout.CENTER);
 	}
 
 	public void setAllClinics(ArrayList<Poradnia> clinics) {
@@ -56,7 +72,7 @@ public class ExaminationPanel extends JPanel {
 			examPane.setClinic(exam.getPoradnia());
 			examPane.setDescription(exam.getOpisBadan());
 			examPane.revalidate();
-			add(examPane);
+			examsPane.add(examPane);
 
 		}
 		revalidate();
@@ -90,7 +106,7 @@ public class ExaminationPanel extends JPanel {
 		ArrayList<Skierowanie> exams = new ArrayList<Skierowanie>();
 		boolean allTheSame = true;
 
-		for (Component panel : getComponents()) {
+		for (Component panel : examsPane.getComponents()) {
 			if (panel instanceof ExamPanel) {
 				ExamPanel examPanel = (ExamPanel) panel;
 				Skierowanie exam = examPanel.retrieveExam();

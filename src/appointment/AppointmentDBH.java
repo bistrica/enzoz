@@ -83,7 +83,7 @@ public class AppointmentDBH {
 			} else {
 				System.out.println("ONCE MORE");
 				DBHandler.incrementTrialsNo();
-				openPreviewIfPossible(app);
+				openPreview(app);// IfPossible(app);
 			}
 
 		}
@@ -92,32 +92,22 @@ public class AppointmentDBH {
 	}
 
 	// TO REMOVE (?)
-	private boolean openPreviewIfPossible(Wizyta app)
-			throws PreviewCannotBeCreatedException {
-		boolean isPossible = false;
-		try {
-			isPossible = appDAO.checkAndChangeStatus(app);
-			// isPossible = appDAO.updateData(app);
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
-				throw new PreviewCannotBeCreatedException();
-			} else {
-				System.out.println("ONCE MORE");
-				DBHandler.incrementTrialsNo();
-				isPossible = openPreviewIfPossible(app);
-			}
-
-		}
-		DBHandler.resetTrialsNo();
-		return isPossible;
-	}
-
 	/*
-	 * public boolean statusAllowsEditing(Wizyta app) throws SQLException {
+	 * private boolean openPreviewIfPossible(Wizyta app) throws
+	 * PreviewCannotBeCreatedException { boolean isPossible = false; try {
+	 * isPossible = appDAO.checkAndChangeStatus(app); // isPossible =
+	 * appDAO.updateData(app); } catch (SQLException e) {
+	 * 
+	 * e.printStackTrace();
+	 * 
+	 * if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
+	 * DBHandler.resetTrialsNo(); throw new PreviewCannotBeCreatedException(); }
+	 * else { System.out.println("ONCE MORE"); DBHandler.incrementTrialsNo();
+	 * isPossible = openPreviewIfPossible(app); }
+	 * 
+	 * } DBHandler.resetTrialsNo(); return isPossible; }/
+	 * 
+	 * /* public boolean statusAllowsEditing(Wizyta app) throws SQLException {
 	 * return appDAO.checkAndChangeStatus(app); }
 	 */
 

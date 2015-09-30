@@ -16,7 +16,7 @@ public class ArchivePanel extends JPanel {
 	private String previewString = "Podgl¹d";
 	JButton preview;
 
-	public ArchivePanel(AppointmentView parent) {
+	public ArchivePanel() {
 		// appointments=new ArrayList<Wizyta>();
 		appointmentsTable = new JTable();
 		JScrollPane appScroll = new JScrollPane(appointmentsTable);

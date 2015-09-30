@@ -11,13 +11,15 @@ import database.DBHandler;
 
 public class KonsultacjaDAO {
 
-	Connection conn;
+	// Connection conn;
 
 	public KonsultacjaDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	public Konsultacja getInterview(int appId) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT treœæ FROM konsultacje WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
@@ -48,6 +50,8 @@ public class KonsultacjaDAO {
 
 		if (interview == null)
 			return;
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "INSERT INTO konsultacje (idWizyty, treœæ) VALUES (?,?)";

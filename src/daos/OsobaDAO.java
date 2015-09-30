@@ -10,13 +10,15 @@ import database.DBHandler;
 
 public class OsobaDAO {
 
-	private Connection conn;
+	// private Connection conn;
 
 	public OsobaDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	public Osoba getShortPersonData(int id) throws SQLException {
+		Connection conn = DBHandler.getDatabaseConnection();
+
 		Osoba person = null;
 
 		PreparedStatement st;
@@ -48,6 +50,7 @@ public class OsobaDAO {
 
 	public Osoba getPersonData(int id) throws SQLException {
 
+		Connection conn = DBHandler.getDatabaseConnection();
 		Osoba person = null;
 
 		PreparedStatement st;

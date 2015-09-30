@@ -31,7 +31,7 @@ public class InsertDB {
 
 			conn = DriverManager
 					.getConnection(
-							"jdbc:mysql://localhost/enzoz?useUnicode=true&characterEncoding=UTF-8",
+							"jdbc:mysql://mysql.cba.pl:3306/enzoz_cba_pl?useUnicode=true&characterEncoding=UTF-8",
 							login, haslo);// login, haslo);
 
 			/*
@@ -58,11 +58,11 @@ public class InsertDB {
 			// insertDuplicateConstantIllness();
 
 			System.out.println("Done all.");
-			conn.setAutoCommit(false);
-			insertTest();
-			conn.commit();
+			// conn.setAutoCommit(false);
+			// insertTest();
+			// conn.commit();
 
-			throw new SQLException();
+			// throw new SQLException();
 
 		} catch (SQLException ex) {
 			// handle any errors

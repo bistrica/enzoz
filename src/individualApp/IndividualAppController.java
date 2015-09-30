@@ -20,6 +20,7 @@ import appointment.AppointmentController;
 import database.DBHandler;
 import exceptions.DataCannotBeEditedException;
 import exceptions.LoadDataException;
+import exceptions.PatientAlreadyBlockedException;
 import exceptions.SaveDataException;
 import exceptions.WrongInputException;
 
@@ -33,17 +34,29 @@ public class IndividualAppController {
 	AppointmentController parent;
 	boolean userAllowedToEdit;
 
+	private String dataInUseString = "Dane w trakcie edycji";
+
+	private String dataEditedMessageString = "Nie mo¿na dokonaæ edycji wizyty, gdy¿ dane pacjenta s¹ w trakcie modyfikacji.";
+
 	public IndividualAppController(AppointmentController parent, Wizyta app,
-			boolean previewMode) {
+			boolean previewMode) throws PatientAlreadyBlockedException {
 		this.appointment = app;
 		this.parent = parent;
 
 		iam = new IndividualAppDBH();
+		// TODO: is blocked?
+		if (!iam.tryToBlockPatientForEdit(appointment)) {
+			throw new PatientAlreadyBlockedException();
+			// return;
+		}
+
 		// java.awt.EventQueue.
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
+
+				//
 
 				userAllowedToEdit = false;
 				try {
@@ -101,7 +114,8 @@ public class IndividualAppController {
 		try {
 			if (iam.isPossibleToEdit(appointment)) {
 				iav.setEditMode();
-			}
+			} else
+				iav.displayInfo(dataEditedMessageString, dataInUseString);
 		} catch (DataCannotBeEditedException e) {
 			iav.displayInfo(e.getMessage(), errorString);
 		}
@@ -116,6 +130,14 @@ public class IndividualAppController {
 
 				if (iav.sureToCloseWindow()) {
 					System.out.println("REMM");
+					if (iav.editMode) {
+						try {
+							iam.rewriteStatus(appointment);
+						} catch (SaveDataException e1) {
+							e1.printStackTrace();
+							iav.displayInfo(e1.getMessage(), errorString);
+						}
+					}
 					parent.removeChildWindow(appointment);
 					iav.close();
 				}
@@ -126,7 +148,11 @@ public class IndividualAppController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveChanges();
+				if (iav.sureToSaveChanges()) {
+					saveChanges();
+					parent.removeChildWindow(appointment);
+					iav.close();
+				}
 			}
 		});
 

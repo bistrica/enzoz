@@ -92,6 +92,7 @@ public class LoginView extends JFrame {
 				LoginView view = new LoginView();
 				LoginDBH model = new LoginDBH();
 				LoginController controller = new LoginController(view, model);
+				view.setVisible(true);
 			}
 		});
 

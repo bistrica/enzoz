@@ -59,6 +59,10 @@ public class IndividualAppView extends JFrame {
 
 	private String appointmentString = "Dane wizyty";
 
+	private String confirmSaveString = "Czy na pewno chcesz zatwierdziæ wizytê?";
+
+	private String saveTitleBarString = "Zapisz i zakoñcz wizytê";
+
 	public IndividualAppView(boolean isEnabled, boolean isEditingAllowed,
 			boolean isArchive) {
 
@@ -110,7 +114,7 @@ public class IndividualAppView extends JFrame {
 		illnessesPane = new IllnessesPanel(isArchive);
 		prescriptionPane = new PrescriptionPanel();
 		examinationPane = new ExaminationPanel();
-		archivesPane = new ArchivesPanel();
+		// archivesPane = new ArchivesPanel();
 
 		tabbedPanel.add(interviewPaneString, interviewPane);
 		tabbedPanel.add(illnessesPaneString, illnessesPane);
@@ -118,8 +122,8 @@ public class IndividualAppView extends JFrame {
 		tabbedPanel
 				.add(examinationPaneString, new JScrollPane(examinationPane));
 
-		if (isEnabled)
-			tabbedPanel.add(archivesPaneString, archivesPane);
+		// if (isEnabled)
+		// tabbedPanel.add(archivesPaneString, archivesPane);
 		/*
 		 * else disableComponents();
 		 */
@@ -275,6 +279,12 @@ public class IndividualAppView extends JFrame {
 
 	public ArrayList<Choroba> getCurrentIllnesses(boolean onlyIfEdited) {
 		return illnessesPane.getAllCurrentIllnesses(onlyIfEdited);
+	}
+
+	public boolean sureToSaveChanges() {
+		return (JOptionPane.showOptionDialog(null, confirmSaveString,
+				saveTitleBarString, JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
 	}
 
 	/*

@@ -12,13 +12,15 @@ import database.DBHandler;
 
 public class PoradniaDAO {
 
-	Connection conn;
+	// Connection conn;
 
 	public PoradniaDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	public ArrayList<Poradnia> getAllClinics() throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT idPoradni, nazwa FROM poradnie";
@@ -46,6 +48,7 @@ public class PoradniaDAO {
 
 	public Poradnia getClinic(int id) throws SQLException {
 
+		Connection conn = DBHandler.getDatabaseConnection();
 		// if (true) throw new SQLException();
 
 		PreparedStatement st;

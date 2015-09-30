@@ -11,7 +11,12 @@ public class DBHandler {
 
 	private Pracownik currentUser;
 	private Connection conn;
-	private String host = "192.168.56.1", login, password; // has³o? ??
+	private String host = "192.168.56.1", login, password, dbname = "enzoz";// "89.72.71.58",
+	// login,
+	// password;//
+	// "192.168.0.14",
+	// login, password;
+	// // has³o? ?? 56.1
 	private static DBHandler dbh = null;
 	private static int trialsNo = 0;
 	private static int criticalNo = 5;
@@ -38,11 +43,10 @@ public class DBHandler {
 		// return dbh.conn;
 		// if (dbh.conn==null)
 		// tryToConnect();
-		try {
-			System.out.println("**" + dbh.conn.isValid(0));
-		} catch (SQLException e) {
-			System.out.println(">>>Not valid");
-		}
+		/*
+		 * try { System.out.println("**" + dbh.conn.isValid(0)); } catch
+		 * (SQLException e) { System.out.println(">>>Not valid"); }
+		 */
 		return dbh.conn;
 
 	}
@@ -53,6 +57,9 @@ public class DBHandler {
 
 	public static boolean reconnect() {
 		System.out.println("RECONNECT");
+		String login;
+		String pass = login = "adolega"; // to remove?
+
 		boolean valid = false;
 		try {
 			valid = dbh.conn.isValid(0);
@@ -60,6 +67,7 @@ public class DBHandler {
 		} catch (SQLException e) {
 			System.out.println(">>>Not valid");
 		}
+		valid = false; // hmhmhm
 		int counter = 0;
 		while (!valid && counter++ < 5) {
 			try {
@@ -68,9 +76,11 @@ public class DBHandler {
 						.getConnection(
 								"jdbc:mysql://"
 										+ dbh.host
-										+ "/enzoz?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true",
-								dbh.login, dbh.password);
-
+										+ "/"
+										+ dbh.dbname
+										+ "?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true",
+								// dbh.login, dbh.password);
+								login, pass);
 				valid = dbh.conn.isValid(0);
 
 			} catch (SQLException e) {
@@ -90,13 +100,20 @@ public class DBHandler {
 
 	private DBHandler(String login, String pass) throws SQLException {
 
+		// login = "a8323487_adolega";
+		// pass = "adolega1";
 		this.login = login;
 		this.password = pass; // ?
+
+		login = pass = "adolega"; // tochange/?
+
 		this.conn = DriverManager
 				.getConnection(
 						"jdbc:mysql://"
 								+ host
-								+ "/enzoz?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true",
+								+ "/"
+								+ dbname
+								+ "?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true",
 						login, pass);
 
 		// tryToConnect();

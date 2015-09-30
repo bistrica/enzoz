@@ -51,12 +51,13 @@ public class AppointmentView extends JFrame {
 		appTable = new JScrollPane();
 		appPanel.add(appTable);
 
-		archivePanel = new ArchivePanel(this);
+		archivePanel = new ArchivePanel();// this);
 		tabbedPanel.add(todayAppString, appPanel);
 		tabbedPanel.add(archiveString, archivePanel);
 		getContentPane().add(tabbedPanel);
 		setSize(700, 600);
 
+		// TODO: daæ to jako w kontrolerze
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {

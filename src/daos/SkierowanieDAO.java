@@ -13,16 +13,18 @@ import database.DBHandler;
 
 public class SkierowanieDAO {
 
-	Connection conn;
+	// Connection conn;
 	PoradniaDAO clinicsDAO;
 
 	public SkierowanieDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 		clinicsDAO = new PoradniaDAO();
 	}
 
 	public ArrayList<Skierowanie> getExaminations(int appId)
 			throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 		ArrayList<Skierowanie> examinations = new ArrayList<Skierowanie>();
 
 		// if (true) throw new SQLException();
@@ -69,6 +71,8 @@ public class SkierowanieDAO {
 
 		// boolean autoCommit = conn.getAutoCommit();
 		// conn.setAutoCommit(false);
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "INSERT INTO skierowania (idWizyty) VALUES (?)";

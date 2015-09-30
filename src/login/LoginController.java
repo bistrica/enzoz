@@ -23,7 +23,7 @@ public class LoginController {
 		model = lm;
 
 		// TODO: skasowaæ liniê
-		loginTest();
+		// loginTest();
 
 		view.setLoginListener(new ActionListener() {
 
@@ -64,7 +64,7 @@ public class LoginController {
 
 		Pracownik user;
 		String login;
-		String pass = login = "adolega";
+		String pass = login = "amis";
 		try {
 			user = model.tryToLog(login, pass);
 		} catch (BadDataException | ConnectionException ex) {

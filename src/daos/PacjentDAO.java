@@ -14,18 +14,20 @@ import database.DBHandler;
 
 public class PacjentDAO {
 
-	Connection conn;
+	// Connection conn;
 
 	OsobaDAO personDAO;
 	ChorobaDAO illnessDAO;
 
 	public PacjentDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 		personDAO = new OsobaDAO();
 		illnessDAO = new ChorobaDAO();
 	}
 
 	public Pacjent getPatientData(int id) throws SQLException {
+
+		// Connection conn = DBHandler.getDatabaseConnection();
 
 		Osoba person = personDAO.getPersonData(id);
 		ArrayList<Choroba> illnesses = getPatientConstantIllnesses(id);
@@ -36,6 +38,8 @@ public class PacjentDAO {
 
 	private ArrayList<Choroba> getPatientConstantIllnesses(int id)
 			throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 		// System.out.println("GPCI");
 		ArrayList<Choroba> illnesses = new ArrayList<Choroba>();
 		PreparedStatement st;

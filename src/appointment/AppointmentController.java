@@ -13,6 +13,7 @@ import people.Lekarz;
 import people.Pacjent;
 import database.DBHandler;
 import exceptions.ArchiveException;
+import exceptions.PatientAlreadyBlockedException;
 import exceptions.PreviewCannotBeCreatedException;
 import exceptions.TodayException;
 
@@ -32,7 +33,7 @@ public class AppointmentController {
 	// "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
 	// private String titleBarString = "Wizyta w trakcie edycji";
 	private String errorString = "Wyst¹pi³ b³¹d";
-	protected long SLEEP_DURATION = 6000;
+	protected long SLEEP_DURATION = 300000;// 6000;
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
@@ -157,7 +158,13 @@ public class AppointmentController {
 		System.out.println("CONTAINS " + appsInChildWindows.contains(app));
 		if (!appsInChildWindows.contains(app)) {
 			appsInChildWindows.add(app);
-			new IndividualAppController(this, app, editable);
+			try {
+				new IndividualAppController(this, app, editable);
+			} catch (PatientAlreadyBlockedException e) {
+				e.printStackTrace();
+				appsInChildWindows.remove(app);
+				av.displayInfo(e.getMessage(), errorString);
+			}
 		}
 	}
 

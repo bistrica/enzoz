@@ -13,14 +13,17 @@ import database.DBHandler;
 public class PracownikDAO {
 
 	OsobaDAO personDAO;
-	Connection conn;
+
+	// Connection conn;
 
 	public PracownikDAO() {
 		personDAO = new OsobaDAO();
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	public Pracownik getEmployeeData(String login) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT idOsoby, nazwa FROM pracownicy p JOIN typyPracownikow t ON t.idTypu=p.idTypu WHERE p.login = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";

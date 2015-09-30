@@ -12,13 +12,15 @@ import database.DBHandler;
 
 public class LekDAO {
 
-	Connection conn;
+	// Connection conn;
 
 	public LekDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	public ArrayList<Lek> getAllMedicines() throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT idLeku, nazwa, postaæ, dawka, opakowanie FROM leki";
@@ -48,6 +50,8 @@ public class LekDAO {
 	}
 
 	public Lek getDrug(int drugId) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT nazwa, postaæ, dawka, opakowanie FROM leki WHERE idLeku = ?";

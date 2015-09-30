@@ -13,17 +13,18 @@ import database.DBHandler;
 
 public class PozycjaNaRecepcieDAO {
 
-	Connection conn;
+	// Connection conn;
 	LekDAO drugDAO;
 
 	public PozycjaNaRecepcieDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 		drugDAO = new LekDAO();
 	}
 
 	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(int idPresc)
 			throws SQLException {
 
+		Connection conn = DBHandler.getDatabaseConnection();
 		// IdLeku iloœæOpakowañ iloœæDawek PrzyjêciaNaDzieñ ProcentRefundacji
 
 		PreparedStatement st;
@@ -66,6 +67,8 @@ public class PozycjaNaRecepcieDAO {
 
 		// boolean autoCommit = conn.getAutoCommit();
 		// conn.setAutoCommit(false);
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji) VALUES (?,?,?,?,?,?)";

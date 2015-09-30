@@ -13,15 +13,17 @@ import database.DBHandler;
 
 public class ReceptaDAO {
 
-	Connection conn;
+	// Connection conn;
 	private PozycjaNaRecepcieDAO prescriptionPositionDAO;
 
 	public ReceptaDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 		prescriptionPositionDAO = new PozycjaNaRecepcieDAO();
 	}
 
 	public Recepta getPrescription(int appId) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT idRecepty FROM recepty WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
@@ -50,9 +52,11 @@ public class ReceptaDAO {
 
 	public void writeToDatabase(int appId, Recepta prescription)
 			throws SQLException {
+
 		if (prescription == null)
 			return;
 
+		Connection conn = DBHandler.getDatabaseConnection();
 		// boolean autoCommit = conn.getAutoCommit();
 		// conn.setAutoCommit(false);
 

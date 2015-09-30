@@ -17,6 +17,8 @@ public class Wizyta {
 	private ArrayList<Skierowanie> skierowania;
 	private Konsultacja konsultacja;
 
+	private String status;
+
 	private int id;
 	private boolean isArchive = false;
 
@@ -140,6 +142,14 @@ public class Wizyta {
 
 	public void setArchive(boolean isArchive) {
 		this.isArchive = isArchive;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getStatus() {
+		return this.status;
 	}
 
 	@Override

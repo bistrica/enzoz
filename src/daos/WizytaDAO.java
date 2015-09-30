@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,13 +24,14 @@ import database.DBHandler;
 
 public class WizytaDAO {
 
-	private static Connection conn;
+	// private static Connection conn;
 	private PacjentDAO patientDAO;
 	private OsobaDAO personDAO;
 	private KonsultacjaDAO interviewDAO;
 	private ReceptaDAO prescriptionDAO;
 	private SkierowanieDAO examinationDAO;
 	private ChorobaDAO illnessDAO;
+	private boolean blockingAutoCommit;
 
 	public WizytaDAO() {
 		patientDAO = new PacjentDAO();
@@ -38,7 +40,7 @@ public class WizytaDAO {
 		prescriptionDAO = new ReceptaDAO();
 		examinationDAO = new SkierowanieDAO();
 		illnessDAO = new ChorobaDAO();
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	// private ArrayList<Wizyta> getAppointments(Lekarz doct)
@@ -46,12 +48,15 @@ public class WizytaDAO {
 	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor)
 			throws SQLException {
 		System.out.println("GTA");
+		// conn = DBHandler.getDatabaseConnection(); // refreshed
+
 		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
 		PreparedStatement st;
-		String queryString = "SELECT idWizyty, idPacjenta, data FROM wizytyDzis WHERE idLekarza=? ORDER BY data ASC";
+		String queryString = "SELECT idWizyty, idPacjenta, data, status FROM wizytyDzis WHERE idLekarza=? ORDER BY data ASC";
 
+		Connection conn = DBHandler.getDatabaseConnection();
 		// try {
-		System.out.println("c " + conn);
+		// System.out.println("c " + conn);
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, doctor.getId());
 		ResultSet rs = st.executeQuery();// Update();
@@ -65,6 +70,7 @@ public class WizytaDAO {
 			Wizyta app = new Wizyta(appId, appDate);
 			app.setLekarz(doctor);
 			app.setPacjent(patient);
+			app.setStatus(rs.getString("status"));
 			apps.add(app);
 		}
 		rs.close();
@@ -103,6 +109,8 @@ public class WizytaDAO {
 	}
 
 	public static int getId(Wizyta app) {
+		Connection conn = DBHandler.getDatabaseConnection();
+
 		int patientId = app.getPacjent().getId();
 		int doctorId = app.getLekarz().getId();
 
@@ -132,53 +140,36 @@ public class WizytaDAO {
 
 	}
 
-	public boolean checkAndChangeStatus(Wizyta app) throws SQLException {
-
-		// conn=DBHandler.getDatabaseConnection();
-		conn.setAutoCommit(false);
-
-		int appId = app.getId();
-		PreparedStatement st;
-		// SELECT idWizyty, data FROM wizytyDzis WHERE idPacjenta = 299 AND
-		// idLekarza = 303 ORDER BY data desc LIMIT 1
-		String status = "realizowana";
-		// System.out.println(">"+appId);
-		String queryString = "UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";// "SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
-		int updatedRecords = -1;
-		// try {
-		st = conn.prepareStatement(queryString);
-		// st.setInt(1, 1);
-		st.setString(1, status);
-		st.setInt(2, appId);
-		st.setString(3, status);
-		updatedRecords = st.executeUpdate();
-		System.out.println(updatedRecords);
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); //TODO: ?
-		 * 
-		 * System.out.println(">>>>"+DBHandler.getDatabaseConnection()); }
-		 */
-
-		if (updatedRecords > 0) {
-			try {
-				updateData(app);
-				conn.commit();
-			} catch (SQLException e) {
-				System.out.println("rollback");
-				// e.printStackTrace();
-				conn.rollback();
-				conn.setAutoCommit(true);
-				throw e;
-			}
-
-		}
-		conn.setAutoCommit(true);
-		st.close();
-		return updatedRecords > 0;
-	}
+	/*
+	 * public boolean checkAndChangeStatus(Wizyta app) throws SQLException {
+	 * 
+	 * Connection conn = DBHandler.getDatabaseConnection();
+	 * conn.setAutoCommit(false);
+	 * 
+	 * int appId = app.getId(); PreparedStatement st; // SELECT idWizyty, data
+	 * FROM wizytyDzis WHERE idPacjenta = 299 AND // idLekarza = 303 ORDER BY
+	 * data desc LIMIT 1 String status = "realizowana"; //
+	 * System.out.println(">"+appId); String queryString =
+	 * "UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";//
+	 * "SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?"
+	 * ;//"SELECT idTypu FROM pracownicy WHERE login = ?"; int updatedRecords =
+	 * -1; // try { st = conn.prepareStatement(queryString); // st.setInt(1, 1);
+	 * st.setString(1, status); st.setInt(2, appId); st.setString(3, status);
+	 * updatedRecords = st.executeUpdate(); System.out.println(updatedRecords);
+	 * 
+	 * 
+	 * if (updatedRecords > 0) { try { updateData(app); conn.commit(); } catch
+	 * (SQLException e) { System.out.println("rollback"); //
+	 * e.printStackTrace(); conn.rollback(); conn.setAutoCommit(true); throw e;
+	 * }
+	 * 
+	 * } conn.setAutoCommit(true); st.close(); return updatedRecords > 0; }
+	 */
 
 	public boolean changeStatus(Wizyta app) throws SQLException {
 
+		Connection conn = DBHandler.getDatabaseConnection();
+		// conn.
 		// boolean
 		// conn.setAutoCommit(false);
 
@@ -191,8 +182,14 @@ public class WizytaDAO {
 		st.setString(1, status);
 		st.setInt(2, appId);
 		st.setString(3, status);
-		updatedRecords = st.executeUpdate();
-
+		try {
+			updatedRecords = st.executeUpdate();
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1205) // Lock wait timeout exceeded
+				updatedRecords = -1;
+			else
+				throw e;
+		}
 		st.close();
 		return updatedRecords > 0;
 	}
@@ -222,9 +219,11 @@ public class WizytaDAO {
 
 	public ArrayList<Wizyta> getArchiveAppointments() throws SQLException {
 
+		Connection conn = DBHandler.getDatabaseConnection();
+
 		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
 		PreparedStatement st;
-		String queryString = "SELECT idWizyty, idPacjenta, idLekarza, data FROM wizytyArchiwum ORDER BY data DESC";
+		String queryString = "SELECT idWizyty, idPacjenta, idLekarza, data, status FROM wizytyArchiwum ORDER BY data DESC";
 
 		// try {
 
@@ -241,6 +240,7 @@ public class WizytaDAO {
 			Wizyta app = new Wizyta(appId, appDate);
 			app.setLekarz(doctor);
 			app.setPacjent(patient);
+			app.setStatus(rs.getString("status"));
 			apps.add(app);
 		}
 
@@ -257,9 +257,13 @@ public class WizytaDAO {
 	 */
 
 	public void writeToDatabase(Wizyta app) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
+		Savepoint svp = conn.setSavepoint();
 		// TODO: update status
-		boolean autoCommit = conn.getAutoCommit();
-		conn.setAutoCommit(false);
+
+		// boolean autoCommit = conn.getAutoCommit();
+		// conn.setAutoCommit(false);
 		int appId = app.getId();
 
 		try {
@@ -284,27 +288,115 @@ public class WizytaDAO {
 
 			closeAppointment(app);
 
-			conn.commit();
+			// conn.commit();
 		} catch (SQLException e) {
-			conn.rollback();
+			conn.rollback(svp);
 			throw e;
 		} finally {
-			conn.setAutoCommit(autoCommit);
-			System.out.println("AUTO: " + autoCommit);
+			// conn.setAutoCommit(autoCommit);
+			// System.out.println("AUTO: " + autoCommit);
 		}
 	}
 
 	private void closeAppointment(Wizyta app) throws SQLException {
+		Connection conn = DBHandler.getDatabaseConnection();
+
 		int appId = app.getId();
 		PreparedStatement st;
 		String status = "zrealizowana";
-		String queryString = "UPDATE wizyty SET status = ? WHERE idWizyty = ? AND status != ? ";// "SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
+		String queryString = "UPDATE wizyty SET status = ? WHERE idWizyty = ? ";// AND
+																				// status
+																				// !=
+																				// ?
+																				// ";// "SELECT
+																				// idWizyty
+																				// FROM
+																				// wizytyDzis
+																				// WHERE
+																				// idPacjenta
+																				// =
+																				// ?
+																				// AND
+																				// idLekarza
+																				// =
+																				// ?";//"SELECT
+																				// idTypu
+																				// FROM
+																				// pracownicy
+																				// WHERE
+																				// login
+																				// =
+																				// ?";
 		st = conn.prepareStatement(queryString);
 		st.setString(1, status);
 		st.setInt(2, appId);
-		st.setString(3, status);
+		// st.setString(3, status);
 		st.executeUpdate();
 
 		st.close();
+
+		unblockPatientData();
+
 	}
+
+	public boolean blockPatientData(int patientId) throws SQLException {
+
+		System.out.println("BLOCK");
+		Connection conn = DBHandler.getDatabaseConnection();
+
+		blockingAutoCommit = conn.getAutoCommit();
+
+		conn.setAutoCommit(false);
+		PreparedStatement st;
+		// String status = "zrealizowana";
+		String queryString = "SELECT * FROM wizyty WHERE idPacjenta = ? LOCK IN SHARE MODE";// "SELECT idWizyty FROM wizytyDzis WHERE idPacjenta = ? AND idLekarza = ?";//"SELECT idTypu FROM pracownicy WHERE login = ?";
+		try {
+			st = conn.prepareStatement(queryString,
+					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
+
+			st.setInt(1, patientId);
+
+			st.executeQuery();
+
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+
+	}
+
+	// jeden pacjent jednoczeœnie przyjmowany
+
+	public void unblockPatientData() throws SQLException {
+		System.out.println("UNBLOCK");
+		Connection conn = DBHandler.getDatabaseConnection();
+		conn.commit(); // odblokowanie SELECT FOR UPDATE (?)
+		conn.setAutoCommit(blockingAutoCommit);
+	}
+
+	public void writeBackOldStatus(Wizyta app) throws SQLException {
+
+		System.out.println("OLD");
+
+		Connection conn = DBHandler.getDatabaseConnection();
+		// conn.
+		// boolean
+		// conn.setAutoCommit(false);
+
+		int appId = app.getId();
+		PreparedStatement st;
+		String status = app.getStatus();
+		String queryString = "UPDATE wizyty SET status = ? WHERE idWizyty = ?";
+		st = conn.prepareStatement(queryString);
+		st.setString(1, status);
+		st.setInt(2, appId);
+		st.executeUpdate();
+		st.close();
+
+		unblockPatientData();
+	}
+
 }

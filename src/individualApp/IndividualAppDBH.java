@@ -148,4 +148,36 @@ public class IndividualAppDBH {
 
 	}
 
+	public boolean tryToBlockPatientForEdit(Wizyta appointment) {
+
+		boolean isBlocked = false;
+		try {
+			isBlocked = appDAO.blockPatientData(appointment.getPacjent()
+					.getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return isBlocked;
+	}
+
+	public void rewriteStatus(Wizyta appointment) throws SaveDataException {
+		try {
+			appDAO.writeBackOldStatus(appointment);
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
+				DBHandler.resetTrialsNo();
+				throw new SaveDataException();
+			} else {
+				System.out.println("ONCE MORE");
+				DBHandler.incrementTrialsNo();
+				rewriteStatus(appointment);
+			}
+
+		}
+		DBHandler.resetTrialsNo();
+	}
+
 }

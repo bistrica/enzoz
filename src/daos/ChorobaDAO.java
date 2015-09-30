@@ -14,13 +14,15 @@ import database.DBHandler;
 
 public class ChorobaDAO {
 
-	private static Connection conn;
+	// private static Connection conn;
 
 	public ChorobaDAO() {
-		conn = DBHandler.getDatabaseConnection();
+		// conn = DBHandler.getDatabaseConnection();
 	}
 
 	public Choroba getIllnessData(int id) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";
@@ -52,6 +54,8 @@ public class ChorobaDAO {
 
 	public ArrayList<Choroba> getIllnessData(ArrayList<Integer> ids)
 			throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT kod, nazwa FROM choroby WHERE idChoroby = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
@@ -87,6 +91,8 @@ public class ChorobaDAO {
 	// lub void i throws SQLException (?)
 	public static boolean writeConstantIllnessData(Pacjent patient) {
 		int patientId = patient.getId();
+
+		Connection conn = DBHandler.getDatabaseConnection();
 		ArrayList<Choroba> illnesses = patient.getChorobyPrzewlek³e();
 
 		try {
@@ -124,6 +130,9 @@ public class ChorobaDAO {
 	}
 
 	public static boolean writeCurrentIllnessData(Wizyta app) {
+
+		Connection conn = DBHandler.getDatabaseConnection();
+
 		int appId = WizytaDAO.getId(app);
 		if (appId == -1)
 			return false;
@@ -165,6 +174,8 @@ public class ChorobaDAO {
 
 	public ArrayList<Choroba> getAllIllnesses() throws SQLException {
 
+		Connection conn = DBHandler.getDatabaseConnection();
+
 		PreparedStatement st;
 		String queryString = "SELECT idChoroby, kod, nazwa FROM choroby";
 		ArrayList<Choroba> illnesses = new ArrayList<Choroba>();
@@ -193,6 +204,8 @@ public class ChorobaDAO {
 	//
 	public ArrayList<Choroba> getTemporaryIllnesses(int appId,
 			ArrayList<Choroba> constIllnesses) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "SELECT idRozpoznania FROM rozpoznaneChoroby WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
@@ -275,6 +288,7 @@ public class ChorobaDAO {
 		if (constIllnesses == null)
 			return;
 
+		Connection conn = DBHandler.getDatabaseConnection();
 		// System.out.println(">const size " + constIllnesses.size());
 		PreparedStatement st;
 
@@ -310,6 +324,8 @@ public class ChorobaDAO {
 
 		if (tempIllnesses == null)
 			return;
+
+		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
 		String queryString = "INSERT INTO rozpoznaneChoroby (idWizyty) VALUES (?)";
