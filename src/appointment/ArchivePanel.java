@@ -3,12 +3,13 @@ package appointment;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class ArchivePanel extends JPanel {
+import GUI_items.BPanel;
+
+public class ArchivePanel extends BPanel {
 
 	JTable appointmentsTable;
 	// String[] columnNames={"Data","Pacjent","Lekarz"};

@@ -77,28 +77,35 @@ public class IndividualAppView extends JFrame {
 		editItem = new JMenuItem(editString);
 		saveItem = new JMenuItem(saveString);
 
-		if (!isEnabled) { // wizyta jest archiwalna; archiwalna najpierw dostaje
+		if (!isEnabled) { // wizyta jest archiwalna; archiwalna najpierw
+							// dostaje
 							// previewMode, czyli editMode==false
 			menu = new JMenu(editMenuString);
+
+			// System.out.println("IS ED ALL " + isEditingAllowed);
 			editItem.setEnabled(isEditingAllowed);
 
-			menu.add(editItem);
-
+			// menu.add(editItem);
+			// editItem.setEnabled(false);
 			saveItem.setEnabled(false);
 
 			menu.add(editItem);
 			menu.add(saveItem);
 
-		} else {
+		} else { // wizyta dzisiejsza
 			menu = new JMenu(appointmentString);
 			saveItem.setEnabled(true);
 
 			menu.add(saveItem);
 		}
 
-		JMenuBar bar = new JMenuBar();
-		bar.add(menu);
-		setJMenuBar(bar);
+		System.out.println("EDIT ALL " + isEditingAllowed);
+
+		if (isEnabled || isEditingAllowed) {
+			JMenuBar bar = new JMenuBar();
+			bar.add(menu);
+			setJMenuBar(bar);
+		}
 
 		mainInfo = new JLabel();
 		mainInfo.setFont(new Font("Arial", Font.BOLD, 20));
@@ -146,6 +153,7 @@ public class IndividualAppView extends JFrame {
 	 */
 
 	public void setEditMode() {
+		// System.out.println("SET EDIT MODE");
 		this.editMode = true;
 		setComponentsState();
 	}

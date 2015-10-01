@@ -104,9 +104,14 @@ public class IndividualAppDBH {
 
 	public boolean isPossibleToEdit(Wizyta app)
 			throws DataCannotBeEditedException {
+
 		boolean isPossible = false;
 		try {
 			isPossible = appDAO.changeStatus(app);
+
+			// to check
+			if (isPossible)
+				tryToBlockPatientForEdit(app);
 			// isPossible = appDAO.updateData(app);
 		} catch (SQLException e) {
 
@@ -150,6 +155,7 @@ public class IndividualAppDBH {
 
 	public boolean tryToBlockPatientForEdit(Wizyta appointment) {
 
+		System.out.println("TRY TO BLOCK");
 		boolean isBlocked = false;
 		try {
 			isBlocked = appDAO.blockPatientData(appointment.getPacjent()

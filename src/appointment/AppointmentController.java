@@ -22,7 +22,7 @@ public class AppointmentController {
 	AppointmentDBH am;
 	AppointmentView av;
 	Lekarz doctor;
-	ArrayList<Wizyta> appsInChildWindows;
+	// ArrayList<Wizyta> appsInChildWindows;
 
 	String[] colNames = { "Pacjent", "PESEL", "Godzina" };
 	ArrayList<Wizyta> appointmentsToday;
@@ -35,12 +35,17 @@ public class AppointmentController {
 	private String errorString = "Wyst¹pi³ b³¹d";
 	protected long SLEEP_DURATION = 300000;// 6000;
 
+	boolean currentAppOpen;
+	protected String currentAppOpenString = "Wizyta otwarta";
+	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta dzisiejsza wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
+
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
 	 * constructor stub }
 	 */
 
 	public AppointmentController(Lekarz user) {
+		currentAppOpen = false;
 		doctor = user;
 		am = new AppointmentDBH();
 
@@ -61,7 +66,7 @@ public class AppointmentController {
 			}
 		});
 
-		appsInChildWindows = new ArrayList<Wizyta>();
+		// appsInChildWindows = new ArrayList<Wizyta>();
 
 		Thread t = new Thread(new Runnable() {
 
@@ -99,6 +104,13 @@ public class AppointmentController {
 			public void actionPerformed(ActionEvent e) {
 				int index = av.getSelectedAppIndex();
 				if (index != -1) {
+					if (currentAppOpen) {
+						av.displayInfo(currentAppOpenMessageString,
+								currentAppOpenString);
+						return;
+					}
+
+					currentAppOpen = true;
 					boolean editable = true;
 					createAppointment(appointmentsToday.get(index), editable);
 				}
@@ -154,18 +166,21 @@ public class AppointmentController {
 	}
 
 	private void createAppointment(Wizyta app, boolean editable) {
-		System.out.println("Nowa: " + app.toString());
-		System.out.println("CONTAINS " + appsInChildWindows.contains(app));
-		if (!appsInChildWindows.contains(app)) {
-			appsInChildWindows.add(app);
-			try {
-				new IndividualAppController(this, app, editable);
-			} catch (PatientAlreadyBlockedException e) {
-				e.printStackTrace();
-				appsInChildWindows.remove(app);
-				av.displayInfo(e.getMessage(), errorString);
-			}
+		// System.out.println("Nowa: " + app.toString());
+		// System.out.println("CONTAINS " + appsInChildWindows.contains(app));
+
+		// if (!appsInChildWindows.contains(app)) {
+		// appsInChildWindows.add(app);
+		try {
+			new IndividualAppController(this, app, editable);
+		} catch (PatientAlreadyBlockedException e) {
+			// e.printStackTrace();
+			// appsInChildWindows.remove(app);
+			if (!app.isArchiveAppointment())
+				currentAppOpen = false;
+			av.displayInfo(e.getMessage(), errorString);
 		}
+		// }
 	}
 
 	private void tryToCreateArchiveAppointmentPreview(Wizyta app) {
@@ -235,9 +250,20 @@ public class AppointmentController {
 	}
 
 	public void removeChildWindow(Wizyta childWindowApp) {
-		System.out.println("SIZE PRE " + appsInChildWindows.size());
-		appsInChildWindows.remove(childWindowApp);
-		System.out.println("SIZE AFTER " + appsInChildWindows.size());
+		if (!childWindowApp.isArchiveAppointment())
+			currentAppOpen = false;
+		refreshData();
+		// System.out.println("SIZE PRE " + appsInChildWindows.size());
+		// appsInChildWindows.remove(childWindowApp);
+		// System.out.println("SIZE AFTER " + appsInChildWindows.size());
+	}
+
+	public boolean isCurrentAppOpen() {
+		return currentAppOpen;
+	}
+
+	public void displayError(String message) {
+		av.displayInfo(message, errorString);
 	}
 
 }

@@ -24,7 +24,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class IllnessesPanel extends JPanel {
+import GUI_items.BPanel;
+
+public class IllnessesPanel extends BPanel {
 
 	// private HashSet<Choroba> tempSet;
 	// private HashSet<Choroba> constSet;

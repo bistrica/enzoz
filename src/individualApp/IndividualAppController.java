@@ -44,9 +44,21 @@ public class IndividualAppController {
 		this.parent = parent;
 
 		iam = new IndividualAppDBH();
+
+		// boolean isDoctorAbleToBlockPatient = (DBHandler.getUser()
+		// .equals(appointment.getLekarz()));
 		// TODO: is blocked?
-		if (!iam.tryToBlockPatientForEdit(appointment)) {
-			throw new PatientAlreadyBlockedException();
+		if (!app.isArchiveAppointment()) { // zablokuj, jeœli jest obecn¹ now¹
+											// wizyt¹
+			try {
+				if (!iam.isPossibleToEdit(appointment)) {// tryToBlockPatientForEdit(appointment))
+															// {
+					throw new PatientAlreadyBlockedException();
+				}
+			} catch (DataCannotBeEditedException e) {
+				parent.displayError(e.getMessage());
+				e.printStackTrace();
+			}
 			// return;
 		}
 
@@ -61,7 +73,11 @@ public class IndividualAppController {
 				userAllowedToEdit = false;
 				try {
 					userAllowedToEdit = DBHandler.getCurrentUser().equals(
-							appointment.getLekarz());
+							appointment.getLekarz())
+							&& !parent.isCurrentAppOpen();
+					System.out.println("US " + userAllowedToEdit);
+					// if (userAllowedToEdit && parent.isCurrentAppOpen())
+					// userAllowedToEdit=false;
 					// System.out.println("ALLOWED USER? " + userAllowedToEdit);
 				} catch (SQLException e1) {
 					e1.printStackTrace();

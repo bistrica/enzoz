@@ -25,10 +25,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import rendering.DrugTableModel;
+import GUI_items.BPanel;
 import GUI_items.DrugListPanel;
 import GUI_items.DrugPanel;
 
-public class PrescriptionPanel extends JPanel {
+public class PrescriptionPanel extends BPanel {
 
 	/*
 	 * private String dosesString="Iloœæ dawek/porcjê"; private String
