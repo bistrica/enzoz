@@ -11,12 +11,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 public class LoginView extends JFrame {
 
-	JTextField login, password;
+	JTextField login;
+	JPasswordField password;
 	JButton loginButton;
 
 	String loginString = "Login:", passwordString = "Has³o:",
@@ -31,7 +35,7 @@ public class LoginView extends JFrame {
 		JLabel passwordLabel = new JLabel(passwordString);
 
 		login = new JTextField(30);
-		password = new JTextField(30);
+		password = new JPasswordField(30);
 		loginButton = new JButton(loginButtonString);
 		buttonPanel.add(loginButton);
 
@@ -93,6 +97,43 @@ public class LoginView extends JFrame {
 				LoginDBH model = new LoginDBH();
 				LoginController controller = new LoginController(view, model);
 				view.setVisible(true);
+
+				try {
+
+					/*
+					 * InfoNodeLookAndFeelTheme theme = new
+					 * InfoNodeLookAndFeelTheme( "My Theme", new Color(110, 120,
+					 * 150), new Color(0, 170, 0), new Color(80, 80, 80),
+					 * Color.WHITE, new Color(0, 170, 0), Color.WHITE, 0.8);
+					 */
+					UIManager
+							.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+					for (LookAndFeelInfo info : UIManager
+							.getInstalledLookAndFeels()) {
+						// System.out.println("*" + info.getName());
+						if ("Nimbus".equals(info.getName())) {
+							UIManager.setLookAndFeel(info.getClassName());
+							break;
+						}
+					}
+					// theme));//
+					// OyoahaLookAndFeel laf = new OyoahaLookAndFeel();
+
+					// LiquidLookAndFeel laf = new LiquidLookAndFeel();
+					// UIManager.setLookAndFeel(laf);
+					// UIManager
+					// .setLookAndFeel("com.oyoaha.swing.plaf.oyoaha.OyoahaLookAndFeel");
+					// // info.getClassName());
+
+					// break;
+					// }
+
+					// }
+
+				} catch (Exception e) {
+					System.out.println("Err");
+				}
+
 			}
 		});
 

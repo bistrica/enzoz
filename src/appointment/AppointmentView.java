@@ -4,17 +4,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import database.DBHandler;
 
@@ -23,13 +19,9 @@ public class AppointmentView extends JFrame {
 	JScrollPane appTable;
 	// JTable apps;
 	private String todayAppString = "Dzisiejsze wizyty";
-	private String openString = "Rozpocznij wizytê";
-	JPanel appPanel;
-	// private String[] columnNames;
-	// private Object[][] appointments;
-	private JButton openVisitButton;
-	private JTable tableToday, tableArchive;
-	private ArchivePanel archivePanel;
+	private String openString = "Rozpocznij wizytê", previewString = "Podgl¹d";
+
+	private AppointmentPanel archivePanel, todayPanel;
 	private String archiveString = "Archiwum";
 	private JMenuItem refreshItem;
 	private String viewMenuString = "Widok";
@@ -45,14 +37,10 @@ public class AppointmentView extends JFrame {
 		setJMenuBar(bar);
 
 		JTabbedPane tabbedPanel = new JTabbedPane();
-		appPanel = new JPanel();
-		openVisitButton = new JButton(openString);
-		appPanel.add(openVisitButton);
-		appTable = new JScrollPane();
-		appPanel.add(appTable);
 
-		archivePanel = new ArchivePanel();// this);
-		tabbedPanel.add(todayAppString, appPanel);
+		todayPanel = new AppointmentPanel();
+		archivePanel = new AppointmentPanel();// this);
+		tabbedPanel.add(todayAppString, todayPanel);
 		tabbedPanel.add(archiveString, archivePanel);
 		getContentPane().add(tabbedPanel);
 		setSize(700, 600);
@@ -70,10 +58,6 @@ public class AppointmentView extends JFrame {
 		// pack();
 	}
 
-	public void setOpenButtonListener(ActionListener al) {
-		openVisitButton.addActionListener(al);
-	}
-
 	public void setRefreshListener(ActionListener al) {
 		refreshItem.addActionListener(al);
 	}
@@ -88,32 +72,37 @@ public class AppointmentView extends JFrame {
 	 * appPanel.add(jb); }
 	 */
 
-	public void setAppointments(String[] columnsNames,
-			Object[][] convertAppointments) {
-		// System.out.println("ap "+convertAppointments);
-		tableToday = new JTable(new DefaultTableModel(convertAppointments,
-				columnsNames));
-		appPanel.remove(appTable);
-		appTable = new JScrollPane(tableToday);
-		appPanel.add(appTable);
-
-	}
+	/*
+	 * public void setAppointments(String[] columnsNames, Object[][]
+	 * convertAppointments) { // System.out.println("ap "+convertAppointments);
+	 * tableToday = new JTable(new NonEditableDefaultTableModel(
+	 * convertAppointments, columnsNames)); appPanel.remove(appTable); appTable
+	 * = new JScrollPane(tableToday); appPanel.add(appTable);
+	 * 
+	 * }
+	 */
 
 	public int getSelectedAppIndex() {
-		return tableToday.getSelectedRow();
+		return todayPanel.getAppIndex();// getSelectedRow();
+	}
+
+	public void setTodayListener(ActionListener al) {
+		todayPanel.setButtonListenerAndLabel(openString, al);
 	}
 
 	// TODO: refresh (added appointments for today!)
-	public void refreshTodayApps() {
-
-	}
-
-	public void refreshArchiveApps() {
-
-	}
+	/*
+	 * public void refreshTodayApps() {
+	 * 
+	 * }
+	 * 
+	 * public void refreshArchiveApps() {
+	 * 
+	 * }
+	 */
 
 	public void setArchiveListener(ActionListener al) {
-		archivePanel.setPreviewButtonListener(al);
+		archivePanel.setButtonListenerAndLabel(previewString, al);
 	}
 
 	/*
@@ -121,13 +110,20 @@ public class AppointmentView extends JFrame {
 	 */
 
 	public int getSelectedArchiveAppIndex() {
-		return archivePanel.getArchiveAppIndex();
+		return archivePanel.getAppIndex();
 	}
 
 	public void setArchiveAppointments(String[] columnNames,
 			Object[][] convertArchiveAppointments) {
 
 		archivePanel.setData(convertArchiveAppointments, columnNames);
+		revalidate(); // to check
+	}
+
+	public void setTodayAppointments(String[] columnNames,
+			Object[][] convertArchiveAppointments) {
+
+		todayPanel.setData(convertArchiveAppointments, columnNames);
 		revalidate(); // to check
 	}
 

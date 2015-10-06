@@ -22,14 +22,14 @@ public class KonsultacjaDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT treœæ FROM konsultacje WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
+		String queryString = "SELECT tresc FROM konsultacje WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
 		String interview = "";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
-			interview = rs.getString("treœæ");
+			interview = rs.getString("tresc");
 			break;
 		}
 		rs.close();
@@ -54,7 +54,7 @@ public class KonsultacjaDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "INSERT INTO konsultacje (idWizyty, treœæ) VALUES (?,?)";
+		String queryString = "INSERT INTO konsultacje (idWizyty, tresc) VALUES (?,?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);

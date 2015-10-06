@@ -2,30 +2,31 @@ package appointment;
 
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import GUI_items.BPanel;
 import GUI_items.NonEditableDefaultTableModel;
 
-public class ArchivePanel extends BPanel {
+public class AppointmentPanel extends JPanel {
 
 	JTable appointmentsTable;
 	// String[] columnNames={"Data","Pacjent","Lekarz"};
 	// ArrayList<Wizyta> appointments;
-	private String previewString = "Podgl¹d";
-	JButton preview;
+	// private String previewString = "Podgl¹d";
+	JButton button; // preview;
 
-	public ArchivePanel() {
+	public AppointmentPanel() {
 		// appointments=new ArrayList<Wizyta>();
 		appointmentsTable = new JTable();
 		JScrollPane appScroll = new JScrollPane(appointmentsTable);
-		preview = new JButton(previewString);
-
+		button = new JButton();// previewString);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(appScroll);
-		add(preview);
+		add(button);// preview);
 
 	}
 
@@ -38,12 +39,12 @@ public class ArchivePanel extends BPanel {
 		revalidate();
 	}
 
-	public void setPreviewButtonListener(ActionListener al) {
-		preview.addActionListener(al);
+	public void setButtonListenerAndLabel(String label, ActionListener al) {
+		button.setText(label);
+		button.addActionListener(al);
 	}
 
-	public int getArchiveAppIndex() {
+	public int getAppIndex() {
 		return appointmentsTable.getSelectedRow();
 	}
-
 }

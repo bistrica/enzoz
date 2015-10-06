@@ -11,7 +11,11 @@ public class DBHandler {
 
 	private Pracownik currentUser;
 	private Connection conn;
-	private String host = "192.168.56.1", login, password, dbname = "enzoz";// "89.72.71.58",
+	private String host = "192.168.56.1"// "mysql.serversfree.com"//
+										// "192.168.56.1",
+			,
+			login, password, dbname = "enzoz";//
+												// "89.72.71.58",
 	// login,
 	// password;//
 	// "192.168.0.14",
@@ -57,8 +61,9 @@ public class DBHandler {
 
 	public static boolean reconnect() {
 		System.out.println("RECONNECT");
-		String login;
-		String pass = login = "adolega"; // to remove?
+		// String login;
+		String pass = "adolega";// "3nz0z_b^7a";
+		String login = "adolega";// "u710003583_enzoz"; // to remove?
 
 		boolean valid = false;
 		try {

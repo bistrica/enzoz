@@ -43,7 +43,7 @@ public class PacjentDAO {
 		// System.out.println("GPCI");
 		ArrayList<Choroba> illnesses = new ArrayList<Choroba>();
 		PreparedStatement st;
-		String queryString = "SELECT idChoroby FROM chorobyPrzewlek³e WHERE idPacjenta = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
+		String queryString = "SELECT idChoroby FROM chorobyPrzewlekle WHERE idPacjenta = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);

@@ -22,7 +22,7 @@ public class AppointmentController {
 	AppointmentDBH am;
 	AppointmentView av;
 	Lekarz doctor;
-	// ArrayList<Wizyta> appsInChildWindows;
+	ArrayList<Wizyta> appsInChildWindows;
 
 	String[] colNames = { "Pacjent", "PESEL", "Godzina" };
 	ArrayList<Wizyta> appointmentsToday;
@@ -37,7 +37,7 @@ public class AppointmentController {
 
 	boolean currentAppOpen;
 	protected String currentAppOpenString = "Wizyta otwarta";
-	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta dzisiejsza wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
+	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
@@ -66,7 +66,7 @@ public class AppointmentController {
 			}
 		});
 
-		// appsInChildWindows = new ArrayList<Wizyta>();
+		appsInChildWindows = new ArrayList<Wizyta>();
 
 		Thread t = new Thread(new Runnable() {
 
@@ -98,7 +98,7 @@ public class AppointmentController {
 	}
 
 	private void setListeners() {
-		av.setOpenButtonListener(new ActionListener() {
+		av.setTodayListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -110,7 +110,7 @@ public class AppointmentController {
 						return;
 					}
 
-					currentAppOpen = true;
+					// currentAppOpen = true;
 					boolean editable = true;
 					createAppointment(appointmentsToday.get(index), editable);
 				}
@@ -122,7 +122,9 @@ public class AppointmentController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int index = av.getSelectedArchiveAppIndex();
+
 				if (index != -1) {
+
 					tryToCreateArchiveAppointmentPreview(appointmentsArchive
 							.get(index));
 				}
@@ -146,7 +148,7 @@ public class AppointmentController {
 			public void run() {
 				getAppointments();
 				getArchiveAppointments();
-				av.setAppointments(colNames, convertAppointments());
+				av.setTodayAppointments(colNames, convertAppointments());
 				av.setArchiveAppointments(columnNames,
 						convertArchiveAppointments());
 			}
@@ -168,19 +170,21 @@ public class AppointmentController {
 	private void createAppointment(Wizyta app, boolean editable) {
 		// System.out.println("Nowa: " + app.toString());
 		// System.out.println("CONTAINS " + appsInChildWindows.contains(app));
-
-		// if (!appsInChildWindows.contains(app)) {
-		// appsInChildWindows.add(app);
-		try {
-			new IndividualAppController(this, app, editable);
-		} catch (PatientAlreadyBlockedException e) {
-			// e.printStackTrace();
-			// appsInChildWindows.remove(app);
+		System.out.println("CURR " + currentAppOpen);
+		if (!appsInChildWindows.contains(app)) {
+			appsInChildWindows.add(app);
 			if (!app.isArchiveAppointment())
-				currentAppOpen = false;
-			av.displayInfo(e.getMessage(), errorString);
+				currentAppOpen = true;
+			try {
+				new IndividualAppController(this, app, editable);
+			} catch (PatientAlreadyBlockedException e) {
+				// e.printStackTrace();
+				appsInChildWindows.remove(app);
+				if (!app.isArchiveAppointment())
+					currentAppOpen = false;
+				av.displayInfo(e.getMessage(), errorString);
+			}
 		}
-		// }
 	}
 
 	private void tryToCreateArchiveAppointmentPreview(Wizyta app) {
@@ -250,11 +254,11 @@ public class AppointmentController {
 	}
 
 	public void removeChildWindow(Wizyta childWindowApp) {
-		if (!childWindowApp.isArchiveAppointment())
-			currentAppOpen = false;
+		// if (!childWindowApp.isArchiveAppointment())
+		// currentAppOpen = false;
 		refreshData();
 		// System.out.println("SIZE PRE " + appsInChildWindows.size());
-		// appsInChildWindows.remove(childWindowApp);
+		appsInChildWindows.remove(childWindowApp);
 		// System.out.println("SIZE AFTER " + appsInChildWindows.size());
 	}
 
@@ -262,8 +266,19 @@ public class AppointmentController {
 		return currentAppOpen;
 	}
 
+	public void setCurrentAppOpen(boolean curr) {
+		currentAppOpen = curr;
+	}
+
 	public void displayError(String message) {
 		av.displayInfo(message, errorString);
 	}
+
+	/*
+	 * public void setArchiveAppOpen(boolean b) { // TODO Auto-generated method
+	 * stub
+	 * 
+	 * }
+	 */
 
 }

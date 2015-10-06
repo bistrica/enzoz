@@ -23,7 +23,7 @@ public class LekDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT idLeku, nazwa, postaæ, dawka, opakowanie FROM leki";
+		String queryString = "SELECT idLeku, nazwa, postac, dawka, opakowanie FROM leki";
 		ArrayList<Lek> medicines = new ArrayList<Lek>();
 		st = conn.prepareStatement(queryString);
 
@@ -35,7 +35,7 @@ public class LekDAO {
 		while (rs.next()) {
 			id = rs.getInt("idLeku");
 			name = rs.getString("nazwa");
-			type = rs.getString("postaæ");
+			type = rs.getString("postac");
 			dose = rs.getString("dawka");
 			pckg = rs.getString("opakowanie");
 
@@ -54,7 +54,7 @@ public class LekDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT nazwa, postaæ, dawka, opakowanie FROM leki WHERE idLeku = ?";
+		String queryString = "SELECT nazwa, postac, dawka, opakowanie FROM leki WHERE idLeku = ?";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, drugId);
@@ -66,7 +66,7 @@ public class LekDAO {
 
 		while (rs.next()) {
 			name = rs.getString("nazwa");
-			type = rs.getString("postaæ");
+			type = rs.getString("postac");
 			dose = rs.getString("dawka");
 			pckg = rs.getString("opakowanie");
 			break;

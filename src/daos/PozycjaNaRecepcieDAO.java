@@ -25,10 +25,10 @@ public class PozycjaNaRecepcieDAO {
 			throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
-		// IdLeku iloœæOpakowañ iloœæDawek PrzyjêciaNaDzieñ ProcentRefundacji
+		// IdLeku iloscOpakowan iloscDawek przyjeciaNaDzien ProcentRefundacji
 
 		PreparedStatement st;
-		String queryString = "SELECT idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji FROM pozycjeNaReceptach WHERE idRecepty = ?";
+		String queryString = "SELECT idLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji FROM pozycjeNaReceptach WHERE idRecepty = ?";
 		ArrayList<PozycjaNaRecepcie> positions = new ArrayList<PozycjaNaRecepcie>();
 
 		// try {
@@ -41,9 +41,9 @@ public class PozycjaNaRecepcieDAO {
 
 		while (rs.next()) {
 			drugId = rs.getInt("idLeku");
-			pckgNo = rs.getInt("iloœæOpakowañ");
-			dosesNo = rs.getDouble("iloœæDawek");
-			ingestionNo = rs.getInt("przyjêciaNaDzieñ");
+			pckgNo = rs.getInt("iloscOpakowan");
+			dosesNo = rs.getDouble("iloscDawek");
+			ingestionNo = rs.getInt("przyjeciaNaDzien");
 			discPrcnt = rs.getDouble("procentRefundacji");
 
 			drug = drugDAO.getDrug(drugId);// new Lek(id,name,type,dose,pckg);
@@ -71,7 +71,7 @@ public class PozycjaNaRecepcieDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji) VALUES (?,?,?,?,?,?)";
+		String queryString = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji) VALUES (?,?,?,?,?,?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, prescriptionId); // to check

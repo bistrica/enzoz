@@ -38,6 +38,10 @@ public class IndividualAppController {
 
 	private String dataEditedMessageString = "Nie mo¿na dokonaæ edycji wizyty, gdy¿ dane pacjenta s¹ w trakcie modyfikacji.";
 
+	private String anotherWindowOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby móc rozpocz¹æ kolejn¹.";
+
+	private String anotherWindowOpenString = "Wizyta otwarta";
+
 	public IndividualAppController(AppointmentController parent, Wizyta app,
 			boolean previewMode) throws PatientAlreadyBlockedException {
 		this.appointment = app;
@@ -127,9 +131,16 @@ public class IndividualAppController {
 
 	private void editMode() {
 
+		if (parent.isCurrentAppOpen()) {
+			iav.displayInfo(anotherWindowOpenMessageString,
+					anotherWindowOpenString);
+			return;
+		}
+
 		try {
 			if (iam.isPossibleToEdit(appointment)) {
 				iav.setEditMode();
+				parent.setCurrentAppOpen(true);
 			} else
 				iav.displayInfo(dataEditedMessageString, dataInUseString);
 		} catch (DataCannotBeEditedException e) {
@@ -147,6 +158,7 @@ public class IndividualAppController {
 				if (iav.sureToCloseWindow()) {
 					System.out.println("REMM");
 					if (iav.editMode) {
+
 						try {
 							iam.rewriteStatus(appointment);
 						} catch (SaveDataException e1) {
@@ -154,6 +166,10 @@ public class IndividualAppController {
 							iav.displayInfo(e1.getMessage(), errorString);
 						}
 					}
+
+					if (iav.editMode || !appointment.isArchiveAppointment())
+						parent.setCurrentAppOpen(false);
+
 					parent.removeChildWindow(appointment);
 					iav.close();
 				}
@@ -166,6 +182,7 @@ public class IndividualAppController {
 			public void actionPerformed(ActionEvent e) {
 				if (iav.sureToSaveChanges()) {
 					saveChanges();
+					parent.setCurrentAppOpen(false);
 					parent.removeChildWindow(appointment);
 					iav.close();
 				}

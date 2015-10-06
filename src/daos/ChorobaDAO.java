@@ -1,7 +1,6 @@
 package daos;
 
 import items.Choroba;
-import items.Wizyta;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -99,7 +98,7 @@ public class ChorobaDAO {
 			conn.setAutoCommit(false);
 			// TODO: BATCH!!!!!
 			for (Choroba ill : illnesses) {
-				String query = "INSERT INTO chorobyPrzewlek³e (idPacjenta, idChoroby) VALUES (?,?)";
+				String query = "INSERT INTO chorobyPrzewlekle (idPacjenta, idChoroby) VALUES (?,?)";
 				try {
 					PreparedStatement st = conn.prepareStatement(query);
 					st.setInt(1, patientId);
@@ -129,49 +128,29 @@ public class ChorobaDAO {
 		return true;
 	}
 
-	public static boolean writeCurrentIllnessData(Wizyta app) {
-
-		Connection conn = DBHandler.getDatabaseConnection();
-
-		int appId = WizytaDAO.getId(app);
-		if (appId == -1)
-			return false;
-		ArrayList<Choroba> illnesses = app.getRozpoznaneChoroby();
-		// TODO: zapewniæ, by w tymczasowych nie by³o sta³ych chorób
-
-		try {
-			conn.setAutoCommit(false);
-
-			for (Choroba ill : illnesses) {
-				String query = "INSERT INTO chorobyTymczasowe (idWizyty, idChoroby) VALUES (?,?)";
-				try {
-					PreparedStatement st = conn.prepareStatement(query);
-					st.setInt(1, appId);
-					st.setInt(2, ill.getId());
-					st.executeUpdate();
-					st.close();
-				}
-				// TODO:
-				catch (SQLException e) {
-					if (e.getErrorCode() == 1062) // DUPLICATE PRIMARY KEY
-						continue;
-					// return false;
-					else {
-						conn.rollback();
-						break;
-					}
-				}
-			}
-			conn.commit();
-			conn.setAutoCommit(true);
-
-		} catch (SQLException e) {
-			return false;
-		}
-
-		return true;
-	}
-
+	/*
+	 * public static boolean writeCurrentIllnessData(Wizyta app) {
+	 * 
+	 * Connection conn = DBHandler.getDatabaseConnection();
+	 * 
+	 * int appId = WizytaDAO.getId(app); if (appId == -1) return false;
+	 * ArrayList<Choroba> illnesses = app.getRozpoznaneChoroby(); // TODO:
+	 * zapewniæ, by w tymczasowych nie by³o sta³ych chorób
+	 * 
+	 * try { conn.setAutoCommit(false);
+	 * 
+	 * for (Choroba ill : illnesses) { String query =
+	 * "INSERT INTO chorobyTymczasowe (idWizyty, idChoroby) VALUES (?,?)"; try {
+	 * PreparedStatement st = conn.prepareStatement(query); st.setInt(1, appId);
+	 * st.setInt(2, ill.getId()); st.executeUpdate(); st.close(); } // TODO:
+	 * catch (SQLException e) { if (e.getErrorCode() == 1062) // DUPLICATE
+	 * PRIMARY KEY continue; // return false; else { conn.rollback(); break; } }
+	 * } conn.commit(); conn.setAutoCommit(true);
+	 * 
+	 * } catch (SQLException e) { return false; }
+	 * 
+	 * return true; }
+	 */
 	public ArrayList<Choroba> getAllIllnesses() throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
@@ -293,7 +272,7 @@ public class ChorobaDAO {
 		PreparedStatement st;
 
 		// if (constIllnesses.isEmpty()) { // DELETE, brak rozpoznañ
-		String queryString = "DELETE FROM chorobyPrzewlek³e WHERE idPacjenta = ?";
+		String queryString = "DELETE FROM chorobyPrzewlekle WHERE idPacjenta = ?";
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, patientId);
 		st.executeUpdate();
@@ -302,7 +281,7 @@ public class ChorobaDAO {
 		// }
 
 		// String
-		queryString = "INSERT INTO chorobyPrzewlek³e (idPacjenta, idChoroby) VALUES (?,?)";
+		queryString = "INSERT INTO chorobyPrzewlekle (idPacjenta, idChoroby) VALUES (?,?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, patientId); // to check

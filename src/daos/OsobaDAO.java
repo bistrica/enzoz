@@ -26,12 +26,12 @@ public class OsobaDAO {
 		String fname = "", lname = "", PESEL = "";
 
 		// try {
-		queryString = "SELECT imiê, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowoœæ, telefon FROM Osoby WHERE idOsoby=?";
+		queryString = "SELECT imie, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowosc, telefon FROM Osoby WHERE idOsoby=?";
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
-			fname = rs.getString("imiê");
+			fname = rs.getString("imie");
 			lname = rs.getString("nazwisko");
 			PESEL = rs.getString("PESEL");
 
@@ -58,19 +58,19 @@ public class OsobaDAO {
 		String fname = "", lname = "", PESEL = "", homeNo = "", flatNo = "", code = "", street = "", city = "", phone = "";
 
 		// try {
-		queryString = "SELECT imiê, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowoœæ, telefon FROM Osoby WHERE idOsoby=?";
+		queryString = "SELECT imie, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowosc, telefon FROM Osoby WHERE idOsoby=?";
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
-			fname = rs.getString("imiê");
+			fname = rs.getString("imie");
 			lname = rs.getString("nazwisko");
 			PESEL = rs.getString("PESEL");
 			street = rs.getString("ulica");
 			homeNo = rs.getString("nrDomu");
 			flatNo = rs.getString("nrMieszkania");
 			code = rs.getString("kodPocztowy");
-			city = rs.getString("miejscowoœæ");
+			city = rs.getString("miejscowosc");
 			phone = rs.getString("telefon");
 
 			break;
