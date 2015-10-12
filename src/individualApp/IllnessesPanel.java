@@ -71,7 +71,9 @@ public class IllnessesPanel extends BPanel {
 		JScrollPane constantScroll = new JScrollPane(constant);
 
 		temporaryScroll.setSize(getWidth() / 2, 200);
+		// temporaryScroll.setBackground(Color.GREEN);
 		constantScroll.setSize(getWidth() / 2, 200);
+		// constantScroll.setBackground(Color.BLUE);
 
 		all = new JList<Choroba>();
 
@@ -157,16 +159,19 @@ public class IllnessesPanel extends BPanel {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
+				System.out.println("rem");
 				filter();
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
+				System.out.println("ins");
 				filter();
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
+				System.out.println("cha");
 				filter();
 			}
 		});

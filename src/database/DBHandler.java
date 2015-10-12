@@ -118,7 +118,9 @@ public class DBHandler {
 								+ host
 								+ "/"
 								+ dbname
-								+ "?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true",
+								+ "?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true"
+								+ "&verifyServerCertificate=false&useSSL=true", // TODO
+																				// ask
 						login, pass);
 
 		// tryToConnect();

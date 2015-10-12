@@ -1,8 +1,8 @@
 package appointment;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,9 +24,12 @@ public class AppointmentPanel extends JPanel {
 		appointmentsTable = new JTable();
 		JScrollPane appScroll = new JScrollPane(appointmentsTable);
 		button = new JButton();// previewString);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(appScroll);
-		add(button);// preview);
+		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
+		add(appScroll, BorderLayout.CENTER);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(button);// preview);
+		add(buttonPanel, BorderLayout.SOUTH);
 
 	}
 

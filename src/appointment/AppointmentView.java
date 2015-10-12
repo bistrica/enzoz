@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import people.Lekarz;
+import GUI_items.SearchHelper;
 import database.DBHandler;
 
 public class AppointmentView extends JFrame {
@@ -21,13 +23,14 @@ public class AppointmentView extends JFrame {
 	private String todayAppString = "Dzisiejsze wizyty";
 	private String openString = "Rozpocznij wizytê", previewString = "Podgl¹d";
 
-	private AppointmentPanel archivePanel, todayPanel;
+	private AppointmentPanel todayPanel;
+	private ArchivePanel archivePanel;
 	private String archiveString = "Archiwum";
 	private JMenuItem refreshItem;
 	private String viewMenuString = "Widok";
 	private String refreshString = "Odœwie¿";
 
-	public AppointmentView() {
+	public AppointmentView(Lekarz[] doctors) {
 
 		JMenu menu = new JMenu(viewMenuString);
 		refreshItem = new JMenuItem(refreshString);
@@ -39,9 +42,12 @@ public class AppointmentView extends JFrame {
 		JTabbedPane tabbedPanel = new JTabbedPane();
 
 		todayPanel = new AppointmentPanel();
-		archivePanel = new AppointmentPanel();// this);
-		tabbedPanel.add(todayAppString, todayPanel);
-		tabbedPanel.add(archiveString, archivePanel);
+		archivePanel = new ArchivePanel(doctors);// this);
+		JScrollPane scrollToday = new JScrollPane(todayPanel);
+		JScrollPane scrollArchive = new JScrollPane(archivePanel);
+
+		tabbedPanel.add(todayAppString, scrollToday);// todayPanel);
+		tabbedPanel.add(archiveString, scrollArchive);// archivePanel);
 		getContentPane().add(tabbedPanel);
 		setSize(700, 600);
 
@@ -105,6 +111,18 @@ public class AppointmentView extends JFrame {
 		archivePanel.setButtonListenerAndLabel(previewString, al);
 	}
 
+	public void setSearchListener(ActionListener al) {
+		archivePanel.setSearchButtonListener(al);
+	}
+
+	public boolean validateSearchParameters() {
+		return archivePanel.validateFields();
+	}
+
+	public void setDoctorsSurnames(Lekarz[] sur) {
+		archivePanel.setDoctorsSurnames(sur);
+	}
+
 	/*
 	 * public void tryToMakePreview(Wizyta wizyta) { ia }
 	 */
@@ -131,6 +149,10 @@ public class AppointmentView extends JFrame {
 		JOptionPane.showMessageDialog(null, message, titleBar,
 				JOptionPane.INFORMATION_MESSAGE);
 
+	}
+
+	public SearchHelper getSearchData() {
+		return archivePanel.getSearchData();
 	}
 
 }

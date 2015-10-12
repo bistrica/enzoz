@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import people.Lekarz;
+import GUI_items.SearchHelper;
+import daos.OsobaDAO;
 import daos.WizytaDAO;
 import database.DBHandler;
 import exceptions.ArchiveException;
@@ -17,6 +19,8 @@ public class AppointmentDBH {
 
 	Connection conn = null;
 	WizytaDAO appDAO;
+	ArrayList<Wizyta> tempApps;
+	OsobaDAO personDAO;
 
 	public AppointmentDBH() {
 		conn = DBHandler.getDatabaseConnection();
@@ -44,6 +48,7 @@ public class AppointmentDBH {
 			}
 		}
 		DBHandler.resetTrialsNo();
+
 		return apps;
 	}
 
@@ -66,6 +71,7 @@ public class AppointmentDBH {
 			// throw new ArchiveException();
 		}
 		DBHandler.resetTrialsNo();
+		tempApps = apps;
 		return apps;
 	}
 
@@ -88,6 +94,40 @@ public class AppointmentDBH {
 
 		}
 		DBHandler.resetTrialsNo();
+
+	}
+
+	public ArrayList<Wizyta> searchData(SearchHelper searchData)
+			throws ArchiveException {
+
+		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
+		try {
+			apps = appDAO.getArchiveAppointments(searchData);
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
+				DBHandler.resetTrialsNo();
+				throw new ArchiveException();
+			} else {
+				System.out.println("ONCE MORE");
+				DBHandler.incrementTrialsNo();
+				apps = getArchiveAppointments();
+			}
+			// throw new ArchiveException();
+		}
+		DBHandler.resetTrialsNo();
+		tempApps = apps;
+		return apps;
+	}
+
+	public ArrayList<Lekarz> getDoctors() {
+
+		ArrayList<Lekarz> lek = new ArrayList<Lekarz>();
+		lek.add(new Lekarz(1, "Ola", "Do³êga", ""));
+		lek.add(new Lekarz(2, "Ania", "Kwiatek", ""));
+		return lek;
+		// TODO: zrobiæ to;
 
 	}
 

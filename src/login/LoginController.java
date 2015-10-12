@@ -2,6 +2,7 @@ package login;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.MessageDigest;
 
 import people.Lekarz;
 import people.Pracownik;
@@ -23,7 +24,7 @@ public class LoginController {
 		model = lm;
 
 		// TODO: skasowaæ liniê
-		// loginTest();
+		loginTest();
 
 		view.setLoginListener(new ActionListener() {
 
@@ -39,6 +40,22 @@ public class LoginController {
 				}
 
 				Pracownik user = null;
+
+				try {
+					MessageDigest digest = MessageDigest.getInstance("SHA-512");
+					byte[] hash = digest.digest(pass.getBytes("UTF-8"));
+
+					StringBuilder hexString = new StringBuilder();
+					for (int i : hash) {
+						hexString.append(Integer.toHexString(0XFF & i));
+					}
+					pass = hexString.toString();
+					System.out.println(hexString);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					// TODO: show dialog
+					return;
+				}
 
 				try {
 					user = model.tryToLog(login, pass);

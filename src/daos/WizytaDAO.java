@@ -15,11 +15,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import people.Lekarz;
 import people.Pacjent;
+import GUI_items.SearchHelper;
 import database.DBHandler;
 
 public class WizytaDAO {
@@ -223,11 +225,87 @@ public class WizytaDAO {
 
 		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
 		PreparedStatement st;
-		String queryString = "SELECT idWizyty, idPacjenta, idLekarza, data, status FROM wizytyArchiwum ORDER BY data DESC";
+
+		int year = Calendar.getInstance().get(Calendar.YEAR) - 2;
+
+		String queryString = "SELECT idWizyty, idPacjenta, idLekarza, data, status FROM wizytyArchiwum WHERE YEAR(data)>"
+				+ year + " ORDER BY data DESC";
 
 		// try {
 
 		st = conn.prepareStatement(queryString);
+		ResultSet rs = st.executeQuery();
+		while (rs.next()) {
+			int appId = rs.getInt("idWizyty");
+			Pacjent patient = new Pacjent(personDAO.getShortPersonData(rs
+					.getInt("idPacjenta")));// patientDAO.getShortPatientData(rs.getInt("idPacjenta"));
+			Lekarz doctor = new Lekarz(personDAO.getShortPersonData(rs
+					.getInt("idLekarza"))); // TODO: check, czy wystarczy
+											// osobaDAO || make doctorDAO
+			GregorianCalendar appDate = convertToDate(rs.getString("data"));
+			Wizyta app = new Wizyta(appId, appDate);
+			app.setLekarz(doctor);
+			app.setPacjent(patient);
+			app.setStatus(rs.getString("status"));
+			apps.add(app);
+		}
+
+		rs.close();
+		st.close();
+
+		return apps;
+
+	}
+
+	public ArrayList<Wizyta> getArchiveAppointments(SearchHelper sh)
+			throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
+
+		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
+		PreparedStatement st;
+
+		// int year = Calendar.getInstance().get(Calendar.YEAR) - 2;
+
+		String queryString = "SELECT idWizyty, idPacjenta, idLekarza, data, status FROM wizytyArchiwum WHERE ";
+		StringBuilder sb = new StringBuilder(queryString);
+		int year = sh.getYear(), month = sh.getMonth(), day = sh.getDay();
+		long PESEL = sh.getPESEL();
+		Lekarz doc = sh.getSurname();
+
+		ArrayList<Integer> parameters = new ArrayList<Integer>();
+		if (year != -1) {
+			sb.append("YEAR(data)=? AND ");
+			parameters.add(year);
+		}
+		if (month != -1) {
+			sb.append("MONTH(data)=? AND ");
+			parameters.add(month);
+		}
+		if (day != -1) {
+			sb.append("DAY(data)=? AND ");
+			parameters.add(day);
+		}
+		if (PESEL != -1) {
+			int patientId = personDAO.getPersonId(PESEL);
+			sb.append("IdPacjenta=? AND ");
+			parameters.add(patientId);
+		}
+		if (doc != null) {
+			sb.append("IdLekarza=?");
+			parameters.add(doc.getId());
+		}
+
+		sb.append(" 1 ORDER BY data DESC");
+		queryString = sb.toString();
+
+		// try {
+
+		st = conn.prepareStatement(queryString);
+		int i = 1;
+		for (int param : parameters)
+			st.setInt(i++, param);
+
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
 			int appId = rs.getInt("idWizyty");

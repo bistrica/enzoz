@@ -87,4 +87,20 @@ public class OsobaDAO {
 		return person;
 	}
 
+	public int getPersonId(long pESEL) throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
+
+		String queryString = "SELECT idOsoby FROM Osoby WHERE PESEL=?";
+		PreparedStatement st = conn.prepareStatement(queryString);
+		st.setLong(1, pESEL);
+		ResultSet rs = st.executeQuery();
+		int id = -1;
+		while (rs.next()) {
+			id = rs.getInt("idOsoby");
+		}
+		return id;
+
+	}
+
 }

@@ -33,11 +33,17 @@ public class AppointmentController {
 	// "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
 	// private String titleBarString = "Wizyta w trakcie edycji";
 	private String errorString = "Wyst¹pi³ b³¹d";
+	private String wrongDataTitleString = "B³êdne dane";
+	private String wrongDataString = "WprowadŸ poprawne dane.";
+
 	protected long SLEEP_DURATION = 300000;// 6000;
 
 	boolean currentAppOpen;
 	protected String currentAppOpenString = "Wizyta otwarta";
 	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
+
+	ArrayList<Lekarz> doctors;
+	protected String searchErrorString;
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
@@ -53,7 +59,9 @@ public class AppointmentController {
 
 			@Override
 			public void run() {
-				av = new AppointmentView();
+				doctors = am.getDoctors();
+
+				av = new AppointmentView(getDoctorSurnames());
 				refreshData();
 
 				setListeners();
@@ -93,11 +101,44 @@ public class AppointmentController {
 				}
 			}
 		});
+
 		t.start();
 
 	}
 
+	private Lekarz[] getDoctorSurnames() {
+		Lekarz[] surnames = new Lekarz[doctors.size() + 1];
+		surnames[0] = new Lekarz(0, "", "", "");
+		int i = 1;
+		for (Lekarz doctor : doctors)
+			surnames[i++] = doctor;// doctor.getImie() + " " +
+									// doctor.getNazwisko();
+		return surnames;
+		// av.setDoctorsSurnames(surnames);
+	}
+
 	private void setListeners() {
+
+		av.setSearchListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!av.validateSearchParameters()) {
+					av.displayInfo(wrongDataString, wrongDataTitleString);
+				}
+
+				try {
+					appointmentsArchive = am.searchData(av.getSearchData());
+					av.setArchiveAppointments(columnNames,
+							convertArchiveAppointments());
+				} catch (ArchiveException e1) {
+					av.displayInfo(searchErrorString, errorString);
+					e1.printStackTrace();
+				}
+
+			}
+		});
+
 		av.setTodayListener(new ActionListener() {
 
 			@Override
