@@ -17,6 +17,11 @@ import GUI_items.SearchHelper;
 
 public class ArchivePanel extends AppointmentPanel {
 
+	private static final int PESEL_LENGTH = 11;
+	private static final int DOCTOR_NAME_LENGTH = 50;
+	private static final int DAY_MONTH_LENGTH = 2;
+	private static final int YEAR_LENGTH = 4;
+
 	int MIN_YEAR = 2000;
 	JTextField year, month, day, patientPESEL;
 	JComboBox<Lekarz> doctorSurname;
@@ -35,17 +40,17 @@ public class ArchivePanel extends AppointmentPanel {
 		JLabel yearLab = new JLabel(yearString), monthLab = new JLabel(
 				monthString), dayLab = new JLabel(dayString), patientLab = new JLabel(
 				PESELString), doctorNameLab = new JLabel(surnameString);
-		year = new JTextField(4);
-		year.setDocument(new LengthFilter(4, true));
+		year = new JTextField(YEAR_LENGTH);
+		year.setDocument(new LengthFilter(YEAR_LENGTH, true));
 		year.setMaximumSize(year.getPreferredSize());
-		month = new JTextField(2);
-		month.setDocument(new LengthFilter(2, true));
+		month = new JTextField(DAY_MONTH_LENGTH);
+		month.setDocument(new LengthFilter(DAY_MONTH_LENGTH, true));
 		month.setMaximumSize(month.getPreferredSize());
-		day = new JTextField(2);
-		day.setDocument(new LengthFilter(2, true));
+		day = new JTextField(DAY_MONTH_LENGTH);
+		day.setDocument(new LengthFilter(DAY_MONTH_LENGTH, true));
 		day.setMaximumSize(day.getPreferredSize());
-		patientPESEL = new JTextField(11);
-		patientPESEL.setDocument(new LengthFilter(11, true));
+		patientPESEL = new JTextField(PESEL_LENGTH);
+		patientPESEL.setDocument(new LengthFilter(PESEL_LENGTH, true));
 		patientPESEL.setMaximumSize(patientPESEL.getPreferredSize());
 		doctorSurname = new JComboBox<Lekarz>(doctors);// JTextField(20);
 		// doctorSurname.setDocument(new LengthFilter(50, false));
@@ -107,34 +112,47 @@ public class ArchivePanel extends AppointmentPanel {
 		 * ;// { return false; // } }
 		 */
 
-		int y = -1, m = -1, d = -1;// , p = -1;
-		try {
-			if (!year.getText().trim().equals(""))
+		System.out.println();
+		int y = -1, m = -1, d = -1;
+		// long p = -1;
+		try { // niepotrzebne, bo tylko cyfry
+			if (!year.getText().isEmpty())// equals(""))
 				y = Integer.parseInt(year.getText());
-			if (!month.getText().trim().equals(""))
+			if (!month.getText().isEmpty())
 				m = Integer.parseInt(month.getText());
-			if (!day.getText().trim().equals(""))
+			if (!day.getText().isEmpty())
 				d = Integer.parseInt(day.getText());
-			// if (!patientPESEL.getText().trim().equals(""))
-			// p = Integer.parseInt(patientPESEL.getText());
+			String pesel = patientPESEL.getText();
+			if (!pesel.isEmpty()) {
+				if (pesel.length() < PESEL_LENGTH)
+					return false;
+				long p = Long.parseLong(pesel);
+			}
 		} catch (NumberFormatException e) {
+			System.out.println("NUM");
 			return false;
+
 		}
 
-		if (m < 1 || m > 12 || d < 1 || d > 31)
+		// System.out.println("AFT 1");
+		if ((m != -1 && m < 1) || m > 12 || (d != -1 && d < 1) || d > 31)
 			return false;
 
+		System.out.println("AFT  <>");
 		if (m == 2 && d > 29)
 			return false;
 
+		System.out.println("AFT 20 FEB");
 		if ((m == 4 || m == 6 || m == 9 || m == 11) && d == 31)
 			return false;
 
+		System.out.println("AFT 31");
 		Calendar cal = Calendar.getInstance();
 		int currYear = cal.get(Calendar.YEAR);
-		if (y > currYear || y < MIN_YEAR)
+		if (y > currYear || (y != -1 && y < MIN_YEAR))
 			return false;
 
+		System.out.println("YEARS");
 		if (y != -1) {
 			cal.set(Calendar.YEAR, y);
 			boolean leapYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
@@ -176,8 +194,10 @@ public class ArchivePanel extends AppointmentPanel {
 		Lekarz docSurname = (Lekarz) doctorSurname.getSelectedItem();
 		if (docSurname.toString().trim().equals(""))
 			helper.setSurname(null);
-		else
+		else {
 			helper.setSurname(docSurname);
+			System.out.println("Doc " + docSurname);
+		}
 		String dayStr = day.getText().trim(), monthStr = month.getText().trim(), yearStr = year
 				.getText().trim(), PESELStr = patientPESEL.getText().trim();
 		if (dayStr.isEmpty())
@@ -197,5 +217,19 @@ public class ArchivePanel extends AppointmentPanel {
 		else
 			helper.setPESEL(Long.parseLong(PESELStr));
 		return helper;
+	}
+
+	public boolean emptySearchParameters() {
+		return doctorSurname.getSelectedIndex() == 0 && day.getText().isEmpty()
+				&& month.getText().isEmpty() && year.getText().isEmpty()
+				&& patientPESEL.getText().isEmpty();// &&
+	}
+
+	public void reset() {
+		doctorSurname.setSelectedIndex(0);
+		day.setText("");
+		month.setText("");
+		year.setText("");
+		patientPESEL.setText("");
 	}
 }

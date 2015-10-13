@@ -155,4 +155,13 @@ public class AppointmentView extends JFrame {
 		return archivePanel.getSearchData();
 	}
 
+	public boolean emptySearchParameters() {
+
+		return archivePanel.emptySearchParameters();
+	}
+
+	public void resetSearchResults() {
+		archivePanel.reset();
+	}
+
 }

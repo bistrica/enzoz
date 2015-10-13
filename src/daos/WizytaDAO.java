@@ -219,7 +219,7 @@ public class WizytaDAO {
 		app.setArchive(true);
 	}
 
-	public ArrayList<Wizyta> getArchiveAppointments() throws SQLException {
+	private ArrayList<Wizyta> getArchiveAppointments() throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
 
@@ -260,6 +260,9 @@ public class WizytaDAO {
 	public ArrayList<Wizyta> getArchiveAppointments(SearchHelper sh)
 			throws SQLException {
 
+		if (sh == null)
+			return getArchiveAppointments();
+
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
@@ -292,7 +295,7 @@ public class WizytaDAO {
 			parameters.add(patientId);
 		}
 		if (doc != null) {
-			sb.append("IdLekarza=?");
+			sb.append("IdLekarza=? AND ");
 			parameters.add(doc.getId());
 		}
 

@@ -13,12 +13,14 @@ import people.Lekarz;
 import people.Pacjent;
 import database.DBHandler;
 import exceptions.ArchiveException;
+import exceptions.LoadDataException;
 import exceptions.PatientAlreadyBlockedException;
 import exceptions.PreviewCannotBeCreatedException;
 import exceptions.TodayException;
 
 public class AppointmentController {
 
+	boolean includeSearch;
 	AppointmentDBH am;
 	AppointmentView av;
 	Lekarz doctor;
@@ -43,7 +45,7 @@ public class AppointmentController {
 	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
 
 	ArrayList<Lekarz> doctors;
-	protected String searchErrorString;
+	protected String searchErrorString = "Wyst¹pi³ b³¹d przy wyszukiwaniu danych. Spróbuj póŸniej.";
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
@@ -52,6 +54,7 @@ public class AppointmentController {
 
 	public AppointmentController(Lekarz user) {
 		currentAppOpen = false;
+		doctors = new ArrayList<Lekarz>();
 		doctor = user;
 		am = new AppointmentDBH();
 
@@ -59,15 +62,30 @@ public class AppointmentController {
 
 			@Override
 			public void run() {
-				doctors = am.getDoctors();
+
+				boolean error = false;
+				String errorMessage = "";
+
+				try {
+					doctors = am.getDoctors();
+				} catch (LoadDataException e) {
+					e.printStackTrace();
+					error = true;
+					errorMessage = e.getMessage();
+				}
 
 				av = new AppointmentView(getDoctorSurnames());
+
+				av.setVisible(true);
+
+				if (error)
+					av.displayInfo(errorMessage, errorString);
+
 				refreshData();
 
 				setListeners();
 
 				// TODO: odkomentowaæ
-				av.setVisible(true);
 
 				// TODO:usun¹æ
 				// createAppointment(appointments.get(0));
@@ -125,10 +143,15 @@ public class AppointmentController {
 			public void actionPerformed(ActionEvent e) {
 				if (!av.validateSearchParameters()) {
 					av.displayInfo(wrongDataString, wrongDataTitleString);
+					return;
 				}
 
+				includeSearch = !av.emptySearchParameters();
+
 				try {
-					appointmentsArchive = am.searchData(av.getSearchData());
+					appointmentsArchive = includeSearch ? am.searchData(av
+							.getSearchData()) : am
+							.getArchiveAppointments(includeSearch);
 					av.setArchiveAppointments(columnNames,
 							convertArchiveAppointments());
 				} catch (ArchiveException e1) {
@@ -178,6 +201,8 @@ public class AppointmentController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				includeSearch = false;
+				av.resetSearchResults();
 				refreshData();
 			}
 		});
@@ -200,7 +225,7 @@ public class AppointmentController {
 		ArrayList<Wizyta> tempAppArchive = new ArrayList<Wizyta>();
 		// appointmentsArchive = new ArrayList<Wizyta>();
 		try {
-			tempAppArchive = am.getArchiveAppointments();
+			tempAppArchive = am.getArchiveAppointments(includeSearch);
 			// appointmentsArchive = am.getArchiveAppointments();
 		} catch (ArchiveException e) {
 			av.displayInfo(e.getMessage(), errorString);
