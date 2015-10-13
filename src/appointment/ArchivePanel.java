@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import people.Lekarz;
+import people.Doctor;
 import GUI_items.LengthFilter;
 import GUI_items.SearchHelper;
 
@@ -24,7 +24,7 @@ public class ArchivePanel extends AppointmentPanel {
 
 	int MIN_YEAR = 2000;
 	JTextField year, month, day, patientPESEL;
-	JComboBox<Lekarz> doctorSurname;
+	JComboBox<Doctor> doctorSurname;
 	String yearString = "Rok", monthString = "Miesi¹c", dayString = "Dzieñ",
 			PESELString = "PESEL pacjenta", surnameString = "Nazwisko lekarza";
 	private JButton searchButton;
@@ -32,7 +32,7 @@ public class ArchivePanel extends AppointmentPanel {
 
 	// private ArrayList<String> surnames;
 
-	public ArchivePanel(Lekarz[] doctors) {
+	public ArchivePanel(Doctor[] doctors) {
 		super();
 		JPanel searchPane = new JPanel();
 		// searchPane.setLayout(new BoxLayout(searchPane, BoxLayout.Y_AXIS));
@@ -52,7 +52,7 @@ public class ArchivePanel extends AppointmentPanel {
 		patientPESEL = new JTextField(PESEL_LENGTH);
 		patientPESEL.setDocument(new LengthFilter(PESEL_LENGTH, true));
 		patientPESEL.setMaximumSize(patientPESEL.getPreferredSize());
-		doctorSurname = new JComboBox<Lekarz>(doctors);// JTextField(20);
+		doctorSurname = new JComboBox<Doctor>(doctors);// JTextField(20);
 		// doctorSurname.setDocument(new LengthFilter(50, false));
 		doctorSurname.setMaximumSize(doctorSurname.getPreferredSize());
 
@@ -95,8 +95,8 @@ public class ArchivePanel extends AppointmentPanel {
 
 	}
 
-	public void setDoctorsSurnames(Lekarz[] sur) {
-		doctorSurname = new JComboBox<Lekarz>(sur);
+	public void setDoctorsSurnames(Doctor[] sur) {
+		doctorSurname = new JComboBox<Doctor>(sur);
 		repaint();
 	}
 
@@ -191,7 +191,7 @@ public class ArchivePanel extends AppointmentPanel {
 
 	public SearchHelper getSearchData() {
 		SearchHelper helper = new SearchHelper();
-		Lekarz docSurname = (Lekarz) doctorSurname.getSelectedItem();
+		Doctor docSurname = (Doctor) doctorSurname.getSelectedItem();
 		if (docSurname.toString().trim().equals(""))
 			helper.setSurname(null);
 		else {

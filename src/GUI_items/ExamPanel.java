@@ -1,7 +1,7 @@
 package GUI_items;
 
-import items.Poradnia;
-import items.Skierowanie;
+import items.Clinic;
+import items.Examination;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -19,10 +19,10 @@ import javax.swing.border.EtchedBorder;
 
 public class ExamPanel extends JPanel {
 
-	private Skierowanie position;
+	private Examination position;
 
 	private JTextArea description;
-	private JComboBox<Poradnia> clinics;
+	private JComboBox<Clinic> clinics;
 	private String removeString = "Usuñ skierowanie";
 	JButton removeButton;
 
@@ -30,10 +30,10 @@ public class ExamPanel extends JPanel {
 
 	private String clinicLabelString;
 
-	public ExamPanel(Poradnia[] clinics) {
+	public ExamPanel(Clinic[] clinics) {
 		// this.position=pos;
 
-		this.clinics = new JComboBox<Poradnia>(clinics);
+		this.clinics = new JComboBox<Clinic>(clinics);
 
 		removeButton = new JButton(removeString);
 		JPanel thisPanel = this;
@@ -74,15 +74,15 @@ public class ExamPanel extends JPanel {
 		setMaximumSize(new Dimension(getPreferredSize().width, 200));
 	}
 
-	public Skierowanie getPosition() {
+	public Examination getPosition() {
 		return position;
 	}
 
-	public void setPosition(Skierowanie position) {
+	public void setPosition(Examination position) {
 		this.position = position;
 	}
 
-	public void setClinic(Poradnia clinic) {
+	public void setClinic(Clinic clinic) {
 		this.clinics.setSelectedItem(clinic);
 	}
 
@@ -97,8 +97,8 @@ public class ExamPanel extends JPanel {
 		clinics.setEnabled(state);
 	}
 
-	public Skierowanie retrieveExam() {
-		return new Skierowanie((Poradnia) (clinics.getSelectedItem()),
+	public Examination retrieveExam() {
+		return new Examination((Clinic) (clinics.getSelectedItem()),
 				description.getText());
 	}
 

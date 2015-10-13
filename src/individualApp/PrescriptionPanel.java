@@ -1,7 +1,7 @@
 package individualApp;
 
-import items.Lek;
-import items.PozycjaNaRecepcie;
+import items.Medicine;
+import items.PrescriptedItem;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -38,8 +38,8 @@ public class PrescriptionPanel extends BPanel {
 	 * ingestionString="Iloœæ za¿yæ/dzieñ";
 	 */
 
-	private HashSet<Lek> allSet;
-	private JList<Lek> all;
+	private HashSet<Medicine> allSet;
+	private JList<Medicine> all;
 	private DrugListPanel prescriptedMedicines;
 	private JPanel medicines;
 	private JScrollPane scrollAll;
@@ -89,7 +89,7 @@ public class PrescriptionPanel extends BPanel {
 			}
 		});
 
-		all = new JList<Lek>();
+		all = new JList<Medicine>();
 		// medicinesModel=new DefaultTableModel();//<PozycjaNaRecepcie>();
 		// prescriptedMedicines.setDefaultRenderer(PozycjaNaRecepcie.class, new
 		// DrugCellRenderer());
@@ -137,40 +137,40 @@ public class PrescriptionPanel extends BPanel {
 		refresh(searchedPhrase);
 	}
 
-	public void setAll(ArrayList<Lek> all) {
+	public void setAll(ArrayList<Medicine> all) {
 
-		this.allSet = new HashSet<Lek>();
-		for (Lek i : all)
+		this.allSet = new HashSet<Medicine>();
+		for (Medicine i : all)
 			this.allSet.add(i);
 
-		Lek[] ill = new Lek[all.size()];
+		Medicine[] ill = new Medicine[all.size()];
 		ill = all.toArray(ill);
 
-		this.all = new JList<Lek>(ill);
+		this.all = new JList<Medicine>(ill);
 		createMedicinesDialog();
 	}
 
 	private void refresh(String phrase) {
 
-		List<Lek> col = phrase.isEmpty() ? new ArrayList<Lek>(allSet)
-				: new ArrayList<Lek>();
+		List<Medicine> col = phrase.isEmpty() ? new ArrayList<Medicine>(allSet)
+				: new ArrayList<Medicine>();
 		if (!phrase.isEmpty()) {
 			phrase = phrase.toLowerCase();
-			for (Lek i : allSet)
+			for (Medicine i : allSet)
 				if (i.toString().toLowerCase().contains(phrase))
 					col.add(i);
 		}
-		Collections.sort(col, new Comparator<Lek>() {
+		Collections.sort(col, new Comparator<Medicine>() {
 			@Override
-			public int compare(Lek i1, Lek i2) {
+			public int compare(Medicine i1, Medicine i2) {
 				return i1.toString().compareTo(i2.toString());
 			}
 		});
-		Lek[] all = new Lek[col.size()];
+		Medicine[] all = new Medicine[col.size()];
 		all = col.toArray(all);
 
 		this.medicines.remove(this.scrollAll);
-		this.all = new JList<Lek>(all);
+		this.all = new JList<Medicine>(all);
 		this.scrollAll = new JScrollPane(this.all);
 		this.medicines.add(this.scrollAll, BorderLayout.CENTER);
 
@@ -196,10 +196,10 @@ public class PrescriptionPanel extends BPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// System.out.println("click");
-				Lek newDrug = all.getSelectedValue();
+				Medicine newDrug = all.getSelectedValue();
 				// medicinesModel.addElement(newDrug);
 				// if (!prescriptedMedicines.contains(newDrug)){
-				prescriptedMedicines.add(new PozycjaNaRecepcie(newDrug));
+				prescriptedMedicines.add(new PrescriptedItem(newDrug));
 				repaint();
 				// revalidate();
 				// medicinesModel.addRow(new Object[]{new
@@ -224,8 +224,8 @@ public class PrescriptionPanel extends BPanel {
 
 	}
 
-	public void setPrescription(ArrayList<PozycjaNaRecepcie> positions) {
-		for (PozycjaNaRecepcie pos : positions)
+	public void setPrescription(ArrayList<PrescriptedItem> positions) {
+		for (PrescriptedItem pos : positions)
 			prescriptedMedicines.add(pos);
 		repaint();
 
@@ -240,17 +240,17 @@ public class PrescriptionPanel extends BPanel {
 		}
 	}
 
-	public ArrayList<PozycjaNaRecepcie> getPrescriptedPositions(
+	public ArrayList<PrescriptedItem> getPrescriptedPositions(
 			boolean onlyIfChanged) throws NumberFormatException {
 
-		ArrayList<PozycjaNaRecepcie> positions = new ArrayList<PozycjaNaRecepcie>();
+		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
 
 		boolean allTheSame = true;
 
 		for (Component panel : prescriptedMedicines.getComponents()) {
 			if (panel instanceof DrugPanel) {
 				DrugPanel drugPanel = (DrugPanel) panel;
-				PozycjaNaRecepcie pos = drugPanel.retrievePrescribedPosition();
+				PrescriptedItem pos = drugPanel.retrievePrescribedPosition();
 				if (!pos.equals(drugPanel.getPosition()))
 					allTheSame = false;
 				positions.add(pos);

@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import people.Lekarz;
+import people.Doctor;
 import GUI_items.SearchHelper;
 import database.DBHandler;
 
@@ -30,7 +30,7 @@ public class AppointmentView extends JFrame {
 	private String viewMenuString = "Widok";
 	private String refreshString = "Odœwie¿";
 
-	public AppointmentView(Lekarz[] doctors) {
+	public AppointmentView(Doctor[] doctors) {
 
 		JMenu menu = new JMenu(viewMenuString);
 		refreshItem = new JMenuItem(refreshString);
@@ -119,7 +119,7 @@ public class AppointmentView extends JFrame {
 		return archivePanel.validateFields();
 	}
 
-	public void setDoctorsSurnames(Lekarz[] sur) {
+	public void setDoctorsSurnames(Doctor[] sur) {
 		archivePanel.setDoctorsSurnames(sur);
 	}
 

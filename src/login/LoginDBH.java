@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DBHandler;
-import people.Lekarz;
-import people.Pracownik;
+import people.Doctor;
+import people.Employee;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
 
@@ -18,10 +18,10 @@ public class LoginDBH {
 	//String login;
 	//DBHandler dbh;
 	
-	public Pracownik tryToLog(String login, String pass) throws ConnectionException, BadDataException {
+	public Employee tryToLog(String login, String pass) throws ConnectionException, BadDataException {
 		
 		//this.login=login;
-		Pracownik user=null;
+		Employee user=null;
 		
 		try {
 	      

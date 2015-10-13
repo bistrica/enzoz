@@ -1,7 +1,7 @@
 package appointment;
 
 import individualApp.IndividualAppController;
-import items.Wizyta;
+import items.Appointment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import people.Lekarz;
-import people.Pacjent;
+import people.Doctor;
+import people.Patient;
 import database.DBHandler;
 import exceptions.ArchiveException;
 import exceptions.LoadDataException;
@@ -23,12 +23,12 @@ public class AppointmentController {
 	boolean includeSearch;
 	AppointmentDBH am;
 	AppointmentView av;
-	Lekarz doctor;
-	ArrayList<Wizyta> appsInChildWindows;
+	Doctor doctor;
+	ArrayList<Appointment> appsInChildWindows;
 
 	String[] colNames = { "Pacjent", "PESEL", "Godzina" };
-	ArrayList<Wizyta> appointmentsToday;
-	ArrayList<Wizyta> appointmentsArchive;
+	ArrayList<Appointment> appointmentsToday;
+	ArrayList<Appointment> appointmentsArchive;
 
 	String[] columnNames = { "Data", "Pacjent", "Lekarz" };
 	// private String notEditableString =
@@ -44,7 +44,7 @@ public class AppointmentController {
 	protected String currentAppOpenString = "Wizyta otwarta";
 	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
 
-	ArrayList<Lekarz> doctors;
+	ArrayList<Doctor> doctors;
 	protected String searchErrorString = "Wyst¹pi³ b³¹d przy wyszukiwaniu danych. Spróbuj póŸniej.";
 
 	/*
@@ -52,9 +52,9 @@ public class AppointmentController {
 	 * constructor stub }
 	 */
 
-	public AppointmentController(Lekarz user) {
+	public AppointmentController(Doctor user) {
 		currentAppOpen = false;
-		doctors = new ArrayList<Lekarz>();
+		doctors = new ArrayList<Doctor>();
 		doctor = user;
 		am = new AppointmentDBH();
 
@@ -92,7 +92,7 @@ public class AppointmentController {
 			}
 		});
 
-		appsInChildWindows = new ArrayList<Wizyta>();
+		appsInChildWindows = new ArrayList<Appointment>();
 
 		Thread t = new Thread(new Runnable() {
 
@@ -124,11 +124,11 @@ public class AppointmentController {
 
 	}
 
-	private Lekarz[] getDoctorSurnames() {
-		Lekarz[] surnames = new Lekarz[doctors.size() + 1];
-		surnames[0] = new Lekarz(0, "", "", "");
+	private Doctor[] getDoctorSurnames() {
+		Doctor[] surnames = new Doctor[doctors.size() + 1];
+		surnames[0] = new Doctor(0, "", "", "");
 		int i = 1;
-		for (Lekarz doctor : doctors)
+		for (Doctor doctor : doctors)
 			surnames[i++] = doctor;// doctor.getImie() + " " +
 									// doctor.getNazwisko();
 		return surnames;
@@ -222,7 +222,7 @@ public class AppointmentController {
 	}
 
 	private void getArchiveAppointments() {
-		ArrayList<Wizyta> tempAppArchive = new ArrayList<Wizyta>();
+		ArrayList<Appointment> tempAppArchive = new ArrayList<Appointment>();
 		// appointmentsArchive = new ArrayList<Wizyta>();
 		try {
 			tempAppArchive = am.getArchiveAppointments(includeSearch);
@@ -233,7 +233,7 @@ public class AppointmentController {
 		appointmentsArchive = tempAppArchive;
 	}
 
-	private void createAppointment(Wizyta app, boolean editable) {
+	private void createAppointment(Appointment app, boolean editable) {
 		// System.out.println("Nowa: " + app.toString());
 		// System.out.println("CONTAINS " + appsInChildWindows.contains(app));
 		System.out.println("CURR " + currentAppOpen);
@@ -253,7 +253,7 @@ public class AppointmentController {
 		}
 	}
 
-	private void tryToCreateArchiveAppointmentPreview(Wizyta app) {
+	private void tryToCreateArchiveAppointmentPreview(Appointment app) {
 		/*
 		 * boolean allowed=false; try { allowed = am.statusAllowsEditing(app); }
 		 * catch (SQLException e) { throw new PreviewCannotBeCreatedException();
@@ -288,8 +288,8 @@ public class AppointmentController {
 	private Object[][] convertAppointments() {
 		Object[][] converted = new Object[appointmentsToday.size()][colNames.length];
 		int i = 0;
-		for (Wizyta app : appointmentsToday) {
-			Pacjent patient = app.getPacjent();
+		for (Appointment app : appointmentsToday) {
+			Patient patient = app.getPatient();
 			converted[i][0] = patient.nameToString();
 			converted[i][1] = patient.getPESEL();
 			converted[i][2] = app.getHourToString(); //
@@ -301,16 +301,16 @@ public class AppointmentController {
 	private Object[][] convertArchiveAppointments() {
 		Object[][] data = new Object[appointmentsArchive.size()][3];
 		int i = 0;
-		for (Wizyta app : appointmentsArchive) {
+		for (Appointment app : appointmentsArchive) {
 			data[i][0] = app.getDataToString();
-			data[i][1] = app.getPacjent().getMainInfo();
-			data[i++][2] = app.getLekarz().getName();
+			data[i][1] = app.getPatient().getMainInfo();
+			data[i++][2] = app.getDoctor().getName();
 		}
 		return data;
 	}
 
 	private void getAppointments() {
-		ArrayList<Wizyta> tempAppToday = new ArrayList<Wizyta>();
+		ArrayList<Appointment> tempAppToday = new ArrayList<Appointment>();
 		try {
 			tempAppToday = am.getTodayAppointments(doctor);
 		} catch (TodayException e) {
@@ -319,7 +319,7 @@ public class AppointmentController {
 		appointmentsToday = tempAppToday;
 	}
 
-	public void removeChildWindow(Wizyta childWindowApp) {
+	public void removeChildWindow(Appointment childWindowApp) {
 		// if (!childWindowApp.isArchiveAppointment())
 		// currentAppOpen = false;
 		refreshData();

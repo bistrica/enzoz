@@ -1,7 +1,7 @@
 package GUI_items;
 
-import items.Lek;
-import items.PozycjaNaRecepcie;
+import items.Medicine;
+import items.PrescriptedItem;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -33,16 +33,16 @@ public class DrugPanel extends JPanel {
 	JTextField packageCount;
 	JTextField discountVal;
 	JTextField ingestionCount;
-	private PozycjaNaRecepcie position;
+	private PrescriptedItem position;
 	private String removeString = "Usuñ pozycjê";
 	JButton removeButton;
 
-	public DrugPanel(PozycjaNaRecepcie pos) {
+	public DrugPanel(PrescriptedItem pos) {
 
 		position = pos;
-		Lek drug = pos.getLek();
-		nameDoseLabel = new JLabel(drug.getNazwa() + ", " + drug.getDawka());
-		typeLabel = new JLabel(drug.getPostac() + ", " + drug.getOpakowanie());
+		Medicine drug = pos.getMedicine();
+		nameDoseLabel = new JLabel(drug.getName() + ", " + drug.getDose());
+		typeLabel = new JLabel(drug.getFormulation() + ", " + drug.getPackageDescription());
 		nameDoseLabel.setFont(new Font("Arial", Font.BOLD, 20));
 		typeLabel.setFont(new Font("Arial", Font.PLAIN, 15));
 
@@ -60,10 +60,10 @@ public class DrugPanel extends JPanel {
 		discountVal = new JTextField(3);
 		ingestionCount = new JTextField(3);
 
-		dosesCount.setText("" + pos.getIloscDawekNaPrzyjecie());
-		packageCount.setText("" + pos.getIloscOpakowan());
-		discountVal.setText((int) (pos.getProcentRefundacji() * 100) + "%");
-		ingestionCount.setText("" + pos.getIloscPrzyjec());
+		dosesCount.setText("" + pos.getDosesCountPerIngestion());
+		packageCount.setText("" + pos.getPackageCount());
+		discountVal.setText((int) (pos.getDiscountPercent() * 100) + "%");
+		ingestionCount.setText("" + pos.getIngestionCount());
 
 		JLabel dosesCountLabel = new JLabel(dosesString);
 		JLabel packageCountLabel = new JLabel(packageString);
@@ -153,11 +153,11 @@ public class DrugPanel extends JPanel {
 
 	}
 
-	public PozycjaNaRecepcie getPosition() {
+	public PrescriptedItem getPosition() {
 		return position;
 	}
 
-	public void setPosition(PozycjaNaRecepcie position) {
+	public void setPosition(PrescriptedItem position) {
 		this.position = position;
 	}
 
@@ -170,9 +170,9 @@ public class DrugPanel extends JPanel {
 		ingestionCount.setEditable(state);
 	}
 
-	public PozycjaNaRecepcie retrievePrescribedPosition()
+	public PrescriptedItem retrievePrescribedPosition()
 			throws NumberFormatException {
-		PozycjaNaRecepcie pos = null;
+		PrescriptedItem pos = null;
 
 		// try {
 		double doses = Double.parseDouble(dosesCount.getText()
@@ -180,7 +180,7 @@ public class DrugPanel extends JPanel {
 		double discount = Double.parseDouble(discountVal.getText()
 				.replace('%', ' ').trim()) * 0.01;
 		System.out.println("d: " + doses + ", r: " + discount);
-		pos = new PozycjaNaRecepcie(position.getLek(),
+		pos = new PrescriptedItem(position.getMedicine(),
 				Integer.parseInt(packageCount.getText()), doses,
 				Integer.parseInt(ingestionCount.getText()), discount);
 		/*

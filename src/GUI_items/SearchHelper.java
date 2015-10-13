@@ -1,12 +1,12 @@
 package GUI_items;
 
-import people.Lekarz;
+import people.Doctor;
 
 public class SearchHelper {
 
 	int day, month, year;
 	long PESEL;
-	Lekarz surname;
+	Doctor surname;
 
 	public int getDay() {
 		return day;
@@ -40,11 +40,11 @@ public class SearchHelper {
 		PESEL = pESEL;
 	}
 
-	public Lekarz getSurname() {
+	public Doctor getSurname() {
 		return surname;
 	}
 
-	public void setSurname(Lekarz surname) {
+	public void setSurname(Doctor surname) {
 		this.surname = surname;
 	}
 }

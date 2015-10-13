@@ -1,7 +1,7 @@
 package rendering;
 
-import items.Lek;
-import items.PozycjaNaRecepcie;
+import items.Medicine;
+import items.PrescriptedItem;
 
 import java.awt.Component;
 
@@ -41,7 +41,7 @@ public class DrugCellRenderer extends AbstractCellEditor implements TableCellEdi
 					Object value, boolean isSelected, boolean hasFocus,
 					int row, int column) {
 
-				PozycjaNaRecepcie pos=null;
+				PrescriptedItem pos=null;
 				/*if (value instanceof PozycjaNaRecepcie)
 					 pos=(PozycjaNaRecepcie) value;
 				
@@ -49,7 +49,7 @@ public class DrugCellRenderer extends AbstractCellEditor implements TableCellEdi
 					 pos=((DrugCellPanel) value).getValue();
 				*/
 				
-				pos=(PozycjaNaRecepcie)table.getModel().getValueAt(row, column);
+				pos=(PrescriptedItem)table.getModel().getValueAt(row, column);
 					rowPanel.update(pos);
 				   //edit=rowPanel2;
 				   return rowPanel;
@@ -67,14 +67,14 @@ public class DrugCellRenderer extends AbstractCellEditor implements TableCellEdi
 				System.out.println("Val : "+value);
 				//if (!(value instanceof PozycjaNaRecepcie) || value==null) return rowPanel;
 				
-				PozycjaNaRecepcie pos=null;
+				PrescriptedItem pos=null;
 				/*if (value instanceof PozycjaNaRecepcie)
 					 pos=(PozycjaNaRecepcie) value;
 				
 				else if (value instanceof DrugCellPanel)
 					 pos=((DrugCellPanel) value).getValue();
 				*/
-				pos=(PozycjaNaRecepcie)table.getModel().getValueAt(row, column);
+				pos=(PrescriptedItem)table.getModel().getValueAt(row, column);
 				System.out.println("posval "+pos);
 				//PozycjaNaRecepcie pos=(PozycjaNaRecepcie) value;
 				rowPanel2.update(pos);

@@ -1,7 +1,7 @@
 package rendering;
 
-import items.Lek;
-import items.PozycjaNaRecepcie;
+import items.Medicine;
+import items.PrescriptedItem;
 
 import java.util.ArrayList;
 

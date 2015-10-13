@@ -1,15 +1,15 @@
 package appointment;
 
-import items.Wizyta;
+import items.Appointment;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import people.Lekarz;
+import people.Doctor;
 import GUI_items.SearchHelper;
-import daos.LekarzDAO;
-import daos.WizytaDAO;
+import daos.DoctorDAO;
+import daos.AppointmentDAO;
 import database.DBHandler;
 import exceptions.ArchiveException;
 import exceptions.LoadDataException;
@@ -19,23 +19,23 @@ import exceptions.TodayException;
 public class AppointmentDBH {
 
 	Connection conn = null;
-	WizytaDAO appDAO;
-	ArrayList<Wizyta> tempApps;
+	AppointmentDAO appDAO;
+	ArrayList<Appointment> tempApps;
 	// OsobaDAO personDAO;
-	LekarzDAO doctorDAO;
+	DoctorDAO doctorDAO;
 	private SearchHelper previousHelper;
 	private String doctorString = "dane lekarzy";
 
 	public AppointmentDBH() {
 		conn = DBHandler.getDatabaseConnection();
-		appDAO = new WizytaDAO();
-		doctorDAO = new LekarzDAO();
+		appDAO = new AppointmentDAO();
+		doctorDAO = new DoctorDAO();
 	}
 
-	public ArrayList<Wizyta> getTodayAppointments(Lekarz doctor)
+	public ArrayList<Appointment> getTodayAppointments(Doctor doctor)
 			throws TodayException {
 
-		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
+		ArrayList<Appointment> apps = new ArrayList<Appointment>();
 
 		try {
 			apps = appDAO.getTodayAppointments(doctor);
@@ -56,10 +56,10 @@ public class AppointmentDBH {
 		return apps;
 	}
 
-	public ArrayList<Wizyta> getArchiveAppointments(boolean recentSearch)
+	public ArrayList<Appointment> getArchiveAppointments(boolean recentSearch)
 			throws ArchiveException {
 
-		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
+		ArrayList<Appointment> apps = new ArrayList<Appointment>();
 		SearchHelper searchData = recentSearch ? previousHelper : null;
 		try {
 			apps = appDAO.getArchiveAppointments(searchData);// getArchiveAppointments();
@@ -81,7 +81,7 @@ public class AppointmentDBH {
 		return apps;
 	}
 
-	public void openPreview(Wizyta app) throws PreviewCannotBeCreatedException {
+	public void openPreview(Appointment app) throws PreviewCannotBeCreatedException {
 		try {
 			appDAO.updateData(app);
 			// isPossible = appDAO.updateData(app);
@@ -103,10 +103,10 @@ public class AppointmentDBH {
 
 	}
 
-	public ArrayList<Wizyta> searchData(SearchHelper searchData)
+	public ArrayList<Appointment> searchData(SearchHelper searchData)
 			throws ArchiveException {
 
-		ArrayList<Wizyta> apps = new ArrayList<Wizyta>();
+		ArrayList<Appointment> apps = new ArrayList<Appointment>();
 		try {
 			previousHelper = searchData;
 			apps = appDAO.getArchiveAppointments(searchData);
@@ -128,8 +128,8 @@ public class AppointmentDBH {
 		return apps;
 	}
 
-	public ArrayList<Lekarz> getDoctors() throws LoadDataException {
-		ArrayList<Lekarz> doctors = new ArrayList<Lekarz>();
+	public ArrayList<Doctor> getDoctors() throws LoadDataException {
+		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
 
 		try {
 			doctors = doctorDAO.getDoctors();

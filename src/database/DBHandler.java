@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import people.Pracownik;
-import daos.PracownikDAO;
+import people.Employee;
+import daos.EmployeeDAO;
 
 public class DBHandler {
 
-	private Pracownik currentUser;
+	private Employee currentUser;
 	private Connection conn;
 	private String host = "192.168.56.1"// "mysql.serversfree.com"//
 										// "192.168.56.1",
@@ -136,16 +136,16 @@ public class DBHandler {
 	 */
 
 	// TODO: zdecydowaæ siê z poni¿szymi 2ma metodami
-	public static Pracownik getCurrentUser() throws SQLException {
+	public static Employee getCurrentUser() throws SQLException {
 
-		PracownikDAO employeeDAO = new PracownikDAO();
+		EmployeeDAO employeeDAO = new EmployeeDAO();
 		if (dbh.currentUser == null)
 			dbh.currentUser = employeeDAO.getEmployeeData(dbh.login);
 
 		return dbh.currentUser;
 	}
 
-	public static Pracownik getUser() {
+	public static Employee getUser() {
 		return dbh.currentUser;
 	}
 

@@ -1,10 +1,10 @@
 package individualApp;
 
-import items.Choroba;
-import items.Lek;
-import items.Poradnia;
-import items.PozycjaNaRecepcie;
-import items.Skierowanie;
+import items.Illness;
+import items.Medicine;
+import items.Clinic;
+import items.PrescriptedItem;
+import items.Examination;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -172,21 +172,21 @@ public class IndividualAppView extends JFrame {
 		editItem.setEnabled(!editMode);
 	}
 
-	public void setClinicsList(ArrayList<Poradnia> list) {
+	public void setClinicsList(ArrayList<Clinic> list) {
 		examinationPane.setAllClinics(list);
 	}
 
 	// ³aduje wszystkie istniej¹ce z bazy
-	public void setIllnessesList(ArrayList<Choroba> list) {
+	public void setIllnessesList(ArrayList<Illness> list) {
 		illnessesPane.setAll(list);
 	}
 
-	public void setTemporaryIllnesses(ArrayList<Choroba> list) {
+	public void setTemporaryIllnesses(ArrayList<Illness> list) {
 		illnessesPane.setTemporary(list);
 		illnessesPane.revalidate();
 	}
 
-	public void setConstantIllnesses(ArrayList<Choroba> list) {
+	public void setConstantIllnesses(ArrayList<Illness> list) {
 		illnessesPane.setConstant(list);
 		illnessesPane.revalidate();
 	}
@@ -209,12 +209,12 @@ public class IndividualAppView extends JFrame {
 	 * illnessesPane.setConstant(ill); illnessesPane.revalidate(); }
 	 */
 
-	public void setPrescription(ArrayList<PozycjaNaRecepcie> pos) {
+	public void setPrescription(ArrayList<PrescriptedItem> pos) {
 		prescriptionPane.setPrescription(pos);
 		prescriptionPane.revalidate();
 	}
 
-	public void setExaminations(ArrayList<Skierowanie> exams) {
+	public void setExaminations(ArrayList<Examination> exams) {
 		examinationPane.setExaminations(exams);
 		examinationPane.revalidate();
 	}
@@ -224,7 +224,7 @@ public class IndividualAppView extends JFrame {
 	 */
 
 	// ³aduje wszystkie leki z bazy
-	public void setAllMedicinesList(ArrayList<Lek> list) {
+	public void setAllMedicinesList(ArrayList<Medicine> list) {
 		prescriptionPane.setAll(list);
 	}
 
@@ -260,14 +260,14 @@ public class IndividualAppView extends JFrame {
 		return interviewPane.getInterviewDescription();
 	}
 
-	public ArrayList<Skierowanie> getExaminations(boolean onlyEdited) {
+	public ArrayList<Examination> getExaminations(boolean onlyEdited) {
 		return examinationPane.getExaminations(onlyEdited);
 
 	}
 
-	public ArrayList<PozycjaNaRecepcie> getPrescriptionData(boolean onlyEdited)
+	public ArrayList<PrescriptedItem> getPrescriptionData(boolean onlyEdited)
 			throws WrongInputException {
-		ArrayList<PozycjaNaRecepcie> positions = new ArrayList<PozycjaNaRecepcie>();
+		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
 		try {
 			positions = prescriptionPane.getPrescriptedPositions(onlyEdited);
 		} catch (NumberFormatException e) {
@@ -281,11 +281,11 @@ public class IndividualAppView extends JFrame {
 	 * illnessesPane.getTemporaryIllnesses(); }
 	 */
 
-	public ArrayList<Choroba> getConstantIllnesses(boolean onlyIfEdited) {
+	public ArrayList<Illness> getConstantIllnesses(boolean onlyIfEdited) {
 		return illnessesPane.getConstantIllnesses(onlyIfEdited);
 	}
 
-	public ArrayList<Choroba> getCurrentIllnesses(boolean onlyIfEdited) {
+	public ArrayList<Illness> getCurrentIllnesses(boolean onlyIfEdited) {
 		return illnessesPane.getAllCurrentIllnesses(onlyIfEdited);
 	}
 

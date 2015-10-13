@@ -1,6 +1,6 @@
 package individualApp;
 
-import items.Choroba;
+import items.Illness;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -30,12 +30,12 @@ public class IllnessesPanel extends BPanel {
 
 	// private HashSet<Choroba> tempSet;
 	// private HashSet<Choroba> constSet;
-	private HashSet<Choroba> allSet;
+	private HashSet<Illness> allSet;
 	JPanel illnesses;
 
-	JList<Choroba> temporary, constant, all;
+	JList<Illness> temporary, constant, all;
 	// JList<Choroba> all;
-	DefaultListModel<Choroba> temporaryModel, constantModel;
+	DefaultListModel<Illness> temporaryModel, constantModel;
 
 	JButton addTemporary, removeTemporary, addConstant, removeConstant,
 			addIllness;
@@ -52,18 +52,18 @@ public class IllnessesPanel extends BPanel {
 
 	boolean temporaryWindow;
 	private JScrollPane scrollAll;
-	private ArrayList<Choroba> constantIllnesses;
-	private ArrayList<Choroba> temporaryIllnesses;
+	private ArrayList<Illness> constantIllnesses;
+	private ArrayList<Illness> temporaryIllnesses;
 
 	public IllnessesPanel(boolean archive) {
 
-		temporary = new JList<Choroba>();
-		constant = new JList<Choroba>();
-		temporaryIllnesses = new ArrayList<Choroba>();
-		constantIllnesses = new ArrayList<Choroba>();
+		temporary = new JList<Illness>();
+		constant = new JList<Illness>();
+		temporaryIllnesses = new ArrayList<Illness>();
+		constantIllnesses = new ArrayList<Illness>();
 
-		temporaryModel = new DefaultListModel<Choroba>();
-		constantModel = new DefaultListModel<Choroba>();
+		temporaryModel = new DefaultListModel<Illness>();
+		constantModel = new DefaultListModel<Illness>();
 		temporary.setModel(temporaryModel);
 		constant.setModel(constantModel);
 
@@ -75,7 +75,7 @@ public class IllnessesPanel extends BPanel {
 		constantScroll.setSize(getWidth() / 2, 200);
 		// constantScroll.setBackground(Color.BLUE);
 
-		all = new JList<Choroba>();
+		all = new JList<Illness>();
 
 		addTemporary = new JButton(addTemporaryString);
 		removeTemporary = new JButton(removeTemporaryString);
@@ -205,7 +205,7 @@ public class IllnessesPanel extends BPanel {
 				// ListModel oldModel=chosen.getModel();
 				// for (Choroba ill: chosen.getModel().)
 				// chosen.getModel().addElement(all.getSelectedValue());
-				Choroba newIll = all.getSelectedValue();
+				Illness newIll = all.getSelectedValue();
 				if (temporaryWindow) {
 
 					if (constantModel.contains(newIll)
@@ -243,48 +243,48 @@ public class IllnessesPanel extends BPanel {
 
 	}
 
-	public JList<Choroba> getTemporary() {
+	public JList<Illness> getTemporary() {
 		return temporary;
 	}
 
-	public JList<Choroba> getConstant() {
+	public JList<Illness> getConstant() {
 		return constant;
 	}
 
-	public void setAll(ArrayList<Choroba> all) {
+	public void setAll(ArrayList<Illness> all) {
 
-		this.allSet = new HashSet<Choroba>();
-		for (Choroba i : all)
+		this.allSet = new HashSet<Illness>();
+		for (Illness i : all)
 			this.allSet.add(i);
 
-		Choroba[] ill = new Choroba[all.size()];
+		Illness[] ill = new Illness[all.size()];
 		ill = all.toArray(ill);
 
-		this.all = new JList<Choroba>(ill);
+		this.all = new JList<Illness>(ill);
 		createIllnessDialog();
 	}
 
 	private void refresh(String phrase) {
 
-		List<Choroba> col = phrase.isEmpty() ? new ArrayList<Choroba>(allSet)
-				: new ArrayList<Choroba>();
+		List<Illness> col = phrase.isEmpty() ? new ArrayList<Illness>(allSet)
+				: new ArrayList<Illness>();
 		if (!phrase.isEmpty()) {
 			phrase = phrase.toLowerCase();
-			for (Choroba i : allSet)
+			for (Illness i : allSet)
 				if (i.toString().toLowerCase().contains(phrase))
 					col.add(i);
 		}
-		Collections.sort(col, new Comparator<Choroba>() {
+		Collections.sort(col, new Comparator<Illness>() {
 			@Override
-			public int compare(Choroba i1, Choroba i2) {
+			public int compare(Illness i1, Illness i2) {
 				return i1.toString().compareTo(i2.toString());
 			}
 		});
-		Choroba[] all = new Choroba[col.size()];
+		Illness[] all = new Illness[col.size()];
 		all = col.toArray(all);
 
 		this.illnesses.remove(this.scrollAll);
-		this.all = new JList<Choroba>(all);
+		this.all = new JList<Illness>(all);
 		this.scrollAll = new JScrollPane(this.all);
 		this.illnesses.add(this.scrollAll, BorderLayout.CENTER);
 
@@ -292,22 +292,22 @@ public class IllnessesPanel extends BPanel {
 
 	}
 
-	public void setTemporary(ArrayList<Choroba> list) {
+	public void setTemporary(ArrayList<Illness> list) {
 		// temporaryModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 		temporaryIllnesses = list;
 
-		for (Choroba ill : list)
+		for (Illness ill : list)
 			temporaryModel.addElement(ill);
 
 		repaint();
 	}
 
-	public void setConstant(ArrayList<Choroba> list) {
+	public void setConstant(ArrayList<Illness> list) {
 		// constantModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 
 		constantIllnesses = list;
 
-		for (Choroba ill : list)
+		for (Illness ill : list)
 			constantModel.addElement(ill);
 
 	}
@@ -322,17 +322,17 @@ public class IllnessesPanel extends BPanel {
 	 * null; return temp; }
 	 */
 
-	public ArrayList<Choroba> getConstantIllnesses(boolean onlyIfEdited) {
+	public ArrayList<Illness> getConstantIllnesses(boolean onlyIfEdited) {
 
 		boolean changes = false;
 		int size = constantModel.getSize();
 		if (size != constantIllnesses.size())
 			changes = true;
 
-		ArrayList<Choroba> cons = new ArrayList<Choroba>();// Arrays.asList(temporaryModel.toArray(array));
+		ArrayList<Illness> cons = new ArrayList<Illness>();// Arrays.asList(temporaryModel.toArray(array));
 
 		for (int i = 0; i < size; i++) {
-			Choroba illness = constantModel.getElementAt(i);
+			Illness illness = constantModel.getElementAt(i);
 			if (!changes && !constantIllnesses.contains(illness))
 				changes = true;
 			cons.add(illness);
@@ -343,21 +343,21 @@ public class IllnessesPanel extends BPanel {
 		return cons;
 	}
 
-	public ArrayList<Choroba> getAllCurrentIllnesses(boolean onlyIfEdited) {
+	public ArrayList<Illness> getAllCurrentIllnesses(boolean onlyIfEdited) {
 
 		boolean changes = false;
 		int size = temporaryModel.getSize();
 		if (size != temporaryIllnesses.size())
 			changes = true;
 
-		ArrayList<Choroba> illnesses = getConstantIllnesses(onlyIfEdited);
+		ArrayList<Illness> illnesses = getConstantIllnesses(onlyIfEdited);
 		if (illnesses == null)
-			illnesses = new ArrayList<Choroba>();
+			illnesses = new ArrayList<Illness>();
 		else
 			changes = true;
 
 		for (int i = 0; i < size; i++) {
-			Choroba illness = temporaryModel.getElementAt(i);
+			Illness illness = temporaryModel.getElementAt(i);
 			if (!changes && !temporaryIllnesses.contains(illness))
 				changes = true;
 			illnesses.add(illness);

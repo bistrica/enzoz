@@ -1,11 +1,11 @@
 package individualApp;
 
-import items.Choroba;
-import items.Konsultacja;
-import items.PozycjaNaRecepcie;
-import items.Recepta;
-import items.Skierowanie;
-import items.Wizyta;
+import items.Illness;
+import items.Interview;
+import items.PrescriptedItem;
+import items.Prescription;
+import items.Examination;
+import items.Appointment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +26,7 @@ import exceptions.WrongInputException;
 
 public class IndividualAppController {
 
-	Wizyta appointment;
+	Appointment appointment;
 
 	IndividualAppDBH iam;
 	IndividualAppView iav;
@@ -42,7 +42,7 @@ public class IndividualAppController {
 
 	private String anotherWindowOpenString = "Wizyta otwarta";
 
-	public IndividualAppController(AppointmentController parent, Wizyta app,
+	public IndividualAppController(AppointmentController parent, Appointment app,
 			boolean previewMode) throws PatientAlreadyBlockedException {
 		this.appointment = app;
 		this.parent = parent;
@@ -77,7 +77,7 @@ public class IndividualAppController {
 				userAllowedToEdit = false;
 				try {
 					userAllowedToEdit = DBHandler.getCurrentUser().equals(
-							appointment.getLekarz())
+							appointment.getDoctor())
 							&& !parent.isCurrentAppOpen();
 					System.out.println("US " + userAllowedToEdit);
 					// if (userAllowedToEdit && parent.isCurrentAppOpen())
@@ -101,21 +101,21 @@ public class IndividualAppController {
 					return;
 				}
 
-				iav.setInfo(appointment.getPacjent().getMainInfo(), appointment
-						.getPacjent().getAddressInfo());
+				iav.setInfo(appointment.getPatient().getMainInfo(), appointment
+						.getPatient().getAddressInfo());
 
 				if (appointment.isArchiveAppointment()) {
-					iav.setInterview(appointment.getKonsultacja().getTresc());
+					iav.setInterview(appointment.getInterview().getContent());
 					iav.setTemporaryIllnesses(appointment
-							.getRozpoznaneChoroby());
+							.getRecognizedIllnesses());
 					/*
 					 * iav.setConstantIllnesses(appointment.getPacjent()
 					 * .getChorobyPrzewlek쿮());
 					 */
-					iav.setPrescription(appointment.getRecepta().getPozycje());
-					iav.setExaminations(appointment.getSkierowania());
+					iav.setPrescription(appointment.getPrescription().getPozycje());
+					iav.setExaminations(appointment.getExaminations());
 				} else {
-					iav.setConstantIllnesses(appointment.getPacjent()
+					iav.setConstantIllnesses(appointment.getPatient()
 							.getChorobyPrzewlek쿮());
 				}
 				iav.setComponentsState();
@@ -208,22 +208,22 @@ public class IndividualAppController {
 		boolean isEdited = appointment.isArchiveAppointment();
 
 		// TODO: potwierdzenie zapisu zmian
-		Wizyta newOrEditedApp = new Wizyta(appointment.getId(),
-				appointment.getData(), appointment.getPacjent(),
-				appointment.getLekarz());
+		Appointment newOrEditedApp = new Appointment(appointment.getId(),
+				appointment.getDate(), appointment.getPatient(),
+				appointment.getDoctor());
 
 		newOrEditedApp.setArchive(appointment.isArchiveAppointment());
 
-		Konsultacja interview = new Konsultacja(iav.getInterview());
-		if (isEdited && appointment.getKonsultacja().equals(interview))
-			newOrEditedApp.setKonsultacja(null);
+		Interview interview = new Interview(iav.getInterview());
+		if (isEdited && appointment.getInterview().equals(interview))
+			newOrEditedApp.setInterview(null);
 		else
-			newOrEditedApp.setKonsultacja(interview);
+			newOrEditedApp.setInterview(interview);
 
-		ArrayList<Skierowanie> examinations = iav.getExaminations(isEdited);
-		newOrEditedApp.setSkierowania(examinations);
+		ArrayList<Examination> examinations = iav.getExaminations(isEdited);
+		newOrEditedApp.setExaminations(examinations);
 
-		ArrayList<PozycjaNaRecepcie> prescriptionData = null;
+		ArrayList<PrescriptedItem> prescriptionData = null;
 		try {
 			prescriptionData = iav.getPrescriptionData(isEdited);
 		} catch (WrongInputException e) {
@@ -232,17 +232,17 @@ public class IndividualAppController {
 			return;
 		}
 
-		Recepta prescription = (prescriptionData != null) ? new Recepta(
+		Prescription prescription = (prescriptionData != null) ? new Prescription(
 				prescriptionData) : null;
-		newOrEditedApp.setRecepta(prescription);
+		newOrEditedApp.setPrescription(prescription);
 
-		ArrayList<Choroba> tempIllnesses = iav.getCurrentIllnesses(isEdited);
-		newOrEditedApp.setRozpoznaneChoroby(tempIllnesses);
+		ArrayList<Illness> tempIllnesses = iav.getCurrentIllnesses(isEdited);
+		newOrEditedApp.setRecognizedIllnesses(tempIllnesses);
 
 		if (!isEdited) {
-			ArrayList<Choroba> constIllnesses = iav
+			ArrayList<Illness> constIllnesses = iav
 					.getConstantIllnesses(isEdited);
-			newOrEditedApp.getPacjent().setChorobyPrzewlek쿮(constIllnesses);
+			newOrEditedApp.getPatient().setChorobyPrzewlek쿮(constIllnesses);
 		}
 		try {
 			iam.saveAppointment(newOrEditedApp);

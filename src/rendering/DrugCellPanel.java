@@ -1,7 +1,7 @@
 package rendering;
 
-import items.Lek;
-import items.PozycjaNaRecepcie;
+import items.Medicine;
+import items.PrescriptedItem;
 
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -24,7 +24,7 @@ public class DrugCellPanel extends JPanel {
 	JTextField packageCount;
 	JTextField discountVal;
 	JTextField ingestionCount;
-	private PozycjaNaRecepcie position;
+	private PrescriptedItem position;
 	
 	public DrugCellPanel() {
 		
@@ -104,15 +104,15 @@ public class DrugCellPanel extends JPanel {
 		   add(modifiedData);
 	}
 	
-	public void update(PozycjaNaRecepcie pos) {
+	public void update(PrescriptedItem pos) {
 		this.position=pos;
 		System.out.println("pos "+pos);
-		Lek drug=pos.getLek();
-		nameDoseLabel.setText(drug.getNazwa()+" "+drug.getDawka());
-		typeLabel.setText(drug.getPostac()+", "+drug.getOpakowanie());
+		Medicine drug=pos.getMedicine();
+		nameDoseLabel.setText(drug.getName()+" "+drug.getDose());
+		typeLabel.setText(drug.getFormulation()+", "+drug.getPackageDescription());
 	}
 
-	public PozycjaNaRecepcie getValue() {
+	public PrescriptedItem getValue() {
 		return position;
 		
 	}

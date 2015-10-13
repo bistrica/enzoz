@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.MessageDigest;
 
-import people.Lekarz;
-import people.Pracownik;
+import people.Doctor;
+import people.Employee;
 import appointment.AppointmentController;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
@@ -39,7 +39,7 @@ public class LoginController {
 					return;
 				}
 
-				Pracownik user = null;
+				Employee user = null;
 
 				try {
 					MessageDigest digest = MessageDigest.getInstance("SHA-512");
@@ -65,8 +65,8 @@ public class LoginController {
 				}
 				view.setVisible(false);
 				System.out.println("U: " + user);
-				if (user instanceof Lekarz)
-					new AppointmentController((Lekarz) user);
+				if (user instanceof Doctor)
+					new AppointmentController((Doctor) user);
 				else
 					view.displayError(moduleNotImplementedString);
 
@@ -79,7 +79,7 @@ public class LoginController {
 
 	public void loginTest() {
 
-		Pracownik user;
+		Employee user;
 		String login;
 		String pass = login = "amis";
 		try {
@@ -90,8 +90,8 @@ public class LoginController {
 		}
 		view.setVisible(false);
 		System.out.println("U: " + user);
-		if (user instanceof Lekarz)
-			new AppointmentController((Lekarz) user);
+		if (user instanceof Doctor)
+			new AppointmentController((Doctor) user);
 		else
 			view.displayError(moduleNotImplementedString);
 

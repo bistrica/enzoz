@@ -1,6 +1,6 @@
 package GUI_items;
 
-import items.PozycjaNaRecepcie;
+import items.PrescriptedItem;
 
 import java.awt.Component;
 
@@ -14,9 +14,9 @@ public class DrugListPanel extends JPanel {
 
 	}
 
-	public void add(PozycjaNaRecepcie pos) {
+	public void add(PrescriptedItem pos) {
 		for (Component panel : getComponents()) {
-			if (((DrugPanel) panel).getPosition().getLek().equals(pos.getLek()))
+			if (((DrugPanel) panel).getPosition().getMedicine().equals(pos.getMedicine()))
 				return;
 		}
 		add(new DrugPanel(pos));

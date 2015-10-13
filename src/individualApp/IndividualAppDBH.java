@@ -1,17 +1,17 @@
 package individualApp;
 
-import items.Choroba;
-import items.Lek;
-import items.Poradnia;
-import items.Wizyta;
+import items.Illness;
+import items.Medicine;
+import items.Clinic;
+import items.Appointment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import daos.ChorobaDAO;
-import daos.LekDAO;
-import daos.PoradniaDAO;
-import daos.WizytaDAO;
+import daos.IllnessDAO;
+import daos.MedicineDAO;
+import daos.ClinicDAO;
+import daos.AppointmentDAO;
 import database.DBHandler;
 import exceptions.DataCannotBeEditedException;
 import exceptions.LoadDataException;
@@ -19,23 +19,23 @@ import exceptions.SaveDataException;
 
 public class IndividualAppDBH {
 
-	WizytaDAO appDAO;
-	ChorobaDAO illnessDAO;
-	LekDAO drugDAO;
-	PoradniaDAO clinicDAO;
+	AppointmentDAO appDAO;
+	IllnessDAO illnessDAO;
+	MedicineDAO drugDAO;
+	ClinicDAO clinicDAO;
 	private String illnessesString = "dane chorób";
 	private String medicinesString = "dane leków";
 	private String clinicsString = "dane poradni";
 
 	public IndividualAppDBH() {
-		illnessDAO = new ChorobaDAO();
-		drugDAO = new LekDAO();
-		clinicDAO = new PoradniaDAO();
-		appDAO = new WizytaDAO();
+		illnessDAO = new IllnessDAO();
+		drugDAO = new MedicineDAO();
+		clinicDAO = new ClinicDAO();
+		appDAO = new AppointmentDAO();
 	}
 
-	public ArrayList<Choroba> getAllIllnesses() throws LoadDataException {
-		ArrayList<Choroba> ill = new ArrayList<Choroba>();
+	public ArrayList<Illness> getAllIllnesses() throws LoadDataException {
+		ArrayList<Illness> ill = new ArrayList<Illness>();
 		try {
 			ill = illnessDAO.getAllIllnesses();
 		} catch (SQLException e) {
@@ -58,8 +58,8 @@ public class IndividualAppDBH {
 
 	}
 
-	public ArrayList<Lek> getAllMedicines() throws LoadDataException {
-		ArrayList<Lek> med = new ArrayList<Lek>();
+	public ArrayList<Medicine> getAllMedicines() throws LoadDataException {
+		ArrayList<Medicine> med = new ArrayList<Medicine>();
 		try {
 			med = drugDAO.getAllMedicines();
 		} catch (SQLException e) {
@@ -80,8 +80,8 @@ public class IndividualAppDBH {
 		return med;
 	}
 
-	public ArrayList<Poradnia> getAllClinics() throws LoadDataException {
-		ArrayList<Poradnia> cli = new ArrayList<Poradnia>();
+	public ArrayList<Clinic> getAllClinics() throws LoadDataException {
+		ArrayList<Clinic> cli = new ArrayList<Clinic>();
 		try {
 			cli = clinicDAO.getAllClinics();
 		} catch (SQLException e) {
@@ -102,7 +102,7 @@ public class IndividualAppDBH {
 		return cli;
 	}
 
-	public boolean isPossibleToEdit(Wizyta app)
+	public boolean isPossibleToEdit(Appointment app)
 			throws DataCannotBeEditedException {
 
 		boolean isPossible = false;
@@ -131,7 +131,7 @@ public class IndividualAppDBH {
 		return isPossible;
 	}
 
-	public void saveAppointment(Wizyta app) throws SaveDataException {
+	public void saveAppointment(Appointment app) throws SaveDataException {
 
 		try {
 			appDAO.writeToDatabase(app);
@@ -153,12 +153,12 @@ public class IndividualAppDBH {
 
 	}
 
-	public boolean tryToBlockPatientForEdit(Wizyta appointment) {
+	public boolean tryToBlockPatientForEdit(Appointment appointment) {
 
 		System.out.println("TRY TO BLOCK");
 		boolean isBlocked = false;
 		try {
-			isBlocked = appDAO.blockPatientData(appointment.getPacjent()
+			isBlocked = appDAO.blockPatientData(appointment.getPatient()
 					.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -166,7 +166,7 @@ public class IndividualAppDBH {
 		return isBlocked;
 	}
 
-	public void rewriteStatus(Wizyta appointment) throws SaveDataException {
+	public void rewriteStatus(Appointment appointment) throws SaveDataException {
 		try {
 			appDAO.writeBackOldStatus(appointment);
 		} catch (SQLException e) {

@@ -1,7 +1,7 @@
 package individualApp;
 
-import items.Poradnia;
-import items.Skierowanie;
+import items.Clinic;
+import items.Examination;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -19,7 +19,7 @@ import GUI_items.ExamPanel;
 
 public class ExaminationPanel extends BPanel {
 
-	Poradnia[] clinics;
+	Clinic[] clinics;
 	private String addString = "Dodaj skierowanie";
 	JButton addButton;
 	JPanel examsPane;
@@ -56,22 +56,22 @@ public class ExaminationPanel extends BPanel {
 		add(scrollPane);// , BorderLayout.CENTER);
 	}
 
-	public void setAllClinics(ArrayList<Poradnia> clinics) {
+	public void setAllClinics(ArrayList<Clinic> clinics) {
 
-		Poradnia[] items = new Poradnia[clinics.size()];
+		Clinic[] items = new Clinic[clinics.size()];
 		items = clinics.toArray(items);
 		this.clinics = items;
 	}
 
-	public void setExaminations(ArrayList<Skierowanie> exams) {
+	public void setExaminations(ArrayList<Examination> exams) {
 		System.out.println("SET");
 
-		for (Skierowanie exam : exams) {
-			System.out.println("::" + exam.getOpisBadan());
+		for (Examination exam : exams) {
+			System.out.println("::" + exam.getDescription());
 			ExamPanel examPane = new ExamPanel(clinics);
 			examPane.setPosition(exam);
-			examPane.setClinic(exam.getPoradnia());
-			examPane.setDescription(exam.getOpisBadan());
+			examPane.setClinic(exam.getClinic());
+			examPane.setDescription(exam.getDescription());
 			examPane.revalidate();
 			examsPane.add(examPane);
 
@@ -102,15 +102,15 @@ public class ExaminationPanel extends BPanel {
 	 * }
 	 */
 
-	public ArrayList<Skierowanie> getExaminations(boolean onlyIfChanged) {
+	public ArrayList<Examination> getExaminations(boolean onlyIfChanged) {
 
-		ArrayList<Skierowanie> exams = new ArrayList<Skierowanie>();
+		ArrayList<Examination> exams = new ArrayList<Examination>();
 		boolean allTheSame = true;
 
 		for (Component panel : examsPane.getComponents()) {
 			if (panel instanceof ExamPanel) {
 				ExamPanel examPanel = (ExamPanel) panel;
-				Skierowanie exam = examPanel.retrieveExam();
+				Examination exam = examPanel.retrieveExam();
 				if (!exam.equals(examPanel.getPosition()))
 					allTheSame = false;
 				exams.add(exam);
