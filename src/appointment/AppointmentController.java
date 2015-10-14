@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import login.LoginController;
 import people.Doctor;
 import people.Patient;
 import database.DBHandler;
@@ -30,7 +31,8 @@ public class AppointmentController {
 	ArrayList<Appointment> appointmentsToday;
 	ArrayList<Appointment> appointmentsArchive;
 
-	String[] columnNames = { "Data", "Pacjent", "Lekarz" };
+	String[] columnNames = { "Data", "Nazwisko pacjenta", "PESEL pacjenta",
+			"Lekarz" };
 	// private String notEditableString =
 	// "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
 	// private String titleBarString = "Wizyta w trakcie edycji";
@@ -38,7 +40,7 @@ public class AppointmentController {
 	private String wrongDataTitleString = "B³êdne dane";
 	private String wrongDataString = "WprowadŸ poprawne dane.";
 
-	protected long SLEEP_DURATION = 300000;// 6000;
+	protected long SLEEP_DURATION = 12000;// 300000;// 6000;
 
 	boolean currentAppOpen;
 	protected String currentAppOpenString = "Wizyta otwarta";
@@ -46,16 +48,21 @@ public class AppointmentController {
 
 	ArrayList<Doctor> doctors;
 	protected String searchErrorString = "Wyst¹pi³ b³¹d przy wyszukiwaniu danych. Spróbuj póŸniej.";
+	private LoginController loginController;
+	protected String openAppsString = "Otwarte wizyty";
+	protected String cannotCloseString = "Nie mo¿na opuœciæ okna, poniewa¿ jest otwarte okno ze szczegó³ami wizyty. Zamknij okno wizyty i spróbuj ponownie.";
+	boolean refreshRunning;
 
 	/*
 	 * public AppointmentController(String login) { // TODO Auto-generated
 	 * constructor stub }
 	 */
 
-	public AppointmentController(Doctor user) {
+	public AppointmentController(Doctor user, LoginController caller) {
 		currentAppOpen = false;
 		doctors = new ArrayList<Doctor>();
 		doctor = user;
+		loginController = caller;
 		am = new AppointmentDBH();
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -74,14 +81,14 @@ public class AppointmentController {
 					errorMessage = e.getMessage();
 				}
 
-				av = new AppointmentView(getDoctorSurnames());
+				av = new AppointmentView(getDoctorSurnames(), doctor.getName());
 
 				av.setVisible(true);
 
 				if (error)
 					av.displayInfo(errorMessage, errorString);
 
-				refreshData();
+				// refreshData();
 
 				setListeners();
 
@@ -94,12 +101,14 @@ public class AppointmentController {
 
 		appsInChildWindows = new ArrayList<Appointment>();
 
+		refreshRunning = true;
 		Thread t = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				boolean running = true;
-				while (running) {
+				refreshData();
+
+				while (refreshRunning) {
 
 					if (DBHandler.isClosed())
 						break;
@@ -108,14 +117,13 @@ public class AppointmentController {
 						Thread.sleep(SLEEP_DURATION); // co 5 min
 					} catch (InterruptedException e) {
 						System.out.println("stop refreshing");
-						running = false;
+						refreshRunning = false;
 						e.printStackTrace();
 					}
 
-					// if (iav.)
-					refreshData();
-
 					System.out.println("refreshed");
+					// if (iav.)
+
 				}
 			}
 		});
@@ -137,6 +145,33 @@ public class AppointmentController {
 
 	private void setListeners() {
 
+		av.setLogOutListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (av.sureToCloseWindow())
+					if (appsInChildWindows.isEmpty()) {
+						refreshRunning = false;
+						av.dispose();// setVisible(false);
+						// stopRefreshing();
+						loginController.logOut();
+					} else
+						av.displayInfo(cannotCloseString, openAppsString);
+			}
+		});
+
+		av.setExitListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (av.sureToCloseWindow())
+					if (appsInChildWindows.isEmpty())
+						System.exit(0);
+					else
+						av.displayInfo(cannotCloseString, openAppsString);
+			}
+		});
+
 		av.setSearchListener(new ActionListener() {
 
 			@Override
@@ -153,7 +188,7 @@ public class AppointmentController {
 							.getSearchData()) : am
 							.getArchiveAppointments(includeSearch);
 					av.setArchiveAppointments(columnNames,
-							convertArchiveAppointments());
+							convertArchiveAppointments(), true);
 				} catch (ArchiveException e1) {
 					av.displayInfo(searchErrorString, errorString);
 					e1.printStackTrace();
@@ -216,7 +251,7 @@ public class AppointmentController {
 				getArchiveAppointments();
 				av.setTodayAppointments(colNames, convertAppointments());
 				av.setArchiveAppointments(columnNames,
-						convertArchiveAppointments());
+						convertArchiveAppointments(), false);
 			}
 		});
 	}
@@ -299,12 +334,13 @@ public class AppointmentController {
 	}
 
 	private Object[][] convertArchiveAppointments() {
-		Object[][] data = new Object[appointmentsArchive.size()][3];
+		Object[][] data = new Object[appointmentsArchive.size()][4];
 		int i = 0;
 		for (Appointment app : appointmentsArchive) {
 			data[i][0] = app.getDataToString();
-			data[i][1] = app.getPatient().getMainInfo();
-			data[i++][2] = app.getDoctor().getName();
+			data[i][1] = app.getPatient().getName();
+			data[i][2] = app.getPatient().getPESEL();
+			data[i++][3] = app.getDoctor().getName();
 		}
 		return data;
 	}

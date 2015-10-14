@@ -1,6 +1,7 @@
 package appointment;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -22,6 +23,9 @@ public class AppointmentPanel extends JPanel {
 	public AppointmentPanel() {
 		// appointments=new ArrayList<Wizyta>();
 		appointmentsTable = new JTable();
+		appointmentsTable.setFont(new Font("Arial", Font.PLAIN, 18));
+		appointmentsTable.setRowHeight(appointmentsTable.getRowHeight() * 2);
+
 		JScrollPane appScroll = new JScrollPane(appointmentsTable);
 		button = new JButton();// previewString);
 		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

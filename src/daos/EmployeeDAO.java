@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import people.Doctor;
-import people.Person;
 import people.Employee;
+import people.Person;
 import database.DBHandler;
 
 public class EmployeeDAO {
@@ -19,6 +19,27 @@ public class EmployeeDAO {
 	public EmployeeDAO() {
 		personDAO = new PersonDAO();
 		// conn = DBHandler.getDatabaseConnection();
+	}
+
+	public boolean userExists(String login, String hashedPass)
+			throws SQLException {
+
+		Connection conn = DBHandler.getDatabaseConnection();
+
+		String queryString = "SELECT COUNT(*) AS ile FROM pracownicy WHERE login = ? and haslo = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
+
+		PreparedStatement st = conn.prepareStatement(queryString);
+		st.setString(1, login);
+		st.setString(2, hashedPass);
+		ResultSet rs = st.executeQuery();// Update();
+		int count = -1;
+		while (rs.next()) {
+			count = rs.getInt("ile");
+			break;
+		}
+
+		return count == 1;
+
 	}
 
 	public Employee getEmployeeData(String login) throws SQLException {

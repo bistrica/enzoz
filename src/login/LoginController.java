@@ -2,13 +2,13 @@ package login;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.MessageDigest;
 
 import people.Doctor;
 import people.Employee;
 import appointment.AppointmentController;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
+import exceptions.LibraryException;
 
 public class LoginController {
 
@@ -24,49 +24,49 @@ public class LoginController {
 		model = lm;
 
 		// TODO: skasowaæ liniê
-		loginTest();
+		// loginTest();
+
+		LoginController caller = this;
 
 		view.setLoginListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String pass = view.getPassword();
+				char[] pass = view.getPassword();
+				String password = new String(pass);
 				String login = view.getLogin();
-				pass = pass.trim();
+				password = password.trim();
 				login = login.trim();
-				if (pass.isEmpty() || login.isEmpty()) {
+				if (password.isEmpty() || login.isEmpty()) {
 					lv.displayError(emptyFieldString);
 					return;
 				}
 
 				Employee user = null;
 
-				try {
-					MessageDigest digest = MessageDigest.getInstance("SHA-512");
-					byte[] hash = digest.digest(pass.getBytes("UTF-8"));
-
-					StringBuilder hexString = new StringBuilder();
-					for (int i : hash) {
-						hexString.append(Integer.toHexString(0XFF & i));
-					}
-					pass = hexString.toString();
-					System.out.println(hexString);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					// TODO: show dialog
-					return;
-				}
+				/*
+				 * try { MessageDigest digest =
+				 * MessageDigest.getInstance("SHA-512"); byte[] hash =
+				 * digest.digest(password.getBytes("UTF-8"));
+				 * 
+				 * StringBuilder hexString = new StringBuilder(); for (int i :
+				 * hash) { hexString.append(Integer.toHexString(0XFF & i)); }
+				 * password = hexString.toString();
+				 * System.out.println(hexString); } catch (Exception e1) {
+				 * e1.printStackTrace(); // TODO: show dialog return; }
+				 */
 
 				try {
-					user = model.tryToLog(login, pass);
-				} catch (BadDataException | ConnectionException ex) {
+					user = model.tryToLog(login, password);
+				} catch (BadDataException | ConnectionException
+						| LibraryException ex) {
 					view.displayError(ex.getMessage());
 					return;
 				}
 				view.setVisible(false);
 				System.out.println("U: " + user);
 				if (user instanceof Doctor)
-					new AppointmentController((Doctor) user);
+					new AppointmentController((Doctor) user, caller);
 				else
 					view.displayError(moduleNotImplementedString);
 
@@ -84,17 +84,22 @@ public class LoginController {
 		String pass = login = "amis";
 		try {
 			user = model.tryToLog(login, pass);
-		} catch (BadDataException | ConnectionException ex) {
+		} catch (BadDataException | ConnectionException | LibraryException ex) {
 			view.displayError(ex.getMessage());
 			return;
 		}
 		view.setVisible(false);
 		System.out.println("U: " + user);
 		if (user instanceof Doctor)
-			new AppointmentController((Doctor) user);
+			new AppointmentController((Doctor) user, this);
 		else
 			view.displayError(moduleNotImplementedString);
 
+	}
+
+	public void logOut() {
+		view.clear();
+		view.setVisible(true);
 	}
 
 }

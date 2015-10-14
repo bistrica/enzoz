@@ -22,21 +22,41 @@ public class AppointmentView extends JFrame {
 	// JTable apps;
 	private String todayAppString = "Dzisiejsze wizyty";
 	private String openString = "Rozpocznij wizytê", previewString = "Podgl¹d";
+	Object options[] = { "Tak", "Nie" };
+	private String confirmExitString = "Czy na pewno chcesz opuœciæ to okno?";
+	private String exitTitleBarString = "Wyjœcie";
 
 	private AppointmentPanel todayPanel;
 	private ArchivePanel archivePanel;
 	private String archiveString = "Archiwum";
-	private JMenuItem refreshItem;
+	private JMenuItem refreshItem, logoutItem, exitItem;
 	private String viewMenuString = "Widok";
 	private String refreshString = "Odœwie¿";
+	private String noArchiveAppsString = "Nie znaleziono archiwalnych wizyt.";
+	private String noAppsString = "Brak wizyt";
+	private String noTodayAppsString = "Brak wizyt na dzisiaj.";
+	private String exitString = "Wyjœcie";
+	private String logoutString = "Wyloguj: ";
+	private String optionMenuString = "Opcje programu";
+	private boolean firstTimeOpenArchive;
+	private boolean firstTimeOpenToday;
 
-	public AppointmentView(Doctor[] doctors) {
+	public AppointmentView(Doctor[] doctors, String userName) {
 
-		JMenu menu = new JMenu(viewMenuString);
+		firstTimeOpenArchive = true;
+		firstTimeOpenToday = true;
+
+		JMenu menuView = new JMenu(viewMenuString);
 		refreshItem = new JMenuItem(refreshString);
-		menu.add(refreshItem);
+		menuView.add(refreshItem);
+		JMenu menuOptions = new JMenu(optionMenuString);
+		logoutItem = new JMenuItem(logoutString + " " + userName);
+		menuOptions.add(logoutItem);
+		exitItem = new JMenuItem(exitString);
+		menuOptions.add(exitItem);
 		JMenuBar bar = new JMenuBar();
-		bar.add(menu);
+		bar.add(menuOptions);
+		bar.add(menuView);
 		setJMenuBar(bar);
 
 		JTabbedPane tabbedPanel = new JTabbedPane();
@@ -132,17 +152,30 @@ public class AppointmentView extends JFrame {
 	}
 
 	public void setArchiveAppointments(String[] columnNames,
-			Object[][] convertArchiveAppointments) {
+			Object[][] convertedArchiveAppointments, boolean showMessageIfNoApp) {
 
-		archivePanel.setData(convertArchiveAppointments, columnNames);
+		archivePanel.setData(convertedArchiveAppointments, columnNames);
 		revalidate(); // to check
+
+		if (convertedArchiveAppointments.length == 0
+				&& (showMessageIfNoApp || firstTimeOpenArchive))
+			displayInfo(noArchiveAppsString, noAppsString);
+
+		if (firstTimeOpenArchive)
+			firstTimeOpenArchive = false;
 	}
 
 	public void setTodayAppointments(String[] columnNames,
-			Object[][] convertArchiveAppointments) {
+			Object[][] convertedAppointments) {
 
-		todayPanel.setData(convertArchiveAppointments, columnNames);
+		todayPanel.setData(convertedAppointments, columnNames);
 		revalidate(); // to check
+
+		if (convertedAppointments.length == 0 && firstTimeOpenToday)
+			displayInfo(noTodayAppsString, noAppsString);
+
+		if (firstTimeOpenToday)
+			firstTimeOpenToday = false;
 	}
 
 	public void displayInfo(String message, String titleBar) {
@@ -164,4 +197,17 @@ public class AppointmentView extends JFrame {
 		archivePanel.reset();
 	}
 
+	public void setLogOutListener(ActionListener al) {
+		logoutItem.addActionListener(al);
+	}
+
+	public void setExitListener(ActionListener al) {
+		exitItem.addActionListener(al);
+	}
+
+	public boolean sureToCloseWindow() {
+		return (JOptionPane.showOptionDialog(null, confirmExitString,
+				exitTitleBarString, JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
+	}
 }

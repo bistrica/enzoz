@@ -38,8 +38,10 @@ public class DBHandler {
 	public static Connection createAndGetDatabaseConnection(String login,
 			String pass) throws SQLException {
 		if (dbh == null) {
-			dbh = new DBHandler(login, pass);
+			dbh = new DBHandler();// login, pass);
 		}
+		dbh.login = login;
+		// password = pass;
 		return dbh.conn;
 	}
 
@@ -103,14 +105,17 @@ public class DBHandler {
 
 	}
 
-	private DBHandler(String login, String pass) throws SQLException {
+	private DBHandler() throws SQLException { // String login, String pass)
+												// throws SQLException {
 
 		// login = "a8323487_adolega";
 		// pass = "adolega1";
-		this.login = login;
-		this.password = pass; // ?
+		// this.login = login;
+		// this.password = pass; // ?
 
-		login = pass = "adolega"; // tochange/?
+		String login;
+		String pass = "adolega";
+		login = pass;// tochange/?
 
 		this.conn = DriverManager
 				.getConnection(
@@ -139,8 +144,8 @@ public class DBHandler {
 	public static Employee getCurrentUser() throws SQLException {
 
 		EmployeeDAO employeeDAO = new EmployeeDAO();
-		if (dbh.currentUser == null)
-			dbh.currentUser = employeeDAO.getEmployeeData(dbh.login);
+		// if (dbh.currentUser == null)
+		dbh.currentUser = employeeDAO.getEmployeeData(dbh.login);
 
 		return dbh.currentUser;
 	}

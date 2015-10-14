@@ -78,8 +78,8 @@ public class LoginView extends JFrame {
 		return login.getText();
 	}
 
-	public String getPassword() {
-		return password.getText();
+	public char[] getPassword() {
+		return password.getPassword();
 	}
 
 	public void setLoginListener(ActionListener al) {
@@ -96,7 +96,7 @@ public class LoginView extends JFrame {
 				LoginView view = new LoginView();
 				LoginDBH model = new LoginDBH();
 				LoginController controller = new LoginController(view, model);
-				// view.setVisible(true);
+				view.setVisible(true);
 
 				try {
 
@@ -145,6 +145,11 @@ public class LoginView extends JFrame {
 		JOptionPane.showMessageDialog(null, message, titleBar,
 				JOptionPane.INFORMATION_MESSAGE);
 
+	}
+
+	public void clear() {
+		login.setText("");
+		password.setText("");
 	}
 
 }
