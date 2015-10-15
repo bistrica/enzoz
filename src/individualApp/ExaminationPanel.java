@@ -14,10 +14,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import GUI_items.BPanel;
 import GUI_items.ExamPanel;
 
-public class ExaminationPanel extends BPanel {
+public class ExaminationPanel extends JPanel {
 
 	Clinic[] clinics;
 	private String addString = "Dodaj skierowanie";

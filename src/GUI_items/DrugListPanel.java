@@ -6,17 +6,20 @@ import java.awt.Component;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class DrugListPanel extends JPanel {
 
 	public DrugListPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		setBorder(new EmptyBorder(5, 5, 5, 5));
 	}
 
 	public void add(PrescriptedItem pos) {
 		for (Component panel : getComponents()) {
-			if (((DrugPanel) panel).getPosition().getMedicine().equals(pos.getMedicine()))
+			if (((DrugPanel) panel).getPosition().getMedicine()
+					.equals(pos.getMedicine()))
 				return;
 		}
 		add(new DrugPanel(pos));

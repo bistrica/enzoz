@@ -2,10 +2,13 @@ package login;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import people.Doctor;
 import people.Employee;
 import appointment.AppointmentController;
+import database.DBHandler;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
 import exceptions.LibraryException;
@@ -71,6 +74,19 @@ public class LoginController {
 					view.displayError(moduleNotImplementedString);
 
 			}
+		});
+
+		view.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+				if (!DBHandler.isClosed()) {
+					System.out.println("CLOSE");
+					DBHandler.close();
+				}
+			}
+
 		});
 
 	}

@@ -163,7 +163,7 @@ public class DBHandler {
 	}
 
 	public static boolean isClosed() {
-		return isClosed;
+		return dbh == null || isClosed;
 	}
 
 	public static void setClosed(boolean closed) {

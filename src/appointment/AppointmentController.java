@@ -5,6 +5,8 @@ import items.Appointment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
@@ -40,7 +42,7 @@ public class AppointmentController {
 	private String wrongDataTitleString = "B≥Ídne dane";
 	private String wrongDataString = "Wprowadü poprawne dane.";
 
-	protected long SLEEP_DURATION = 12000;// 300000;// 6000;
+	protected long SLEEP_DURATION = 300000;// 6000;
 
 	boolean currentAppOpen;
 	protected String currentAppOpenString = "Wizyta otwarta";
@@ -106,12 +108,9 @@ public class AppointmentController {
 
 			@Override
 			public void run() {
-				refreshData();
+				refreshDataInvoke();
 
 				while (refreshRunning) {
-
-					if (DBHandler.isClosed())
-						break;
 
 					try {
 						Thread.sleep(SLEEP_DURATION); // co 5 min
@@ -121,6 +120,9 @@ public class AppointmentController {
 						e.printStackTrace();
 					}
 
+					if (DBHandler.isClosed())
+						break;
+					refreshDataInvoke();
 					System.out.println("refreshed");
 					// if (iav.)
 
@@ -145,17 +147,19 @@ public class AppointmentController {
 
 	private void setListeners() {
 
+		av.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+				logout();// false);
+			}
+
+		});
+
 		av.setLogOutListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (av.sureToCloseWindow())
-					if (appsInChildWindows.isEmpty()) {
-						refreshRunning = false;
-						av.dispose();// setVisible(false);
-						// stopRefreshing();
-						loginController.logOut();
-					} else
-						av.displayInfo(cannotCloseString, openAppsString);
+				logout();// false);
 			}
 		});
 
@@ -243,12 +247,28 @@ public class AppointmentController {
 		});
 	}
 
-	private void refreshData() {
+	protected void logout() {// boolean closeDatabase) {
+		if (av.sureToCloseWindow())
+			if (appsInChildWindows.isEmpty()) {
+				refreshRunning = false;
+				av.dispose();// setVisible(false);
+				// stopRefreshing();
+				loginController.logOut();
+				// if (closeDatabase)
+				// DBHandler.close();
+			} else
+				av.displayInfo(cannotCloseString, openAppsString);
+	}
+
+	private void refreshDataInvoke() {
+
+		getAppointments(true);
+		getArchiveAppointments(true);
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				getAppointments();
-				getArchiveAppointments();
+
 				av.setTodayAppointments(colNames, convertAppointments());
 				av.setArchiveAppointments(columnNames,
 						convertArchiveAppointments(), false);
@@ -256,14 +276,34 @@ public class AppointmentController {
 		});
 	}
 
-	private void getArchiveAppointments() {
+	private void refreshData() {
+
+		System.out.println("RF " + Thread.currentThread().getName());
+		getAppointments(false);
+		getArchiveAppointments(false);
+		av.setTodayAppointments(colNames, convertAppointments());
+		av.setArchiveAppointments(columnNames, convertArchiveAppointments(),
+				false);
+
+	}
+
+	private void getArchiveAppointments(boolean invoked) {
 		ArrayList<Appointment> tempAppArchive = new ArrayList<Appointment>();
 		// appointmentsArchive = new ArrayList<Wizyta>();
 		try {
 			tempAppArchive = am.getArchiveAppointments(includeSearch);
 			// appointmentsArchive = am.getArchiveAppointments();
 		} catch (ArchiveException e) {
-			av.displayInfo(e.getMessage(), errorString);
+			if (invoked) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						av.displayInfo(e.getMessage(), errorString);
+					}
+				});
+			} else
+				av.displayInfo(e.getMessage(), errorString);
 		}
 		appointmentsArchive = tempAppArchive;
 	}
@@ -345,12 +385,21 @@ public class AppointmentController {
 		return data;
 	}
 
-	private void getAppointments() {
+	private void getAppointments(boolean invoked) {
 		ArrayList<Appointment> tempAppToday = new ArrayList<Appointment>();
 		try {
 			tempAppToday = am.getTodayAppointments(doctor);
 		} catch (TodayException e) {
-			av.displayInfo(e.getMessage(), errorString);
+			if (invoked) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						av.displayInfo(e.getMessage(), errorString);
+					}
+				});
+			} else
+				av.displayInfo(e.getMessage(), errorString);
 		}
 		appointmentsToday = tempAppToday;
 	}
@@ -358,6 +407,7 @@ public class AppointmentController {
 	public void removeChildWindow(Appointment childWindowApp) {
 		// if (!childWindowApp.isArchiveAppointment())
 		// currentAppOpen = false;
+		// System.out.println("REM C" + Thread.currentThread().getName());
 		refreshData();
 		// System.out.println("SIZE PRE " + appsInChildWindows.size());
 		appsInChildWindows.remove(childWindowApp);

@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 public class ExamPanel extends JPanel {
@@ -41,9 +42,12 @@ public class ExamPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Container cont = thisPanel.getParent();
+				Container cont = thisPanel.getParent(); // ew. tu change
 				cont.remove(thisPanel);
-				cont.revalidate();
+				cont.revalidate();// repaint();
+				// System.out.println(cont + "*"
+				// + Thread.currentThread().getName());
+
 			}
 		});
 
@@ -72,6 +76,8 @@ public class ExamPanel extends JPanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 		setMinimumSize(getPreferredSize());
 		setMaximumSize(new Dimension(getPreferredSize().width, 200));
+
+		setBorder(new EmptyBorder(5, 0, 0, 0));
 	}
 
 	public Examination getPosition() {

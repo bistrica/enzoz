@@ -42,7 +42,8 @@ public class DrugPanel extends JPanel {
 		position = pos;
 		Medicine drug = pos.getMedicine();
 		nameDoseLabel = new JLabel(drug.getName() + ", " + drug.getDose());
-		typeLabel = new JLabel(drug.getFormulation() + ", " + drug.getPackageDescription());
+		typeLabel = new JLabel(drug.getFormulation() + ", "
+				+ drug.getPackageDescription());
 		nameDoseLabel.setFont(new Font("Arial", Font.BOLD, 20));
 		typeLabel.setFont(new Font("Arial", Font.PLAIN, 15));
 
@@ -151,6 +152,7 @@ public class DrugPanel extends JPanel {
 		setMinimumSize(getPreferredSize());
 		setMaximumSize(new Dimension(getPreferredSize().width, 200));
 
+		// setBorder(new EmptyBorder(0, 0, 5, 0));
 	}
 
 	public PrescriptedItem getPosition() {

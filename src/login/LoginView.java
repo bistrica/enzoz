@@ -1,5 +1,6 @@
 package login;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -7,7 +8,6 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,7 +17,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-public class LoginView extends JFrame {
+import GUI_items.BPanel;
+import GUI_items.IconFrame;
+
+public class LoginView extends IconFrame {
 
 	JTextField login;
 	JPasswordField password;
@@ -27,8 +30,10 @@ public class LoginView extends JFrame {
 			loginButtonString = "Zaloguj", titleBar = "Wyst¹pi³ b³¹d";
 
 	public LoginView() {
-
-		JPanel panel = new JPanel(), buttonPanel = new JPanel();
+		// super();
+		BPanel bgPanel = new BPanel();
+		JPanel panel = new JPanel();
+		JPanel buttonPanel = new JPanel();
 		panel.setLayout(new GridLayout(2, 2));
 
 		JLabel loginLabel = new JLabel(loginString);
@@ -68,9 +73,24 @@ public class LoginView extends JFrame {
 		getContentPane().setLayout(
 				new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-		getContentPane().add(panel);
-		getContentPane().add(buttonPanel);// loguj);
+		panel.setOpaque(false);
+		buttonPanel.setOpaque(false);
+
+		JPanel emptyPanel = new JPanel();
+		emptyPanel.setOpaque(false);
+		emptyPanel.setPreferredSize(new Dimension(600, 300));
+
+		bgPanel.add(emptyPanel);
+		bgPanel.add(panel);
+		bgPanel.add(buttonPanel);
+
+		getContentPane().add(bgPanel);
+		// loguj);
 		pack(); // todo: maybe to change?
+		setPreferredSize(new Dimension(600, 400));
+		setResizable(false);
+
+		setCentreLocation();
 
 	}
 
@@ -93,6 +113,11 @@ public class LoginView extends JFrame {
 			@Override
 			public void run() {
 
+				/*
+				 * Toolkit.getDefaultToolkit() .getImage( LoginView.class
+				 * .getResource
+				 * ("C:\\Users\\Olusiak\\Documents\\logo_icon.png"));
+				 */
 				LoginView view = new LoginView();
 				LoginDBH model = new LoginDBH();
 				LoginController controller = new LoginController(view, model);

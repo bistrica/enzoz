@@ -25,11 +25,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import rendering.DrugTableModel;
-import GUI_items.BPanel;
 import GUI_items.DrugListPanel;
 import GUI_items.DrugPanel;
 
-public class PrescriptionPanel extends BPanel {
+public class PrescriptionPanel extends JPanel {
 
 	/*
 	 * private String dosesString="Iloœæ dawek/porcjê"; private String
@@ -64,8 +63,11 @@ public class PrescriptionPanel extends BPanel {
 		 * JTable(data,columnNames);//JList<PozycjaNaRecepcie>();
 		 */
 
-		prescriptedMedicines = new DrugListPanel();// JTable((medicinesModel=new
-													// DrugTableModel()));
+		prescriptedMedicines = new DrugListPanel();
+		// prescriptedMedicines.setInsets=new Insets(0,0,0,0);//setBorder(new
+		// EmptyBorder(0, 0, 0, 0));
+		// JTable((medicinesModel=new
+		// DrugTableModel()));
 		/*
 		 * DrugCellRenderer renderer=new DrugCellRenderer();
 		 * prescriptedMedicines.setDefaultRenderer(Object.class, renderer);

@@ -1,10 +1,10 @@
 package individualApp;
 
+import items.Clinic;
+import items.Examination;
 import items.Illness;
 import items.Medicine;
-import items.Clinic;
 import items.PrescriptedItem;
-import items.Examination;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -23,9 +23,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import GUI_items.IconFrame;
 import exceptions.WrongInputException;
 
-public class IndividualAppView extends JFrame {
+public class IndividualAppView extends IconFrame {
 
 	// tabbedPanel;
 	// JPanel interviewPane, illnessesPane, prescriptionPane, examinationPane,
@@ -143,6 +144,8 @@ public class IndividualAppView extends JFrame {
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
+
+		setCentreLocation();
 
 	}
 

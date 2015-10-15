@@ -1,10 +1,9 @@
 package appointment;
 
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -13,10 +12,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import people.Doctor;
+import GUI_items.IconFrame;
 import GUI_items.SearchHelper;
-import database.DBHandler;
 
-public class AppointmentView extends JFrame {
+public class AppointmentView extends IconFrame {
 
 	JScrollPane appTable;
 	// JTable apps;
@@ -43,6 +42,7 @@ public class AppointmentView extends JFrame {
 
 	public AppointmentView(Doctor[] doctors, String userName) {
 
+		// super();
 		firstTimeOpenArchive = true;
 		firstTimeOpenToday = true;
 
@@ -69,19 +69,16 @@ public class AppointmentView extends JFrame {
 		tabbedPanel.add(todayAppString, scrollToday);// todayPanel);
 		tabbedPanel.add(archiveString, scrollArchive);// archivePanel);
 		getContentPane().add(tabbedPanel);
-		setSize(700, 600);
+		// setSize(700, 600);
 
-		// TODO: daæ to jako w kontrolerze
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				DBHandler.close();
-				System.out.println("closed");
-				System.exit(0);
-
-			}
-		});
-		// pack();
+		pack();
+		System.out.println(getSize() + " : " + getPreferredSize());
+		Dimension dim = new Dimension(getPreferredSize().width + 100,
+				getPreferredSize().height + 100);
+		setSize(dim);
+		setPreferredSize(dim);
+		System.out.println(getSize() + " :: " + getPreferredSize());
+		setCentreLocation();
 	}
 
 	public void setRefreshListener(ActionListener al) {
@@ -209,5 +206,9 @@ public class AppointmentView extends JFrame {
 		return (JOptionPane.showOptionDialog(null, confirmExitString,
 				exitTitleBarString, JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
+	}
+
+	public void setWindowCloseListener(WindowAdapter windowAdapter) {
+		addWindowListener(windowAdapter);
 	}
 }

@@ -3,6 +3,8 @@ package individualApp;
 import items.Illness;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,12 +23,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import GUI_items.BPanel;
-
-public class IllnessesPanel extends BPanel {
+public class IllnessesPanel extends JPanel {
 
 	// private HashSet<Choroba> tempSet;
 	// private HashSet<Choroba> constSet;
@@ -70,11 +73,6 @@ public class IllnessesPanel extends BPanel {
 		JScrollPane temporaryScroll = new JScrollPane(temporary);
 		JScrollPane constantScroll = new JScrollPane(constant);
 
-		temporaryScroll.setSize(getWidth() / 2, 200);
-		// temporaryScroll.setBackground(Color.GREEN);
-		constantScroll.setSize(getWidth() / 2, 200);
-		// constantScroll.setBackground(Color.BLUE);
-
 		all = new JList<Illness>();
 
 		addTemporary = new JButton(addTemporaryString);
@@ -85,8 +83,8 @@ public class IllnessesPanel extends BPanel {
 		temporaryPane = new JPanel();
 		constantPane = new JPanel();
 
-		JLabel tempIll = new JLabel(temporaryIllnessString);
-		JLabel constIll = new JLabel(constantIllnessString);
+		JLabel tempIllLabel = new JLabel(temporaryIllnessString);
+		JLabel constIllLabel = new JLabel(constantIllnessString);
 		JPanel tempButtons = new JPanel();
 		tempButtons.add(addTemporary);
 		tempButtons.add(removeTemporary);
@@ -95,20 +93,40 @@ public class IllnessesPanel extends BPanel {
 		constButtons.add(removeConstant);
 
 		temporaryPane.setLayout(new BoxLayout(temporaryPane, BoxLayout.Y_AXIS));
-		temporaryPane.add(tempIll);
+		// temporaryPane.add(tempIllLabel);
 		temporaryPane.add(temporaryScroll);
 		temporaryPane.add(tempButtons);
+		tempIllLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		constantPane.setLayout(new BoxLayout(constantPane, BoxLayout.Y_AXIS));
-		constantPane.add(constIll);
-		constantPane.add(constantScroll);
-		constantPane.add(constButtons);
-
+		temporaryScroll.setPreferredSize(new Dimension(getWidth() / 2,
+				(int) getPreferredSize().getHeight()));
 		if (!archive) {
+			constantPane
+					.setLayout(new BoxLayout(constantPane, BoxLayout.Y_AXIS));
+			// constantPane.add(constIllLabel);
+			constantPane.add(constantScroll);
+			constantPane.add(constButtons);
+			constantScroll.setBorder(new CompoundBorder(new EmptyBorder(20, 50,
+					20, 50), new TitledBorder(constantIllnessString)));
+
+			constIllLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+			// temporaryScroll.setSize(getWidth() / 2, 200);
+			constantScroll.setPreferredSize(new Dimension(getWidth() / 2,
+					(int) getPreferredSize().getHeight()));// );Size(getWidth()
+															// / 2, 200);
+
 			setLayout(new GridLayout(1, 2));
 			add(constantPane);
+		} else {
+
+			// temporaryScroll.setSize(temporaryScroll.getPreferredSize());
+			setLayout(new BorderLayout());// (this, BoxLayout.Y_AXIS));
+
 		}
 
+		temporaryScroll.setBorder(new CompoundBorder(new EmptyBorder(20, 50,
+				20, 50), new TitledBorder(temporaryIllnessString)));
 		add(temporaryPane);
 		searchField = new JTextField(30);
 

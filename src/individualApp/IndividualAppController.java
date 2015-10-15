@@ -1,11 +1,11 @@
 package individualApp;
 
+import items.Appointment;
+import items.Examination;
 import items.Illness;
 import items.Interview;
 import items.PrescriptedItem;
 import items.Prescription;
-import items.Examination;
-import items.Appointment;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,8 +42,9 @@ public class IndividualAppController {
 
 	private String anotherWindowOpenString = "Wizyta otwarta";
 
-	public IndividualAppController(AppointmentController parent, Appointment app,
-			boolean previewMode) throws PatientAlreadyBlockedException {
+	public IndividualAppController(AppointmentController parent,
+			Appointment app, boolean previewMode)
+			throws PatientAlreadyBlockedException {
 		this.appointment = app;
 		this.parent = parent;
 
@@ -112,7 +113,8 @@ public class IndividualAppController {
 					 * iav.setConstantIllnesses(appointment.getPacjent()
 					 * .getChorobyPrzewlek³e());
 					 */
-					iav.setPrescription(appointment.getPrescription().getPozycje());
+					iav.setPrescription(appointment.getPrescription()
+							.getPozycje());
 					iav.setExaminations(appointment.getExaminations());
 				} else {
 					iav.setConstantIllnesses(appointment.getPatient()
@@ -161,14 +163,14 @@ public class IndividualAppController {
 
 						try {
 							iam.rewriteStatus(appointment);
+							parent.setCurrentAppOpen(false);
 						} catch (SaveDataException e1) {
 							e1.printStackTrace();
 							iav.displayInfo(e1.getMessage(), errorString);
 						}
 					}
 
-					if (iav.editMode || !appointment.isArchiveAppointment())
-						parent.setCurrentAppOpen(false);
+					// if (iav.editMode || !appointment.isArchiveAppointment())
 
 					parent.removeChildWindow(appointment);
 					iav.close();

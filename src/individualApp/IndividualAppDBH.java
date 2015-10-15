@@ -1,17 +1,17 @@
 package individualApp;
 
+import items.Appointment;
+import items.Clinic;
 import items.Illness;
 import items.Medicine;
-import items.Clinic;
-import items.Appointment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import daos.AppointmentDAO;
+import daos.ClinicDAO;
 import daos.IllnessDAO;
 import daos.MedicineDAO;
-import daos.ClinicDAO;
-import daos.AppointmentDAO;
 import database.DBHandler;
 import exceptions.DataCannotBeEditedException;
 import exceptions.LoadDataException;
@@ -167,6 +167,7 @@ public class IndividualAppDBH {
 	}
 
 	public void rewriteStatus(Appointment appointment) throws SaveDataException {
+		System.out.println("REWRITE");
 		try {
 			appDAO.writeBackOldStatus(appointment);
 		} catch (SQLException e) {
