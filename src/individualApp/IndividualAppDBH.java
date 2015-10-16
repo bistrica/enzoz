@@ -26,6 +26,8 @@ public class IndividualAppDBH {
 	private String illnessesString = "dane chorób";
 	private String medicinesString = "dane leków";
 	private String clinicsString = "dane poradni";
+	private ArrayList<Medicine> medicines;
+	private ArrayList<Illness> illnesses;
 
 	public IndividualAppDBH() {
 		illnessDAO = new IllnessDAO();
@@ -35,9 +37,12 @@ public class IndividualAppDBH {
 	}
 
 	public ArrayList<Illness> getAllIllnesses() throws LoadDataException {
-		ArrayList<Illness> ill = new ArrayList<Illness>();
+		if (illnesses != null)
+			return illnesses;
+
+		illnesses = new ArrayList<Illness>();
 		try {
-			ill = illnessDAO.getAllIllnesses();
+			illnesses = illnessDAO.getAllIllnesses();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -49,19 +54,22 @@ public class IndividualAppDBH {
 			} else {
 				System.out.println("ONCE MORE IND");
 				DBHandler.incrementTrialsNo();
-				ill = getAllIllnesses();
+				illnesses = getAllIllnesses();
 			}
 		}
 
 		DBHandler.resetTrialsNo();
-		return ill;
+		return illnesses;
 
 	}
 
 	public ArrayList<Medicine> getAllMedicines() throws LoadDataException {
-		ArrayList<Medicine> med = new ArrayList<Medicine>();
+		if (medicines != null)
+			return medicines;
+
+		medicines = new ArrayList<Medicine>();
 		try {
-			med = drugDAO.getAllMedicines();
+			medicines = drugDAO.getAllMedicines();
 		} catch (SQLException e) {
 			e.printStackTrace();
 
@@ -72,12 +80,12 @@ public class IndividualAppDBH {
 			} else {
 				System.out.println("ONCE MORE IND");
 				DBHandler.incrementTrialsNo();
-				med = getAllMedicines();
+				medicines = getAllMedicines();
 			}
 		}
 
 		DBHandler.resetTrialsNo();
-		return med;
+		return medicines;
 	}
 
 	public ArrayList<Clinic> getAllClinics() throws LoadDataException {
@@ -167,7 +175,7 @@ public class IndividualAppDBH {
 	}
 
 	public void rewriteStatus(Appointment appointment) throws SaveDataException {
-		System.out.println("REWRITE");
+		System.out.println("REWRITE " + appointment);
 		try {
 			appDAO.writeBackOldStatus(appointment);
 		} catch (SQLException e) {
@@ -178,7 +186,16 @@ public class IndividualAppDBH {
 				DBHandler.resetTrialsNo();
 				throw new SaveDataException();
 			} else {
-				System.out.println("ONCE MORE");
+				try { // TODO wywaliæ
+					System.out
+							.println("ONCE MORE "
+									+ DBHandler.getDatabaseConnection()
+											.getAutoCommit());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 				DBHandler.incrementTrialsNo();
 				rewriteStatus(appointment);
 			}

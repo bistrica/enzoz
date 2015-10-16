@@ -92,7 +92,7 @@ public class IllnessDAO {
 		int patientId = patient.getId();
 
 		Connection conn = DBHandler.getDatabaseConnection();
-		ArrayList<Illness> illnesses = patient.getChorobyPrzewlek³e();
+		ArrayList<Illness> illnesses = patient.getConstantIllnesses();
 
 		try {
 			conn.setAutoCommit(false);

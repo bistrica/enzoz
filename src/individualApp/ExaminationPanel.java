@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 import GUI_items.ExamPanel;
 
@@ -46,6 +47,7 @@ public class ExaminationPanel extends JPanel {
 
 		examsPane.setLayout(new BoxLayout(examsPane, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(examsPane);
+		scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight()
 				- addButton.getHeight()));
 		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -81,15 +83,10 @@ public class ExaminationPanel extends JPanel {
 
 	@Override
 	public void setEnabled(boolean state) {
+		// System.out.println("enabled");
 		addButton.setEnabled(state); // zbêdne
-		for (Component panel : getComponents()) {
+		for (Component panel : examsPane.getComponents()) {
 			panel.setEnabled(state);
-			// System.out.println("P:" + panel);
-			// if (panel instanceof ExamPanel)
-			// ((ExamPanel) panel).setEnabled(state); // get ExamPanels,
-			// overriden
-			// setEnabled
-			// disables button in exampanel
 		}
 	}
 

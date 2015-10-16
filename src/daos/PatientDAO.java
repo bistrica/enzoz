@@ -68,7 +68,7 @@ public class PatientDAO {
 		if (patient == null)
 			return;
 		illnessDAO.writeConstantIllnesses(patient.getId(),
-				patient.getChorobyPrzewlek³e());
+				patient.getConstantIllnesses());
 
 	}
 

@@ -168,11 +168,12 @@ public class AppointmentController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (av.sureToCloseWindow())
+				if (av.sureToCloseWindow()) {
 					if (appsInChildWindows.isEmpty())
 						System.exit(0);
 					else
 						av.displayInfo(cannotCloseString, openAppsString);
+				}
 			}
 		});
 

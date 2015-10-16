@@ -27,7 +27,7 @@ public class LoginController {
 		model = lm;
 
 		// TODO: skasowaæ liniê
-		// loginTest();
+		loginTest();
 
 		LoginController caller = this;
 
@@ -97,7 +97,7 @@ public class LoginController {
 
 		Employee user;
 		String login;
-		String pass = login = "amis";
+		String pass = login = "adolega";
 		try {
 			user = model.tryToLog(login, pass);
 		} catch (BadDataException | ConnectionException | LibraryException ex) {

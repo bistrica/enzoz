@@ -3,14 +3,11 @@ package GUI_items;
 import items.Medicine;
 import items.PrescriptedItem;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -18,7 +15,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+
+import exceptions.BadDataException;
 
 public class DrugPanel extends JPanel {
 
@@ -26,6 +26,7 @@ public class DrugPanel extends JPanel {
 	private String discountString = "Refundacja";
 	private String packageString = "Iloœæ opakowañ";
 	private String ingestionString = "Iloœæ za¿yæ/dzieñ";
+	private String removeString = "Usuñ pozycjê";
 
 	JLabel typeLabel;
 	JLabel nameDoseLabel;
@@ -34,11 +35,12 @@ public class DrugPanel extends JPanel {
 	JTextField discountVal;
 	JTextField ingestionCount;
 	private PrescriptedItem position;
-	private String removeString = "Usuñ pozycjê";
+	private DrugListPanel parent;
 	JButton removeButton;
 
-	public DrugPanel(PrescriptedItem pos) {
+	public DrugPanel(PrescriptedItem pos, DrugListPanel parent) {
 
+		this.parent = parent;
 		position = pos;
 		Medicine drug = pos.getMedicine();
 		nameDoseLabel = new JLabel(drug.getName() + ", " + drug.getDose());
@@ -50,7 +52,8 @@ public class DrugPanel extends JPanel {
 		setBorder(new EtchedBorder());
 
 		JPanel labels = new JPanel();
-		labels.setLayout(new BoxLayout(labels, BoxLayout.PAGE_AXIS));
+		labels.setLayout(new BoxLayout(labels, BoxLayout.PAGE_AXIS));// //Y_AXIS));
+		labels.setAlignmentX(CENTER_ALIGNMENT);
 		labels.add(nameDoseLabel);
 		labels.add(typeLabel);
 
@@ -125,33 +128,46 @@ public class DrugPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Container cont = thisPanel.getParent();
-				cont.remove(thisPanel);
-				cont.revalidate();
+				/*
+				 * Container cont = thisPanel.getParent();
+				 * cont.remove(thisPanel); cont.revalidate();
+				 */
+
+				parent.remove(thisPanel);
+				parent.updateCounter();
+				parent.revalidate();
 			}
 		});
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(removeButton);
 
-		setLayout(new GridBagLayout());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); //
+		// GridBagLayout());
 
-		labels.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 0));
+		// labels.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 0));
 
-		labels.setAlignmentX(LEFT_ALIGNMENT);
-		labels.setPreferredSize(new Dimension(350, 100));
-		labels.setMinimumSize(new Dimension(350, 100));
+		labels.setAlignmentX(CENTER_ALIGNMENT);// LEFT_ALIGNMENT);
+		labels.setPreferredSize(new Dimension(320, 80));
+		labels.setMinimumSize(new Dimension(320, 80));
 
-		modifiedData.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
+		setBorder(new EmptyBorder(0, 30, 0, 30));
+		// labels.setBackground(Color.RED);
+		// modifiedData.setBackground(Color.BLUE);
+		// buttonPanel.setBackground(Color.GREEN);
 
-		add(labels);
-		add(modifiedData);
-		add(buttonPanel);
+		// modifiedData.setBorder(BorderFactory.createEmptyBorder(50, 20, 50,
+		// 20));
+		// buttonPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
+
+		add(labels);// , BorderLayout.NORTH);
+		add(modifiedData);// , BorderLayout.CENTER);
+		add(buttonPanel);// , BorderLayout.SOUTH);
 
 		setMinimumSize(getPreferredSize());
-		setMaximumSize(new Dimension(getPreferredSize().width, 200));
+		// setMaximumSize(new Dimension(getPreferredSize().width, 200));
 
+		// System.out.println("GG " + getPreferredSize().width);
 		// setBorder(new EmptyBorder(0, 0, 5, 0));
 	}
 
@@ -172,19 +188,29 @@ public class DrugPanel extends JPanel {
 		ingestionCount.setEditable(state);
 	}
 
-	public PrescriptedItem retrievePrescribedPosition()
-			throws NumberFormatException {
+	public PrescriptedItem retrievePrescribedPosition() throws BadDataException {
 		PrescriptedItem pos = null;
 
-		// try {
-		double doses = Double.parseDouble(dosesCount.getText()
-				.replace(',', '.'));
-		double discount = Double.parseDouble(discountVal.getText()
-				.replace('%', ' ').trim()) * 0.01;
-		System.out.println("d: " + doses + ", r: " + discount);
-		pos = new PrescriptedItem(position.getMedicine(),
-				Integer.parseInt(packageCount.getText()), doses,
-				Integer.parseInt(ingestionCount.getText()), discount);
+		try {
+			double doses = Double.parseDouble(dosesCount.getText().replace(',',
+					'.'));
+			double discount = Double.parseDouble(discountVal.getText()
+					.replace('%', ' ').trim()) * 0.01;
+
+			int packages = Integer.parseInt(packageCount.getText());
+			int ingestions = Integer.parseInt(ingestionCount.getText());
+
+			if (doses <= 0 || discount < 0 || discount > 100 || packages <= 0
+					|| ingestions <= 0)
+				throw new BadDataException();
+
+			System.out.println("d: " + doses + ", r: " + discount);
+			pos = new PrescriptedItem(position.getMedicine(), packages, doses,
+					ingestions, discount);
+
+		} catch (NumberFormatException e) {
+			throw new BadDataException();
+		}
 		/*
 		 * } catch (NumberFormatException e) { throw new WrongInputException();
 		 * }

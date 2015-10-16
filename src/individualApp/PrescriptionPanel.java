@@ -21,12 +21,14 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import rendering.DrugTableModel;
 import GUI_items.DrugListPanel;
 import GUI_items.DrugPanel;
+import exceptions.BadDataException;
 
 public class PrescriptionPanel extends JPanel {
 
@@ -50,6 +52,7 @@ public class PrescriptionPanel extends JPanel {
 	private DrugTableModel medicinesModel;
 
 	JButton addNewMedicine;
+	private int itemsInitialNo;
 
 	// private ArrayList<PozycjaNaRecepcie> positions;
 
@@ -101,6 +104,7 @@ public class PrescriptionPanel extends JPanel {
 		// DrugCellRenderer());
 
 		JScrollPane scrollMedicines = new JScrollPane(prescriptedMedicines);
+		scrollMedicines.setBorder(new EmptyBorder(0, 0, 0, 0));
 		// scrollMedicines.setPreferredSize(new Dimension(getWidth(),
 		// getHeight()));
 		// setLayout(new BorderLayout());
@@ -227,6 +231,7 @@ public class PrescriptionPanel extends JPanel {
 	}
 
 	public void setPrescription(ArrayList<PrescriptedItem> positions) {
+		itemsInitialNo = positions.size();
 		for (PrescriptedItem pos : positions)
 			prescriptedMedicines.add(pos);
 		repaint();
@@ -243,13 +248,17 @@ public class PrescriptionPanel extends JPanel {
 	}
 
 	public ArrayList<PrescriptedItem> getPrescriptedPositions(
-			boolean onlyIfChanged) throws NumberFormatException {
+			boolean onlyIfChanged) throws BadDataException {
 
 		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
 
 		boolean allTheSame = true;
+		Component[] items = prescriptedMedicines.getComponents();
+		if (items.length != itemsInitialNo)
+			allTheSame = false;
 
-		for (Component panel : prescriptedMedicines.getComponents()) {
+		for (Component panel : items) {
+			// System.out.println("III");
 			if (panel instanceof DrugPanel) {
 				DrugPanel drugPanel = (DrugPanel) panel;
 				PrescriptedItem pos = drugPanel.retrievePrescribedPosition();
@@ -258,6 +267,9 @@ public class PrescriptionPanel extends JPanel {
 				positions.add(pos);
 			}
 		}
+
+		System.out.println(allTheSame + " POS: " + positions + " : "
+				+ positions.size());
 
 		if (positions.isEmpty())
 			positions = null;

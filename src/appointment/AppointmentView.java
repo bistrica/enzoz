@@ -79,6 +79,8 @@ public class AppointmentView extends IconFrame {
 		setPreferredSize(dim);
 		System.out.println(getSize() + " :: " + getPreferredSize());
 		setCentreLocation();
+
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	}
 
 	public void setRefreshListener(ActionListener al) {
@@ -203,6 +205,7 @@ public class AppointmentView extends IconFrame {
 	}
 
 	public boolean sureToCloseWindow() {
+
 		return (JOptionPane.showOptionDialog(null, confirmExitString,
 				exitTitleBarString, JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);

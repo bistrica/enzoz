@@ -6,7 +6,8 @@ public class ConnectionException extends Exception {
 	// errorString="Wyst¹pi³ b³¹d w po³¹czeniu. Spróbuj ponownie póŸniej.";
 
 	public ConnectionException() {
-		super("Wyst¹pi³ b³¹d w po³¹czeniu. Spróbuj ponownie póŸniej.");
+		super(
+				"Wyst¹pi³ b³¹d w po³¹czeniu. Spróbuj ponownie póŸniej. \nJeœli jesteœ zalogowany na innym komputerze, wyloguj siê.");
 	}
 
 	/*

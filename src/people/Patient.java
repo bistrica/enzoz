@@ -33,11 +33,11 @@ public class Patient extends Person {
 		this(person, null);
 	}
 
-	public ArrayList<Illness> getChorobyPrzewlek³e() {
+	public ArrayList<Illness> getConstantIllnesses() {
 		return constantIllnesses;
 	}
 
-	public void setChorobyPrzewlek³e(ArrayList<Illness> constIllnesses) {
+	public void setConstantIllnesses(ArrayList<Illness> constIllnesses) {
 		this.constantIllnesses = constIllnesses;
 	}
 

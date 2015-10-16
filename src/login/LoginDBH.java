@@ -43,7 +43,8 @@ public class LoginDBH {
 				throw new BadDataException();
 
 		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+			System.out.println(ex.getErrorCode() + " :: " + ex.getMessage());
+
 			if (ex.getErrorCode() == 1045)
 				throw new BadDataException();
 			else

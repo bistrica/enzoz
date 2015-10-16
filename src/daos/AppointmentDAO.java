@@ -1,10 +1,10 @@
 package daos;
 
+import items.Appointment;
+import items.Examination;
 import items.Illness;
 import items.Interview;
 import items.Prescription;
-import items.Examination;
-import items.Appointment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -213,7 +213,7 @@ public class AppointmentDAO {
 		app.setExaminations(examinations);
 
 		ArrayList<Illness> tempIllnesses = illnessDAO.getTemporaryIllnesses(
-				appId, app.getPatient().getChorobyPrzewlek³e());
+				appId, app.getPatient().getConstantIllnesses());
 		app.setRecognizedIllnesses(tempIllnesses);
 
 		app.setArchive(true);

@@ -1,5 +1,6 @@
 package login;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.EmptyBorder;
 
 import GUI_items.BPanel;
 import GUI_items.IconFrame;
@@ -35,9 +37,13 @@ public class LoginView extends IconFrame {
 		JPanel panel = new JPanel();
 		JPanel buttonPanel = new JPanel();
 		panel.setLayout(new GridLayout(2, 2));
+		panel.setBorder(new EmptyBorder(0, 20, 0, 20));
+		buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
 
 		JLabel loginLabel = new JLabel(loginString);
 		JLabel passwordLabel = new JLabel(passwordString);
+		loginLabel.setForeground(Color.WHITE);
+		passwordLabel.setForeground(Color.WHITE);
 
 		login = new JTextField(30);
 		password = new JPasswordField(30);
@@ -92,6 +98,7 @@ public class LoginView extends IconFrame {
 
 		setCentreLocation();
 
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 	public String getLogin() {
@@ -121,7 +128,7 @@ public class LoginView extends IconFrame {
 				LoginView view = new LoginView();
 				LoginDBH model = new LoginDBH();
 				LoginController controller = new LoginController(view, model);
-				view.setVisible(true);
+				// view.setVisible(true);
 
 				try {
 

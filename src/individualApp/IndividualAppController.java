@@ -18,11 +18,11 @@ import javax.swing.SwingUtilities;
 
 import appointment.AppointmentController;
 import database.DBHandler;
+import exceptions.BadDataException;
 import exceptions.DataCannotBeEditedException;
 import exceptions.LoadDataException;
 import exceptions.PatientAlreadyBlockedException;
 import exceptions.SaveDataException;
-import exceptions.WrongInputException;
 
 public class IndividualAppController {
 
@@ -41,6 +41,12 @@ public class IndividualAppController {
 	private String anotherWindowOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby móc rozpocz¹æ kolejn¹.";
 
 	private String anotherWindowOpenString = "Wizyta otwarta";
+
+	private String lackingInterviewString = "Treœæ konsultacji nie mo¿e byæ pusta.";
+
+	private String notEnoughDataString = "Brak danych";
+
+	private String lackingDescriptionString = "Treœæ skierowania nie mo¿e byæ pusta.";
 
 	public IndividualAppController(AppointmentController parent,
 			Appointment app, boolean previewMode)
@@ -61,7 +67,7 @@ public class IndividualAppController {
 					throw new PatientAlreadyBlockedException();
 				}
 			} catch (DataCannotBeEditedException e) {
-				parent.displayError(e.getMessage());
+				parent.displayError(e.getMessage());// TODO: invoke?
 				e.printStackTrace();
 			}
 			// return;
@@ -103,7 +109,8 @@ public class IndividualAppController {
 				}
 
 				iav.setInfo(appointment.getPatient().getMainInfo(), appointment
-						.getPatient().getAddressInfo());
+						.getPatient().getAddressInfo(), appointment
+						.getDataToString());
 
 				if (appointment.isArchiveAppointment()) {
 					iav.setInterview(appointment.getInterview().getContent());
@@ -118,7 +125,7 @@ public class IndividualAppController {
 					iav.setExaminations(appointment.getExaminations());
 				} else {
 					iav.setConstantIllnesses(appointment.getPatient()
-							.getChorobyPrzewlek³e());
+							.getConstantIllnesses());
 				}
 				iav.setComponentsState();
 
@@ -183,10 +190,11 @@ public class IndividualAppController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (iav.sureToSaveChanges()) {
-					saveChanges();
-					parent.setCurrentAppOpen(false);
-					parent.removeChildWindow(appointment);
-					iav.close();
+					if (saveChanges()) {
+						parent.setCurrentAppOpen(false);
+						parent.removeChildWindow(appointment);
+						iav.close();
+					}
 				}
 			}
 		});
@@ -206,7 +214,7 @@ public class IndividualAppController {
 
 	}
 
-	protected void saveChanges() {
+	protected boolean saveChanges() {
 		boolean isEdited = appointment.isArchiveAppointment();
 
 		// TODO: potwierdzenie zapisu zmian
@@ -216,22 +224,35 @@ public class IndividualAppController {
 
 		newOrEditedApp.setArchive(appointment.isArchiveAppointment());
 
-		Interview interview = new Interview(iav.getInterview());
+		String intvw = iav.getInterview();
+		if (intvw.isEmpty()) {
+			iav.displayInfo(lackingInterviewString, notEnoughDataString);
+			return false;
+		}
+		Interview interview = new Interview(intvw);
+
 		if (isEdited && appointment.getInterview().equals(interview))
 			newOrEditedApp.setInterview(null);
 		else
 			newOrEditedApp.setInterview(interview);
 
 		ArrayList<Examination> examinations = iav.getExaminations(isEdited);
+		if (examinations != null)
+			for (Examination exam : examinations)
+				if (exam.getDescription().isEmpty()) {
+					iav.displayInfo(lackingDescriptionString,
+							notEnoughDataString);
+					return false;
+				}
 		newOrEditedApp.setExaminations(examinations);
 
 		ArrayList<PrescriptedItem> prescriptionData = null;
 		try {
 			prescriptionData = iav.getPrescriptionData(isEdited);
-		} catch (WrongInputException e) {
+		} catch (BadDataException e) {
 			iav.displayInfo(e.getMessage(), errorString);
 			e.printStackTrace();
-			return;
+			return false;
 		}
 
 		Prescription prescription = (prescriptionData != null) ? new Prescription(
@@ -244,16 +265,17 @@ public class IndividualAppController {
 		if (!isEdited) {
 			ArrayList<Illness> constIllnesses = iav
 					.getConstantIllnesses(isEdited);
-			newOrEditedApp.getPatient().setChorobyPrzewlek³e(constIllnesses);
+			newOrEditedApp.getPatient().setConstantIllnesses(constIllnesses);
 		}
 		try {
 			iam.saveAppointment(newOrEditedApp);
 		} catch (SaveDataException e) {
 			iav.displayInfo(e.getMessage(), errorString);
 			e.printStackTrace();
-			return;
+			return false;
 		}
 
+		return true;
 	}
 
 	@Override

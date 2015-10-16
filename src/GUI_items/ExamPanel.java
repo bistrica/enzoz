@@ -105,7 +105,7 @@ public class ExamPanel extends JPanel {
 
 	public Examination retrieveExam() {
 		return new Examination((Clinic) (clinics.getSelectedItem()),
-				description.getText());
+				description.getText().trim());
 	}
 
 }

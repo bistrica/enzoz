@@ -7,7 +7,9 @@ import items.Medicine;
 import items.PrescriptedItem;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
@@ -22,9 +24,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 
 import GUI_items.IconFrame;
-import exceptions.WrongInputException;
+import exceptions.BadDataException;
 
 public class IndividualAppView extends IconFrame {
 
@@ -63,6 +66,10 @@ public class IndividualAppView extends IconFrame {
 	private String confirmSaveString = "Czy na pewno chcesz zatwierdziæ wizytê?";
 
 	private String saveTitleBarString = "Zapisz i zakoñcz wizytê";
+
+	// private JLabel appTime;
+
+	private JLabel appData;
 
 	public IndividualAppView(boolean isEnabled, boolean isEditingAllowed,
 			boolean isArchive) {
@@ -116,6 +123,25 @@ public class IndividualAppView extends IconFrame {
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
 		namePanel.add(mainInfo);
 		namePanel.add(additionalInfo);
+		// namePanel.setBorder(new EmptyBorder(50, 50, 50, 50));
+
+		// appTime = new JLabel();
+		// appTime.setFont(new Font("Arial", Font.BOLD, 20));
+		appData = new JLabel();
+		appData.setFont(new Font("Arial", Font.BOLD, 20));
+
+		JPanel appDataPanel = new JPanel();
+		appDataPanel.setLayout(new BoxLayout(appDataPanel, BoxLayout.Y_AXIS));
+		// appDataPanel.add(appTime);
+		appDataPanel.add(appData);
+		appData.setAlignmentX(RIGHT_ALIGNMENT);
+
+		JPanel info = new JPanel();
+		info.setLayout(new GridLayout(1, 2));
+
+		info.add(namePanel);
+		info.add(appDataPanel);
+		info.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		JTabbedPane tabbedPanel = new JTabbedPane();
 		interviewPane = new InterviewPanel();
@@ -139,11 +165,13 @@ public class IndividualAppView extends IconFrame {
 		setLayout(new BorderLayout());// new BoxLayout(getContentPane(),
 										// BoxLayout.Y_AXIS));
 		// namePanel.setBackground(Color.BLUE);
-		getContentPane().add(namePanel, BorderLayout.NORTH);
+		getContentPane().add(info, BorderLayout.NORTH);
 		getContentPane().add(tabbedPanel);
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		pack();
+
+		setPreferredSize(new Dimension(710, 500));
+		setSize(new Dimension(710, 500));
 
 		setCentreLocation();
 
@@ -194,9 +222,10 @@ public class IndividualAppView extends IconFrame {
 		illnessesPane.revalidate();
 	}
 
-	public void setInfo(String name, String address) {
+	public void setInfo(String name, String address, String date) {
 		mainInfo.setText(name);
 		additionalInfo.setText(address);
+		appData.setText(date);
 	}
 
 	public void setInterview(String interview) {
@@ -260,7 +289,7 @@ public class IndividualAppView extends IconFrame {
 	}
 
 	public String getInterview() {
-		return interviewPane.getInterviewDescription();
+		return interviewPane.getInterviewDescription().trim();
 	}
 
 	public ArrayList<Examination> getExaminations(boolean onlyEdited) {
@@ -269,13 +298,13 @@ public class IndividualAppView extends IconFrame {
 	}
 
 	public ArrayList<PrescriptedItem> getPrescriptionData(boolean onlyEdited)
-			throws WrongInputException {
+			throws BadDataException {// WrongInputException {
 		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
-		try {
-			positions = prescriptionPane.getPrescriptedPositions(onlyEdited);
-		} catch (NumberFormatException e) {
-			throw new WrongInputException();
-		}
+		// try {
+		positions = prescriptionPane.getPrescriptedPositions(onlyEdited);
+		/*
+		 * } catch (BadDataException e) { throw new WrongInputException(); }
+		 */
 		return positions;
 	}
 
