@@ -47,18 +47,6 @@ public class LoginController {
 
 				Employee user = null;
 
-				/*
-				 * try { MessageDigest digest =
-				 * MessageDigest.getInstance("SHA-512"); byte[] hash =
-				 * digest.digest(password.getBytes("UTF-8"));
-				 * 
-				 * StringBuilder hexString = new StringBuilder(); for (int i :
-				 * hash) { hexString.append(Integer.toHexString(0XFF & i)); }
-				 * password = hexString.toString();
-				 * System.out.println(hexString); } catch (Exception e1) {
-				 * e1.printStackTrace(); // TODO: show dialog return; }
-				 */
-
 				try {
 					user = model.tryToLog(login, password);
 				} catch (BadDataException | ConnectionException

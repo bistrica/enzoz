@@ -175,7 +175,6 @@ public class DBHandler {
 		try {
 			dbh.conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -4,8 +4,10 @@ import items.Illness;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -57,9 +59,10 @@ public class IllnessesPanel extends JPanel {
 	private JScrollPane scrollAll;
 	private ArrayList<Illness> constantIllnesses;
 	private ArrayList<Illness> temporaryIllnesses;
+	private IndividualAppView parentView;
 
-	public IllnessesPanel(boolean archive) {
-
+	public IllnessesPanel(boolean archive, IndividualAppView parent) {
+		this.parentView = parent;
 		temporary = new JList<Illness>();
 		constant = new JList<Illness>();
 		temporaryIllnesses = new ArrayList<Illness>();
@@ -98,7 +101,7 @@ public class IllnessesPanel extends JPanel {
 		temporaryPane.add(tempButtons);
 		tempIllLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		temporaryScroll.setPreferredSize(new Dimension(getWidth() / 2,
+		temporaryPane.setPreferredSize(new Dimension(getWidth() / 2,
 				(int) getPreferredSize().getHeight()));
 		if (!archive) {
 			constantPane
@@ -112,11 +115,11 @@ public class IllnessesPanel extends JPanel {
 			constIllLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 			// temporaryScroll.setSize(getWidth() / 2, 200);
-			constantScroll.setPreferredSize(new Dimension(getWidth() / 2,
+			constantPane.setPreferredSize(new Dimension(getWidth() / 2,
 					(int) getPreferredSize().getHeight()));// );Size(getWidth()
 															// / 2, 200);
 
-			setLayout(new GridLayout(1, 2));
+			setLayout(new GridLayout(2, 1));
 			add(constantPane);
 		} else {
 
@@ -138,7 +141,8 @@ public class IllnessesPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: potwierdzenie
+				if (temporary.getSelectedIndex() == -1)
+					return;
 				temporaryModel.remove(temporary.getSelectedIndex());
 			}
 		});
@@ -147,7 +151,8 @@ public class IllnessesPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: potwierdzenie
+				if (constant.getSelectedIndex() == -1)
+					return;
 				constantModel.remove(constant.getSelectedIndex());
 			}
 		});
@@ -202,7 +207,8 @@ public class IllnessesPanel extends JPanel {
 	}
 
 	private void createIllnessDialog() {
-		illnessDialog = new JDialog();
+		illnessDialog = new JDialog(parentView, "",
+				Dialog.ModalityType.DOCUMENT_MODAL);
 		illnesses = new JPanel();
 		illnesses.setLayout(new BorderLayout());
 		scrollAll = new JScrollPane(all);
@@ -252,7 +258,15 @@ public class IllnessesPanel extends JPanel {
 		illnesses.add(addIllness, BorderLayout.SOUTH);
 
 		illnessDialog.add(illnesses);
-		illnessDialog.pack(); // check?
+		// illnessDialog.pack(); // check?
+
+		int size = 450;
+		illnessDialog.setSize(size, size);
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		illnessDialog.setLocation((dim.width - size) / 2,
+				(dim.height - size) / 2);
 	}
 
 	private void openIllnessDialog() {
@@ -260,6 +274,12 @@ public class IllnessesPanel extends JPanel {
 		illnessDialog.setVisible(true);
 
 	}
+
+	/*
+	 * public void closeIllnessDialog() { illnessDialog.setVisible(false);
+	 * 
+	 * }
+	 */
 
 	public JList<Illness> getTemporary() {
 		return temporary;

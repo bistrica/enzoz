@@ -1,7 +1,10 @@
 package login;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -14,10 +17,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.Painter;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ColorUIResource;
 
 import GUI_items.BPanel;
 import GUI_items.IconFrame;
@@ -48,6 +54,8 @@ public class LoginView extends IconFrame {
 		login = new JTextField(30);
 		password = new JPasswordField(30);
 		loginButton = new JButton(loginButtonString);
+		// loginButton.setFont(new Font("Arial", Font.PLAIN, 20));
+
 		buttonPanel.add(loginButton);
 
 		panel.add(loginLabel);
@@ -125,52 +133,110 @@ public class LoginView extends IconFrame {
 				 * .getResource
 				 * ("C:\\Users\\Olusiak\\Documents\\logo_icon.png"));
 				 */
+				setLookAndFeel();
+
 				LoginView view = new LoginView();
 				LoginDBH model = new LoginDBH();
 				LoginController controller = new LoginController(view, model);
-				// view.setVisible(true);
-
-				try {
-
-					/*
-					 * InfoNodeLookAndFeelTheme theme = new
-					 * InfoNodeLookAndFeelTheme( "My Theme", new Color(110, 120,
-					 * 150), new Color(0, 170, 0), new Color(80, 80, 80),
-					 * Color.WHITE, new Color(0, 170, 0), Color.WHITE, 0.8);
-					 */
-					UIManager
-							.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-					for (LookAndFeelInfo info : UIManager
-							.getInstalledLookAndFeels()) {
-						// System.out.println("*" + info.getName());
-						if ("Nimbus".equals(info.getName())) {
-							UIManager.setLookAndFeel(info.getClassName());
-							break;
-						}
-					}
-					// theme));//
-					// OyoahaLookAndFeel laf = new OyoahaLookAndFeel();
-
-					// LiquidLookAndFeel laf = new LiquidLookAndFeel();
-					// UIManager.setLookAndFeel(laf);
-					// UIManager
-					// .setLookAndFeel("com.oyoaha.swing.plaf.oyoaha.OyoahaLookAndFeel");
-					// // info.getClassName());
-
-					// break;
-					// }
-
-					// }
-
-				} catch (Exception e) {
-					System.out.println("Err");
-				}
+				view.setVisible(true);
 
 			}
 		});
 
 		// view.setVisible(true);
 
+	}
+
+	public static void setLookAndFeel() {
+
+		UIManager.put("nimbusBase", new Color(0, 68, 102));
+		UIManager.put("nimbusBlueGrey", new Color(0, 68, 102));//
+		// 115, 164,
+		// 209));
+		UIManager.put("control", new Color(10, 68, 102));// 115,
+		// 164, 209));//
+		UIManager.put("nimbusSelectionBackground", new Color(135, 1, 45));// new
+																			// Color(115,
+		// 164, 209));
+		// // 43,
+		// 82,
+		// 102));
+		UIManager.put("text", Color.WHITE);
+
+		// UIManager.put("Table.background", new Color(10, 68, 102));
+
+		UIManager.put("TextField.font", new Font("Font", Font.PLAIN, 12));
+		// UIManager.put("Label.font", new Font("Font", Font.BOLD, 15));
+
+		UIManager.put("TextField.textForeground", new Color(0, 0, 0));
+		UIManager.put("PasswordField.foreground", new Color(0, 0, 0));
+		UIManager.put("TextArea.font", new Font("Arial", Font.BOLD, 15));
+		UIManager.put("TextArea.background", new Color(57, 105, 138));// new
+																		// Color(0,
+																		// 0,
+																		// 0));
+		UIManager.put("FormattedTextField.foreground", new Color(0, 0, 0));
+
+		// UIManager.put("List[Enabled].textForeground", Color.BLACK);
+		// UIManager.getLookAndFeelDefaults().put("List[Selected].textForeground",
+		// Color.WHITE);
+		UIManager.put("List.background", new Color(57, 105, 138));// 115, 164,
+		// 209));
+		UIManager.put("List.font", new Font("Arial", Font.BOLD, 15));
+		// UIManager.put("Label", value)
+		// UIManager.put("ComboBox:\"ComboBox.listRenderer\".background",
+		// Color.PINK);
+
+		try {
+
+			UIManager
+					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				// System.out.println("*" + info.getName());
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println("Err");
+		}
+
+		UIManager.getLookAndFeelDefaults().put(
+				"Table:\"Table.cellRenderer\".background",
+				new ColorUIResource(new Color(74, 144, 178)));
+
+		UIManager.getLookAndFeelDefaults().put("Table.background",
+				new ColorUIResource(new Color(74, 144, 178)));
+		// UIManager.getLookAndFeelDefaults().put(
+		// "Table[Enabled+Selected].textBackground",
+		// new ColorUIResource(Color.RED));// new Color(115, 164, 209)));
+		UIManager.getLookAndFeelDefaults().put("Table.alternateRowColor",
+				new Color(0, 68, 102));// 8, 46, 121));//
+		// UIManager
+		// .put("List[Selected].textBackground", new Color(115, 164, 209));
+		Border border = new EmptyBorder(2, 5, 2, 5);
+		UIManager.getLookAndFeelDefaults().put(
+				"Table.focusCellHighlightBorder", border);
+
+		Painter<Component> p = new Painter<Component>() {
+			@Override
+			public void paint(Graphics2D g, Component c, int width, int height) {
+				// super.paint(g);
+				g.setColor(new Color(57, 105, 138));// 20, 36, 122));
+				g.fillRect(0, 0, c.getWidth() - 1, c.getHeight() - 1);
+				// and so forth
+			}
+		};
+		UIManager.getLookAndFeelDefaults().put(
+				"MenuBar[Enabled].backgroundPainter", p);
+		UIManager.getLookAndFeelDefaults().put(
+				"MenuBar:Menu[Enabled].textForeground", Color.WHITE);
+
+		// 0,
+		// 68,
+		// 102));
 	}
 
 	public void displayError(String message) {
@@ -184,4 +250,42 @@ public class LoginView extends IconFrame {
 		password.setText("");
 	}
 
+	public static void setLookAndFeel2() {
+
+		UIManager.put("nimbusBase", new Color(0, 68, 102));
+		UIManager.put("nimbusBlueGrey", new Color(60, 145, 144));
+		UIManager.put("control", new Color(43, 82, 102));
+		UIManager.put("text", new Color(255, 255, 255));
+		UIManager.put("Table.alternateRowColor", new Color(0, 68, 102));
+		UIManager.put("TextField.font", new Font("Font", Font.BOLD, 12));
+		UIManager.put("TextField.textForeground", new Color(0, 0, 0));
+		UIManager.put("PasswordField.foreground", new Color(0, 0, 0));
+		UIManager.put("TextArea.foreground", new Color(0, 0, 0));
+		UIManager.put("FormattedTextField.foreground", new Color(0, 0, 0));
+
+		UIManager.put("ComboBox:\"ComboBox.listRenderer\".background",
+				new Color(0, 68, 102));
+		UIManager.put(
+				"ComboBox:\"ComboBox.listRenderer\"[Selected].background",
+				new Color(0, 0, 0));
+
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e) {
+			// If Nimbus is not available, you can set the GUI to another look
+			// and feel.
+		}
+
+		UIManager.getLookAndFeelDefaults().put(
+				"Table:\"Table.cellRenderer\".background",
+				new ColorUIResource(new Color(74, 144, 178)));
+		UIManager.getLookAndFeelDefaults().put("Table.background",
+				new ColorUIResource(new Color(74, 144, 178)));
+
+	}
 }

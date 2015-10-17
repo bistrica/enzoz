@@ -427,11 +427,4 @@ public class AppointmentController {
 		av.displayInfo(message, errorString);
 	}
 
-	/*
-	 * public void setArchiveAppOpen(boolean b) { // TODO Auto-generated method
-	 * stub
-	 * 
-	 * }
-	 */
-
 }

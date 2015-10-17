@@ -6,6 +6,7 @@ public class NonEditableDefaultTableModel extends DefaultTableModel {
 
 	public NonEditableDefaultTableModel(Object[][] data, String[] columnNames) {
 		super(data, columnNames);
+
 	}
 
 	@Override

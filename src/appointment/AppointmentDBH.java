@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import people.Doctor;
 import GUI_items.SearchHelper;
-import daos.DoctorDAO;
 import daos.AppointmentDAO;
+import daos.DoctorDAO;
 import database.DBHandler;
 import exceptions.ArchiveException;
 import exceptions.LoadDataException;
@@ -81,7 +81,8 @@ public class AppointmentDBH {
 		return apps;
 	}
 
-	public void openPreview(Appointment app) throws PreviewCannotBeCreatedException {
+	public void openPreview(Appointment app)
+			throws PreviewCannotBeCreatedException {
 		try {
 			appDAO.updateData(app);
 			// isPossible = appDAO.updateData(app);
@@ -149,30 +150,5 @@ public class AppointmentDBH {
 
 		return doctors;
 	}
-
-	// TO REMOVE (?)
-	/*
-	 * private boolean openPreviewIfPossible(Wizyta app) throws
-	 * PreviewCannotBeCreatedException { boolean isPossible = false; try {
-	 * isPossible = appDAO.checkAndChangeStatus(app); // isPossible =
-	 * appDAO.updateData(app); } catch (SQLException e) {
-	 * 
-	 * e.printStackTrace();
-	 * 
-	 * if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-	 * DBHandler.resetTrialsNo(); throw new PreviewCannotBeCreatedException(); }
-	 * else { System.out.println("ONCE MORE"); DBHandler.incrementTrialsNo();
-	 * isPossible = openPreviewIfPossible(app); }
-	 * 
-	 * } DBHandler.resetTrialsNo(); return isPossible; }/
-	 * 
-	 * /* public boolean statusAllowsEditing(Wizyta app) throws SQLException {
-	 * return appDAO.checkAndChangeStatus(app); }
-	 */
-
-	/*
-	 * public void updateAppData(Wizyta app) throws SQLException { // TODO
-	 * Auto-generated method stub appDAO.updateData(app); }
-	 */
 
 }

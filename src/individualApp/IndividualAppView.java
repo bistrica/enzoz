@@ -22,7 +22,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
@@ -145,16 +144,17 @@ public class IndividualAppView extends IconFrame {
 
 		JTabbedPane tabbedPanel = new JTabbedPane();
 		interviewPane = new InterviewPanel();
-		illnessesPane = new IllnessesPanel(isArchive);
-		prescriptionPane = new PrescriptionPanel();
+		illnessesPane = new IllnessesPanel(isArchive, this);
+		prescriptionPane = new PrescriptionPanel(this);
 		examinationPane = new ExaminationPanel();
+		examinationPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		// archivesPane = new ArchivesPanel();
 
 		tabbedPanel.add(interviewPaneString, interviewPane);
 		tabbedPanel.add(illnessesPaneString, illnessesPane);
 		tabbedPanel.add(prescriptionPaneString, prescriptionPane);
-		tabbedPanel
-				.add(examinationPaneString, new JScrollPane(examinationPane));
+		tabbedPanel.add(examinationPaneString, examinationPane);// new
+																// JScrollPane(examinationPane));
 
 		// if (isEnabled)
 		// tabbedPanel.add(archivesPaneString, archivesPane);
@@ -170,8 +170,8 @@ public class IndividualAppView extends IconFrame {
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		setPreferredSize(new Dimension(710, 500));
-		setSize(new Dimension(710, 500));
+		setPreferredSize(new Dimension(800, 600));
+		setSize(getPreferredSize());// new Dimension(750, 500));
 
 		setCentreLocation();
 
@@ -283,10 +283,11 @@ public class IndividualAppView extends IconFrame {
 				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
 	}
 
-	public void close() {
-		setVisible(false);
-		dispose();
-	}
+	/*
+	 * public void close() { setVisible(false); //
+	 * illnessesPane.closeIllnessDialog(); //
+	 * prescriptionPane.closeMedicinesDialog(); dispose(); }
+	 */
 
 	public String getInterview() {
 		return interviewPane.getInterviewDescription().trim();

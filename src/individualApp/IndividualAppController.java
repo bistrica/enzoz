@@ -48,6 +48,10 @@ public class IndividualAppController {
 
 	private String lackingDescriptionString = "Treœæ skierowania nie mo¿e byæ pusta.";
 
+	protected String dataSavedString = "Zmiany zosta³y zapisane.";
+
+	protected String confirmString = "Potwierdzenie";
+
 	public IndividualAppController(AppointmentController parent,
 			Appointment app, boolean previewMode)
 			throws PatientAlreadyBlockedException {
@@ -193,6 +197,7 @@ public class IndividualAppController {
 					if (saveChanges()) {
 						parent.setCurrentAppOpen(false);
 						parent.removeChildWindow(appointment);
+						iav.displayInfo(dataSavedString, confirmString);
 						iav.close();
 					}
 				}
@@ -217,7 +222,6 @@ public class IndividualAppController {
 	protected boolean saveChanges() {
 		boolean isEdited = appointment.isArchiveAppointment();
 
-		// TODO: potwierdzenie zapisu zmian
 		Appointment newOrEditedApp = new Appointment(appointment.getId(),
 				appointment.getDate(), appointment.getPatient(),
 				appointment.getDoctor());

@@ -63,7 +63,10 @@ public class Medicine {
 
 	@Override
 	public String toString() {
-		return name + ", " + formulation + ", " + dose + ", "
-				+ packageDescription;
+		String desc = name + ", " + formulation + ", ";
+		if (!dose.isEmpty())
+			desc += dose + ", ";
+		desc += packageDescription;
+		return desc;
 	}
 }

@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import GUI_items.NonEditableDefaultTableModel;
@@ -27,6 +28,7 @@ public class AppointmentPanel extends JPanel {
 		appointmentsTable.setRowHeight(appointmentsTable.getRowHeight() * 2);
 
 		JScrollPane appScroll = new JScrollPane(appointmentsTable);
+		appScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
 		button = new JButton();// previewString);
 		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setLayout(new BorderLayout());

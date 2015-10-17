@@ -43,7 +43,12 @@ public class DrugPanel extends JPanel {
 		this.parent = parent;
 		position = pos;
 		Medicine drug = pos.getMedicine();
-		nameDoseLabel = new JLabel(drug.getName() + ", " + drug.getDose());
+		String labelString = drug.getName();
+
+		if (!drug.getDose().isEmpty())
+			labelString += ", " + drug.getDose();
+
+		nameDoseLabel = new JLabel(labelString);
 		typeLabel = new JLabel(drug.getFormulation() + ", "
 				+ drug.getPackageDescription());
 		nameDoseLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -151,7 +156,7 @@ public class DrugPanel extends JPanel {
 		labels.setPreferredSize(new Dimension(320, 80));
 		labels.setMinimumSize(new Dimension(320, 80));
 
-		setBorder(new EmptyBorder(0, 30, 0, 30));
+		setBorder(new EmptyBorder(20, 30, 0, 30));
 		// labels.setBackground(Color.RED);
 		// modifiedData.setBackground(Color.BLUE);
 		// buttonPanel.setBackground(Color.GREEN);

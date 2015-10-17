@@ -14,12 +14,10 @@ public class Patient extends Person {
 			String code, String phone) {
 		super(id, name, surname, pESEL, street, houseNo, flatNo, city, code,
 				phone);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Patient(int id, String name, String surname, String pESEL) {
 		super(id, name, surname, pESEL);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Patient(Person person, ArrayList<Illness> illnesses) {

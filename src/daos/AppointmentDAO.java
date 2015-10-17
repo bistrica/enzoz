@@ -90,7 +90,6 @@ public class AppointmentDAO {
 			date = format.parse(dateString);
 			appDate.setTime(date);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 
 		}
@@ -332,19 +331,11 @@ public class AppointmentDAO {
 
 	}
 
-	/*
-	 * public boolean checkStatus(Wizyta app) { // TODO Auto-generated method
-	 * stub return false; }
-	 */
-
 	public void writeToDatabase(Appointment app) throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
 		Savepoint svp = conn.setSavepoint();
-		// TODO: update status
 
-		// boolean autoCommit = conn.getAutoCommit();
-		// conn.setAutoCommit(false);
 		int appId = app.getId();
 
 		try {

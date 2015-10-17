@@ -186,15 +186,6 @@ public class IndividualAppDBH {
 				DBHandler.resetTrialsNo();
 				throw new SaveDataException();
 			} else {
-				try { // TODO wywaliæ
-					System.out
-							.println("ONCE MORE "
-									+ DBHandler.getDatabaseConnection()
-											.getAutoCommit());
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 
 				DBHandler.incrementTrialsNo();
 				rewriteStatus(appointment);

@@ -48,6 +48,7 @@ public class ExaminationPanel extends JPanel {
 		examsPane.setLayout(new BoxLayout(examsPane, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(examsPane);
 		scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+		examsPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight()
 				- addButton.getHeight()));
 		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

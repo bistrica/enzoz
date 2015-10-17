@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 
 import people.Doctor;
 import GUI_items.IconFrame;
@@ -21,7 +22,7 @@ public class AppointmentView extends IconFrame {
 	// JTable apps;
 	private String todayAppString = "Dzisiejsze wizyty";
 	private String openString = "Rozpocznij wizytê", previewString = "Podgl¹d";
-	Object options[] = { "Tak", "Nie" };
+	String options[] = { "Tak", "Nie" };
 	private String confirmExitString = "Czy na pewno chcesz opuœciæ to okno?";
 	private String exitTitleBarString = "Wyjœcie";
 
@@ -63,8 +64,13 @@ public class AppointmentView extends IconFrame {
 
 		todayPanel = new AppointmentPanel();
 		archivePanel = new ArchivePanel(doctors);// this);
+		todayPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
+		archivePanel.setBorder(new EmptyBorder(0, 10, 0, 10));
 		JScrollPane scrollToday = new JScrollPane(todayPanel);
 		JScrollPane scrollArchive = new JScrollPane(archivePanel);
+
+		scrollToday.setBorder(new EmptyBorder(0, 0, 0, 0));
+		scrollArchive.setBorder(new EmptyBorder(0, 0, 0, 0));
 
 		tabbedPanel.add(todayAppString, scrollToday);// todayPanel);
 		tabbedPanel.add(archiveString, scrollArchive);// archivePanel);
@@ -114,17 +120,6 @@ public class AppointmentView extends IconFrame {
 	public void setTodayListener(ActionListener al) {
 		todayPanel.setButtonListenerAndLabel(openString, al);
 	}
-
-	// TODO: refresh (added appointments for today!)
-	/*
-	 * public void refreshTodayApps() {
-	 * 
-	 * }
-	 * 
-	 * public void refreshArchiveApps() {
-	 * 
-	 * }
-	 */
 
 	public void setArchiveListener(ActionListener al) {
 		archivePanel.setButtonListenerAndLabel(previewString, al);

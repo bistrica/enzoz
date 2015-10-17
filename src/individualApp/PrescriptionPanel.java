@@ -5,6 +5,9 @@ import items.PrescriptedItem;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,7 +28,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import rendering.DrugTableModel;
 import GUI_items.DrugListPanel;
 import GUI_items.DrugPanel;
 import exceptions.BadDataException;
@@ -49,39 +51,15 @@ public class PrescriptionPanel extends JPanel {
 	private JTextField searchField;
 	private String addString = "Dodaj lek";
 	private JButton addMedicine;
-	private DrugTableModel medicinesModel;
 
 	JButton addNewMedicine;
 	private int itemsInitialNo;
+	private IndividualAppView parentView;
 
-	// private ArrayList<PozycjaNaRecepcie> positions;
+	public PrescriptionPanel(IndividualAppView parent) {
 
-	public PrescriptionPanel() {
-
-		/*
-		 * PozycjaNaRecepcie[][] data = { {new PozycjaNaRecepcie(new
-		 * Lek(1,"x","y","z","p"), 1,1,1,1)}, {new PozycjaNaRecepcie(new
-		 * Lek(1,"xx","yy","zz","pp"), 1,1,1,1)} }; Object[] columnNames =
-		 * {"Name"}; prescriptedMedicines=new
-		 * JTable(data,columnNames);//JList<PozycjaNaRecepcie>();
-		 */
-
+		this.parentView = parent;
 		prescriptedMedicines = new DrugListPanel();
-		// prescriptedMedicines.setInsets=new Insets(0,0,0,0);//setBorder(new
-		// EmptyBorder(0, 0, 0, 0));
-		// JTable((medicinesModel=new
-		// DrugTableModel()));
-		/*
-		 * DrugCellRenderer renderer=new DrugCellRenderer();
-		 * prescriptedMedicines.setDefaultRenderer(Object.class, renderer);
-		 * prescriptedMedicines.setDefaultEditor(Object.class, renderer);
-		 * 
-		 * prescriptedMedicines.setRowHeight(300); medicinesModel.addRow(new
-		 * Object[]{new PozycjaNaRecepcie(new Lek(1,"xxx","y","z","p"))});
-		 * medicinesModel.addRow(new Object[]{new PozycjaNaRecepcie(new
-		 * Lek(2,"2xxx","y","z","p"))}); //medicinesModel.add(new
-		 * PozycjaNaRecepcie(new Lek(3,"3xxx","y","z","p")));
-		 */
 
 		searchField = new JTextField(30);
 
@@ -95,23 +73,14 @@ public class PrescriptionPanel extends JPanel {
 		});
 
 		all = new JList<Medicine>();
-		// medicinesModel=new DefaultTableModel();//<PozycjaNaRecepcie>();
-		// prescriptedMedicines.setDefaultRenderer(PozycjaNaRecepcie.class, new
-		// DrugCellRenderer());
-		// prescriptedMedicines.setModel(medicinesModel);
-		// medicinesModel.getCol
-		// prescriptedMedicines.getColumnModel().getColumn(0).setCellRenderer(new
-		// DrugCellRenderer());
 
 		JScrollPane scrollMedicines = new JScrollPane(prescriptedMedicines);
 		scrollMedicines.setBorder(new EmptyBorder(0, 0, 0, 0));
-		// scrollMedicines.setPreferredSize(new Dimension(getWidth(),
-		// getHeight()));
-		// setLayout(new BorderLayout());
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		addNewMedicine.setAlignmentX(CENTER_ALIGNMENT);
-		add(addNewMedicine);// , BorderLayout.NORTH);
-		add(scrollMedicines);// , BorderLayout.CENTER);
+		add(addNewMedicine);
+		add(scrollMedicines);
 
 		setListeners();
 	}
@@ -185,7 +154,8 @@ public class PrescriptionPanel extends JPanel {
 	}
 
 	private void createMedicinesDialog() {
-		medicinesDialog = new JDialog();
+		medicinesDialog = new JDialog(parentView, "",
+				Dialog.ModalityType.DOCUMENT_MODAL);
 		medicines = new JPanel();
 		medicines.setLayout(new BorderLayout());
 		scrollAll = new JScrollPane(all);
@@ -203,17 +173,10 @@ public class PrescriptionPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// System.out.println("click");
 				Medicine newDrug = all.getSelectedValue();
-				// medicinesModel.addElement(newDrug);
-				// if (!prescriptedMedicines.contains(newDrug)){
+
 				prescriptedMedicines.add(new PrescriptedItem(newDrug));
 				repaint();
-				// revalidate();
-				// medicinesModel.addRow(new Object[]{new
-				// PozycjaNaRecepcie(newDrug)});
-				// System.out.println("dodano");
-				// revalidate();
 
-				// prescriptedMedicines.
 			}
 
 		});
@@ -221,7 +184,22 @@ public class PrescriptionPanel extends JPanel {
 		medicines.add(addMedicine, BorderLayout.SOUTH);
 
 		medicinesDialog.add(medicines);
-		medicinesDialog.pack();
+		// medicinesDialog.pack();
+
+		int size = 450;
+		medicinesDialog.setSize(size, size);
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+		medicinesDialog.setLocation((dim.width - size) / 2,
+				(dim.height - size) / 2);
+
+		// medicinesDialog.setModalityType(ModalityType.DOCUMENT_MODAL);//
+		// APPLICATION_MODAL);
+
+		// medicinesDialog.addWindowListener(new WindowAdapter() {
+
+		// });
 	}
 
 	private void openMedicinesDialog() {
@@ -278,11 +256,8 @@ public class PrescriptionPanel extends JPanel {
 
 	}
 
-	/*
-	 * public void setPrescriptionData(ArrayList<Lek> list) { // TODO
-	 * Auto-generated method stub
-	 * 
-	 * }
-	 */
+	public void closeMedicinesDialog() {
+		medicinesDialog.setVisible(false);
+	}
 
 }
