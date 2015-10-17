@@ -283,11 +283,10 @@ public class IndividualAppView extends IconFrame {
 				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
 	}
 
-	/*
-	 * public void close() { setVisible(false); //
-	 * illnessesPane.closeIllnessDialog(); //
-	 * prescriptionPane.closeMedicinesDialog(); dispose(); }
-	 */
+	public void close() {
+		setVisible(false); //
+		dispose();
+	}
 
 	public String getInterview() {
 		return interviewPane.getInterviewDescription().trim();

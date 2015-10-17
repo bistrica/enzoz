@@ -275,12 +275,6 @@ public class IllnessesPanel extends JPanel {
 
 	}
 
-	/*
-	 * public void closeIllnessDialog() { illnessDialog.setVisible(false);
-	 * 
-	 * }
-	 */
-
 	public JList<Illness> getTemporary() {
 		return temporary;
 	}

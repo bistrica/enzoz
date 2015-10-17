@@ -256,8 +256,4 @@ public class PrescriptionPanel extends JPanel {
 
 	}
 
-	public void closeMedicinesDialog() {
-		medicinesDialog.setVisible(false);
-	}
-
 }
