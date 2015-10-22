@@ -1,7 +1,8 @@
 package items;
 
 public class Interview {
-	String content;
+
+	private String content;
 
 	public Interview(String content) {
 		this.content = content;

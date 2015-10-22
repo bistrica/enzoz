@@ -18,32 +18,28 @@ import GUI_items.SearchHelper;
 
 public class AppointmentView extends IconFrame {
 
-	JScrollPane appTable;
-	// JTable apps;
-	private String todayAppString = "Dzisiejsze wizyty";
-	private String openString = "Rozpocznij wizytê", previewString = "Podgl¹d";
-	String options[] = { "Tak", "Nie" };
-	private String confirmExitString = "Czy na pewno chcesz opuœciæ to okno?";
-	private String exitTitleBarString = "Wyjœcie";
+	private JScrollPane appTable;
+
+	private String options[] = { "Tak", "Nie" };
 
 	private AppointmentPanel todayPanel;
 	private ArchivePanel archivePanel;
 	private String archiveString = "Archiwum";
 	private JMenuItem refreshItem, logoutItem, exitItem;
-	private String viewMenuString = "Widok";
-	private String refreshString = "Odœwie¿";
-	private String noArchiveAppsString = "Nie znaleziono archiwalnych wizyt.";
-	private String noAppsString = "Brak wizyt";
-	private String noTodayAppsString = "Brak wizyt na dzisiaj.";
-	private String exitString = "Wyjœcie";
-	private String logoutString = "Wyloguj: ";
-	private String optionMenuString = "Opcje programu";
-	private boolean firstTimeOpenArchive;
-	private boolean firstTimeOpenToday;
+	private String viewMenuString = "Widok", refreshString = "Odœwie¿",
+			noArchiveAppsString = "Nie znaleziono archiwalnych wizyt.",
+			noAppsString = "Brak wizyt",
+			noTodayAppsString = "Brak wizyt na dzisiaj.",
+			exitString = "Wyjœcie", logoutString = "Wyloguj: ",
+			optionMenuString = "Opcje programu",
+			exitTitleBarString = "Wyjœcie",
+			confirmExitString = "Czy na pewno chcesz opuœciæ to okno?",
+			todayAppString = "Dzisiejsze wizyty",
+			openString = "Rozpocznij wizytê", previewString = "Podgl¹d";
+	private boolean firstTimeOpenArchive, firstTimeOpenToday;
 
 	public AppointmentView(Doctor[] doctors, String userName) {
 
-		// super();
 		firstTimeOpenArchive = true;
 		firstTimeOpenToday = true;
 
@@ -63,7 +59,7 @@ public class AppointmentView extends IconFrame {
 		JTabbedPane tabbedPanel = new JTabbedPane();
 
 		todayPanel = new AppointmentPanel();
-		archivePanel = new ArchivePanel(doctors);// this);
+		archivePanel = new ArchivePanel(doctors);
 		todayPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
 		archivePanel.setBorder(new EmptyBorder(0, 10, 0, 10));
 		JScrollPane scrollToday = new JScrollPane(todayPanel);
@@ -72,18 +68,16 @@ public class AppointmentView extends IconFrame {
 		scrollToday.setBorder(new EmptyBorder(0, 0, 0, 0));
 		scrollArchive.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-		tabbedPanel.add(todayAppString, scrollToday);// todayPanel);
-		tabbedPanel.add(archiveString, scrollArchive);// archivePanel);
+		tabbedPanel.add(todayAppString, scrollToday);
+		tabbedPanel.add(archiveString, scrollArchive);
 		getContentPane().add(tabbedPanel);
-		// setSize(700, 600);
 
 		pack();
-		System.out.println(getSize() + " : " + getPreferredSize());
+
 		Dimension dim = new Dimension(getPreferredSize().width + 100,
 				getPreferredSize().height + 100);
 		setSize(dim);
 		setPreferredSize(dim);
-		System.out.println(getSize() + " :: " + getPreferredSize());
 		setCentreLocation();
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -93,28 +87,8 @@ public class AppointmentView extends IconFrame {
 		refreshItem.addActionListener(al);
 	}
 
-	/*
-	 * public void setArchiveData(ArrayList<Wizyta> apps){
-	 * archivePanel.setData(apps); }
-	 */
-
-	/*
-	 * public void dodajPrzycisk() { JButton jb=new JButton("Dzia³a");
-	 * appPanel.add(jb); }
-	 */
-
-	/*
-	 * public void setAppointments(String[] columnsNames, Object[][]
-	 * convertAppointments) { // System.out.println("ap "+convertAppointments);
-	 * tableToday = new JTable(new NonEditableDefaultTableModel(
-	 * convertAppointments, columnsNames)); appPanel.remove(appTable); appTable
-	 * = new JScrollPane(tableToday); appPanel.add(appTable);
-	 * 
-	 * }
-	 */
-
 	public int getSelectedAppIndex() {
-		return todayPanel.getAppIndex();// getSelectedRow();
+		return todayPanel.getAppIndex();
 	}
 
 	public void setTodayListener(ActionListener al) {
@@ -137,10 +111,6 @@ public class AppointmentView extends IconFrame {
 		archivePanel.setDoctorsSurnames(sur);
 	}
 
-	/*
-	 * public void tryToMakePreview(Wizyta wizyta) { ia }
-	 */
-
 	public int getSelectedArchiveAppIndex() {
 		return archivePanel.getAppIndex();
 	}
@@ -149,7 +119,7 @@ public class AppointmentView extends IconFrame {
 			Object[][] convertedArchiveAppointments, boolean showMessageIfNoApp) {
 
 		archivePanel.setData(convertedArchiveAppointments, columnNames);
-		revalidate(); // to check
+		revalidate();
 
 		if (convertedArchiveAppointments.length == 0
 				&& (showMessageIfNoApp || firstTimeOpenArchive))
@@ -163,7 +133,7 @@ public class AppointmentView extends IconFrame {
 			Object[][] convertedAppointments) {
 
 		todayPanel.setData(convertedAppointments, columnNames);
-		revalidate(); // to check
+		revalidate();
 
 		if (convertedAppointments.length == 0 && firstTimeOpenToday)
 			displayInfo(noTodayAppsString, noAppsString);

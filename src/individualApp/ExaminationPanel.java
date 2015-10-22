@@ -19,12 +19,10 @@ import GUI_items.ExamPanel;
 
 public class ExaminationPanel extends JPanel {
 
-	Clinic[] clinics;
+	private Clinic[] clinics;
 	private String addString = "Dodaj skierowanie";
-	JButton addButton;
-	JPanel examsPane;
-
-	// JScrollPane scrollPane;
+	private JButton addButton;
+	private JPanel examsPane;
 
 	public ExaminationPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -42,7 +40,6 @@ public class ExaminationPanel extends JPanel {
 			}
 		});
 
-		// setAutoscrolls(false);
 		examsPane = new JPanel();
 
 		examsPane.setLayout(new BoxLayout(examsPane, BoxLayout.Y_AXIS));
@@ -51,11 +48,10 @@ public class ExaminationPanel extends JPanel {
 		examsPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight()
 				- addButton.getHeight()));
-		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(addButton);// , BorderLayout.NORTH);
-		// JPanel pane = new JPanel();
-		// pane.add(scrollPane);
-		add(scrollPane);// , BorderLayout.CENTER);
+
+		add(addButton);
+
+		add(scrollPane);
 	}
 
 	public void setAllClinics(ArrayList<Clinic> clinics) {
@@ -66,10 +62,8 @@ public class ExaminationPanel extends JPanel {
 	}
 
 	public void setExaminations(ArrayList<Examination> exams) {
-		System.out.println("SET");
 
 		for (Examination exam : exams) {
-			System.out.println("::" + exam.getDescription());
 			ExamPanel examPane = new ExamPanel(clinics);
 			examPane.setPosition(exam);
 			examPane.setClinic(exam.getClinic());
@@ -84,20 +78,12 @@ public class ExaminationPanel extends JPanel {
 
 	@Override
 	public void setEnabled(boolean state) {
-		// System.out.println("enabled");
+
 		addButton.setEnabled(state); // zbêdne
 		for (Component panel : examsPane.getComponents()) {
 			panel.setEnabled(state);
 		}
 	}
-
-	/*
-	 * public void add(Skierowanie pos) {
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
 
 	public ArrayList<Examination> getExaminations(boolean onlyIfChanged) {
 

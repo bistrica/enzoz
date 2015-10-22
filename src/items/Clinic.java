@@ -2,8 +2,8 @@ package items;
 
 public class Clinic {
 
-	String name;
-	int id;
+	private String name;
+	private int id;
 
 	public Clinic(int id, String name) {
 		this.id = id;

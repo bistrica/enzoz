@@ -30,54 +30,33 @@ import exceptions.BadDataException;
 
 public class IndividualAppView extends IconFrame {
 
-	// tabbedPanel;
-	// JPanel interviewPane, illnessesPane, prescriptionPane, examinationPane,
-	// archivesPane;
-	Object options[] = { "Tak", "Nie" };
+	private String options[] = { "Tak", "Nie" };
 
-	InterviewPanel interviewPane;
-	IllnessesPanel illnessesPane;
-	PrescriptionPanel prescriptionPane;
-	ExaminationPanel examinationPane;
-	ArchivesPanel archivesPane;
+	private InterviewPanel interviewPane;
+	private IllnessesPanel illnessesPane;
+	private PrescriptionPanel prescriptionPane;
+	private ExaminationPanel examinationPane;
 
-	JMenuItem editItem;
+	private JMenuItem editItem, saveItem;
 
-	JLabel mainInfo, additionalInfo;
-	String interviewPaneString = "Wywiad", illnessesPaneString = "Choroby",
+	private JLabel mainInfo, additionalInfo;
+	private String interviewPaneString = "Wywiad",
+			illnessesPaneString = "Choroby",
 			prescriptionPaneString = "Recepty",
 			examinationPaneString = "Skierowania",
-			archivesPaneString = "Historia wizyt";
+			confirmExitString = "Czy na pewno chcesz opuœciæ to okno?",
+			exitTitleBarString = "Wyjœcie", editMenuString = "Edycja",
+			editString = "Edytuj wizytê", saveString = "Zapisz zmiany",
+			appointmentString = "Dane wizyty",
+			confirmSaveString = "Czy na pewno chcesz zatwierdziæ wizytê?",
+			saveTitleBarString = "Zapisz i zakoñcz wizytê";
 
-	boolean editMode;
-	private String confirmExitString = "Czy na pewno chcesz opuœciæ to okno?";
-	private String exitTitleBarString = "Wyjœcie";
-
-	private String editMenuString = "Edycja";
-	private String editString = "Edytuj wizytê";
-
-	private JMenuItem saveItem;
-
-	private String saveString = "Zapisz zmiany";
-
-	private String appointmentString = "Dane wizyty";
-
-	private String confirmSaveString = "Czy na pewno chcesz zatwierdziæ wizytê?";
-
-	private String saveTitleBarString = "Zapisz i zakoñcz wizytê";
-
-	// private JLabel appTime;
-
+	private boolean editMode;
 	private JLabel appData;
 
 	public IndividualAppView(boolean isEnabled, boolean isEditingAllowed,
 			boolean isArchive) {
 
-		/*
-		 * this.isEditable = isEditable; if (!isEditable) {
-		 * 
-		 * }
-		 */
 		editMode = isEnabled;
 
 		JMenu menu = null;
@@ -89,11 +68,8 @@ public class IndividualAppView extends IconFrame {
 							// previewMode, czyli editMode==false
 			menu = new JMenu(editMenuString);
 
-			// System.out.println("IS ED ALL " + isEditingAllowed);
 			editItem.setEnabled(isEditingAllowed);
 
-			// menu.add(editItem);
-			// editItem.setEnabled(false);
 			saveItem.setEnabled(false);
 
 			menu.add(editItem);
@@ -122,10 +98,7 @@ public class IndividualAppView extends IconFrame {
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
 		namePanel.add(mainInfo);
 		namePanel.add(additionalInfo);
-		// namePanel.setBorder(new EmptyBorder(50, 50, 50, 50));
 
-		// appTime = new JLabel();
-		// appTime.setFont(new Font("Arial", Font.BOLD, 20));
 		appData = new JLabel();
 		appData.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -148,51 +121,29 @@ public class IndividualAppView extends IconFrame {
 		prescriptionPane = new PrescriptionPanel(this);
 		examinationPane = new ExaminationPanel();
 		examinationPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-		// archivesPane = new ArchivesPanel();
 
 		tabbedPanel.add(interviewPaneString, interviewPane);
 		tabbedPanel.add(illnessesPaneString, illnessesPane);
 		tabbedPanel.add(prescriptionPaneString, prescriptionPane);
-		tabbedPanel.add(examinationPaneString, examinationPane);// new
-																// JScrollPane(examinationPane));
+		tabbedPanel.add(examinationPaneString, examinationPane);
 
-		// if (isEnabled)
-		// tabbedPanel.add(archivesPaneString, archivesPane);
-		/*
-		 * else disableComponents();
-		 */
-
-		setLayout(new BorderLayout());// new BoxLayout(getContentPane(),
-										// BoxLayout.Y_AXIS));
-		// namePanel.setBackground(Color.BLUE);
+		setLayout(new BorderLayout());
 		getContentPane().add(info, BorderLayout.NORTH);
 		getContentPane().add(tabbedPanel);
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		setPreferredSize(new Dimension(800, 600));
-		setSize(getPreferredSize());// new Dimension(750, 500));
+		setSize(getPreferredSize());
 
 		setCentreLocation();
 
 	}
 
-	/*
-	 * private void disableComponents() { changeComponentsState(false); }
-	 * 
-	 * private void enableComponents() { changeComponentsState(true); }
-	 */
-
 	public void setEditMode() {
-		// System.out.println("SET EDIT MODE");
 		this.editMode = true;
 		setComponentsState();
 	}
-
-	/*
-	 * public void setMode(boolean previewMode) { this.previewMode =
-	 * previewMode; setComponentsState(); }
-	 */
 
 	public void setComponentsState() {
 		interviewPane.setEnabled(editMode);
@@ -233,14 +184,6 @@ public class IndividualAppView extends IconFrame {
 		interviewPane.revalidate();
 	}
 
-	/*
-	 * public void setTempIllnesses(ArrayList<Choroba> ill) {
-	 * illnessesPane.setTemporary(ill); illnessesPane.revalidate(); }
-	 * 
-	 * public void setConstIllnesses(ArrayList<Choroba> ill) {
-	 * illnessesPane.setConstant(ill); illnessesPane.revalidate(); }
-	 */
-
 	public void setPrescription(ArrayList<PrescriptedItem> pos) {
 		prescriptionPane.setPrescription(pos);
 		prescriptionPane.revalidate();
@@ -250,10 +193,6 @@ public class IndividualAppView extends IconFrame {
 		examinationPane.setExaminations(exams);
 		examinationPane.revalidate();
 	}
-
-	/*
-	 * public String getInterview() { interviewPanel.getInterview().get(); }
-	 */
 
 	// ³aduje wszystkie leki z bazy
 	public void setAllMedicinesList(ArrayList<Medicine> list) {
@@ -284,7 +223,7 @@ public class IndividualAppView extends IconFrame {
 	}
 
 	public void close() {
-		setVisible(false); //
+		setVisible(false);
 		dispose();
 	}
 
@@ -298,20 +237,13 @@ public class IndividualAppView extends IconFrame {
 	}
 
 	public ArrayList<PrescriptedItem> getPrescriptionData(boolean onlyEdited)
-			throws BadDataException {// WrongInputException {
+			throws BadDataException {
 		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
-		// try {
+
 		positions = prescriptionPane.getPrescriptedPositions(onlyEdited);
-		/*
-		 * } catch (BadDataException e) { throw new WrongInputException(); }
-		 */
+
 		return positions;
 	}
-
-	/*
-	 * public ArrayList<Choroba> getTemporaryIllnesses() { return
-	 * illnessesPane.getTemporaryIllnesses(); }
-	 */
 
 	public ArrayList<Illness> getConstantIllnesses(boolean onlyIfEdited) {
 		return illnessesPane.getConstantIllnesses(onlyIfEdited);
@@ -327,9 +259,8 @@ public class IndividualAppView extends IconFrame {
 				JOptionPane.QUESTION_MESSAGE, null, options, options[1]) == JOptionPane.YES_OPTION);
 	}
 
-	/*
-	 * public void setMedicinesList(ArrayList<Lek> list){
-	 * prescriptionPane.setPrescriptionData(list); }
-	 */
+	public boolean getEditMode() {
+		return editMode;
+	}
 
 }

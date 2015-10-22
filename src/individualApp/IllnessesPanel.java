@@ -33,27 +33,24 @@ import javax.swing.event.DocumentListener;
 
 public class IllnessesPanel extends JPanel {
 
-	// private HashSet<Choroba> tempSet;
-	// private HashSet<Choroba> constSet;
 	private HashSet<Illness> allSet;
-	JPanel illnesses;
+	private JPanel illnesses;
 
-	JList<Illness> temporary, constant, all;
-	// JList<Choroba> all;
-	DefaultListModel<Illness> temporaryModel, constantModel;
+	private JList<Illness> temporary, constant, all;
+	private DefaultListModel<Illness> temporaryModel, constantModel;
 
-	JButton addTemporary, removeTemporary, addConstant, removeConstant,
+	private JButton addTemporary, removeTemporary, addConstant, removeConstant,
 			addIllness;
-	String temporaryIllnessString = "Obecne rozpoznania",
-			constantIllnessString = "Sta³e rozpoznania";
-	String addString = "Dodaj", addTemporaryString = "Dodaj rozpoznanie",
+	private String temporaryIllnessString = "Obecne rozpoznania",
+			constantIllnessString = "Sta³e rozpoznania", addString = "Dodaj",
+			addTemporaryString = "Dodaj rozpoznanie",
 			removeTemporaryString = "Usuñ rozpoznanie",
 			addConstantString = "Dodaj sta³e rozpoznanie",
 			removeConstantString = "Usuñ sta³e rozpoznanie",
 			searchString = "Szukaj";
-	JPanel temporaryPane, constantPane;
-	JDialog illnessDialog;
-	JTextField searchField;
+	private JPanel temporaryPane, constantPane;
+	private JDialog illnessDialog;
+	private JTextField searchField;
 
 	boolean temporaryWindow;
 	private JScrollPane scrollAll;
@@ -96,7 +93,6 @@ public class IllnessesPanel extends JPanel {
 		constButtons.add(removeConstant);
 
 		temporaryPane.setLayout(new BoxLayout(temporaryPane, BoxLayout.Y_AXIS));
-		// temporaryPane.add(tempIllLabel);
 		temporaryPane.add(temporaryScroll);
 		temporaryPane.add(tempButtons);
 		tempIllLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -106,7 +102,6 @@ public class IllnessesPanel extends JPanel {
 		if (!archive) {
 			constantPane
 					.setLayout(new BoxLayout(constantPane, BoxLayout.Y_AXIS));
-			// constantPane.add(constIllLabel);
 			constantPane.add(constantScroll);
 			constantPane.add(constButtons);
 			constantScroll.setBorder(new CompoundBorder(new EmptyBorder(20, 50,
@@ -114,17 +109,14 @@ public class IllnessesPanel extends JPanel {
 
 			constIllLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-			// temporaryScroll.setSize(getWidth() / 2, 200);
 			constantPane.setPreferredSize(new Dimension(getWidth() / 2,
-					(int) getPreferredSize().getHeight()));// );Size(getWidth()
-															// / 2, 200);
+					(int) getPreferredSize().getHeight()));
 
 			setLayout(new GridLayout(2, 1));
 			add(constantPane);
 		} else {
 
-			// temporaryScroll.setSize(temporaryScroll.getPreferredSize());
-			setLayout(new BorderLayout());// (this, BoxLayout.Y_AXIS));
+			setLayout(new BorderLayout());
 
 		}
 
@@ -182,7 +174,6 @@ public class IllnessesPanel extends JPanel {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				System.out.println("rem");
 				filter();
 			}
 
@@ -224,17 +215,12 @@ public class IllnessesPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// DefaultListModel<Choroba> model=new
-				// DefaultListModel<Choroba>();
-				// ListModel oldModel=chosen.getModel();
-				// for (Choroba ill: chosen.getModel().)
-				// chosen.getModel().addElement(all.getSelectedValue());
+
 				Illness newIll = all.getSelectedValue();
 				if (temporaryWindow) {
 
 					if (constantModel.contains(newIll)
 							|| temporaryModel.contains(newIll)) {
-						// TODO: check or override equals; show info
 						return;
 					}
 
@@ -243,7 +229,6 @@ public class IllnessesPanel extends JPanel {
 				} else {
 					if (temporaryModel.contains(newIll)
 							|| constantModel.contains(newIll)) {
-						// TODO: check or override equals; show info
 						return;
 					}
 
@@ -258,7 +243,6 @@ public class IllnessesPanel extends JPanel {
 		illnesses.add(addIllness, BorderLayout.SOUTH);
 
 		illnessDialog.add(illnesses);
-		// illnessDialog.pack(); // check?
 
 		int size = 450;
 		illnessDialog.setSize(size, size);
@@ -325,7 +309,6 @@ public class IllnessesPanel extends JPanel {
 	}
 
 	public void setTemporary(ArrayList<Illness> list) {
-		// temporaryModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 		temporaryIllnesses = list;
 
 		for (Illness ill : list)
@@ -335,7 +318,6 @@ public class IllnessesPanel extends JPanel {
 	}
 
 	public void setConstant(ArrayList<Illness> list) {
-		// constantModel=new DefaultListModel<Choroba>(); //zbêdne raczej
 
 		constantIllnesses = list;
 
@@ -344,16 +326,6 @@ public class IllnessesPanel extends JPanel {
 
 	}
 
-	/*
-	 * public ArrayList<Choroba> getTemporaryIllnesses() {
-	 * 
-	 * ArrayList<Choroba> temp = new ArrayList<Choroba>();//
-	 * Arrays.asList(temporaryModel.toArray(array)); int size =
-	 * temporaryModel.getSize(); for (int i = 0; i < size; i++)
-	 * temp.add(temporaryModel.getElementAt(i)); if (temp.isEmpty()) temp =
-	 * null; return temp; }
-	 */
-
 	public ArrayList<Illness> getConstantIllnesses(boolean onlyIfEdited) {
 
 		boolean changes = false;
@@ -361,8 +333,7 @@ public class IllnessesPanel extends JPanel {
 		if (size != constantIllnesses.size())
 			changes = true;
 
-		ArrayList<Illness> cons = new ArrayList<Illness>();// Arrays.asList(temporaryModel.toArray(array));
-
+		ArrayList<Illness> cons = new ArrayList<Illness>();
 		for (int i = 0; i < size; i++) {
 			Illness illness = constantModel.getElementAt(i);
 			if (!changes && !constantIllnesses.contains(illness))

@@ -30,15 +30,14 @@ import GUI_items.IconFrame;
 
 public class LoginView extends IconFrame {
 
-	JTextField login;
-	JPasswordField password;
-	JButton loginButton;
+	private JTextField login;
+	private JPasswordField password;
+	private JButton loginButton;
 
-	String loginString = "Login:", passwordString = "Has³o:",
+	private String loginString = "Login:", passwordString = "Has³o:",
 			loginButtonString = "Zaloguj", titleBar = "Wyst¹pi³ b³¹d";
 
 	public LoginView() {
-		// super();
 		BPanel bgPanel = new BPanel();
 		JPanel panel = new JPanel();
 		JPanel buttonPanel = new JPanel();
@@ -54,7 +53,6 @@ public class LoginView extends IconFrame {
 		login = new JTextField(30);
 		password = new JPasswordField(30);
 		loginButton = new JButton(loginButtonString);
-		// loginButton.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		buttonPanel.add(loginButton);
 
@@ -62,10 +60,7 @@ public class LoginView extends IconFrame {
 		panel.add(login);
 		panel.add(passwordLabel);
 		panel.add(password);
-		// panel.setAlignmentX(RIGHT_ALIGNMENT);
-		// panel.setAlignmentY(CENTER_ALIGNMENT);
 
-		// panel.add(loguj);
 		GroupLayout layout = new GroupLayout(panel);
 		panel.setLayout(layout);
 
@@ -99,8 +94,7 @@ public class LoginView extends IconFrame {
 		bgPanel.add(buttonPanel);
 
 		getContentPane().add(bgPanel);
-		// loguj);
-		pack(); // todo: maybe to change?
+		pack();
 		setPreferredSize(new Dimension(600, 400));
 		setResizable(false);
 
@@ -128,11 +122,6 @@ public class LoginView extends IconFrame {
 			@Override
 			public void run() {
 
-				/*
-				 * Toolkit.getDefaultToolkit() .getImage( LoginView.class
-				 * .getResource
-				 * ("C:\\Users\\Olusiak\\Documents\\logo_icon.png"));
-				 */
 				setLookAndFeel();
 
 				LoginView view = new LoginView();
@@ -143,56 +132,29 @@ public class LoginView extends IconFrame {
 			}
 		});
 
-		// view.setVisible(true);
-
 	}
 
 	public static void setLookAndFeel() {
 
 		UIManager.put("nimbusBase", new Color(0, 68, 102));
-		UIManager.put("nimbusBlueGrey", new Color(0, 68, 102));//
-		// 115, 164,
-		// 209));
-		UIManager.put("control", new Color(10, 68, 102));// 115,
-		// 164, 209));//
-		UIManager.put("nimbusSelectionBackground", new Color(135, 1, 45));// new
-																			// Color(115,
-		// 164, 209));
-		// // 43,
-		// 82,
-		// 102));
+		UIManager.put("nimbusBlueGrey", new Color(0, 68, 102));
+		UIManager.put("control", new Color(10, 68, 102));
+		UIManager.put("nimbusSelectionBackground", new Color(135, 1, 45));
 		UIManager.put("text", Color.WHITE);
-
-		// UIManager.put("Table.background", new Color(10, 68, 102));
-
 		UIManager.put("TextField.font", new Font("Font", Font.PLAIN, 12));
-		// UIManager.put("Label.font", new Font("Font", Font.BOLD, 15));
-
 		UIManager.put("TextField.textForeground", new Color(0, 0, 0));
 		UIManager.put("PasswordField.foreground", new Color(0, 0, 0));
 		UIManager.put("TextArea.font", new Font("Arial", Font.BOLD, 15));
-		UIManager.put("TextArea.background", new Color(57, 105, 138));// new
-																		// Color(0,
-																		// 0,
-																		// 0));
+		UIManager.put("TextArea.background", new Color(57, 105, 138));
 		UIManager.put("FormattedTextField.foreground", new Color(0, 0, 0));
-
-		// UIManager.put("List[Enabled].textForeground", Color.BLACK);
-		// UIManager.getLookAndFeelDefaults().put("List[Selected].textForeground",
-		// Color.WHITE);
-		UIManager.put("List.background", new Color(57, 105, 138));// 115, 164,
-		// 209));
+		UIManager.put("List.background", new Color(57, 105, 138));
 		UIManager.put("List.font", new Font("Arial", Font.BOLD, 15));
-		// UIManager.put("Label", value)
-		// UIManager.put("ComboBox:\"ComboBox.listRenderer\".background",
-		// Color.PINK);
 
 		try {
 
 			UIManager
 					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				// System.out.println("*" + info.getName());
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
@@ -209,13 +171,8 @@ public class LoginView extends IconFrame {
 
 		UIManager.getLookAndFeelDefaults().put("Table.background",
 				new ColorUIResource(new Color(74, 144, 178)));
-		// UIManager.getLookAndFeelDefaults().put(
-		// "Table[Enabled+Selected].textBackground",
-		// new ColorUIResource(Color.RED));// new Color(115, 164, 209)));
 		UIManager.getLookAndFeelDefaults().put("Table.alternateRowColor",
-				new Color(0, 68, 102));// 8, 46, 121));//
-		// UIManager
-		// .put("List[Selected].textBackground", new Color(115, 164, 209));
+				new Color(0, 68, 102));
 		Border border = new EmptyBorder(2, 5, 2, 5);
 		UIManager.getLookAndFeelDefaults().put(
 				"Table.focusCellHighlightBorder", border);
@@ -223,10 +180,8 @@ public class LoginView extends IconFrame {
 		Painter<Component> p = new Painter<Component>() {
 			@Override
 			public void paint(Graphics2D g, Component c, int width, int height) {
-				// super.paint(g);
-				g.setColor(new Color(57, 105, 138));// 20, 36, 122));
+				g.setColor(new Color(57, 105, 138));
 				g.fillRect(0, 0, c.getWidth() - 1, c.getHeight() - 1);
-				// and so forth
 			}
 		};
 		UIManager.getLookAndFeelDefaults().put(
@@ -234,9 +189,6 @@ public class LoginView extends IconFrame {
 		UIManager.getLookAndFeelDefaults().put(
 				"MenuBar:Menu[Enabled].textForeground", Color.WHITE);
 
-		// 0,
-		// 68,
-		// 102));
 	}
 
 	public void displayError(String message) {
@@ -250,42 +202,34 @@ public class LoginView extends IconFrame {
 		password.setText("");
 	}
 
-	public static void setLookAndFeel2() {
-
-		UIManager.put("nimbusBase", new Color(0, 68, 102));
-		UIManager.put("nimbusBlueGrey", new Color(60, 145, 144));
-		UIManager.put("control", new Color(43, 82, 102));
-		UIManager.put("text", new Color(255, 255, 255));
-		UIManager.put("Table.alternateRowColor", new Color(0, 68, 102));
-		UIManager.put("TextField.font", new Font("Font", Font.BOLD, 12));
-		UIManager.put("TextField.textForeground", new Color(0, 0, 0));
-		UIManager.put("PasswordField.foreground", new Color(0, 0, 0));
-		UIManager.put("TextArea.foreground", new Color(0, 0, 0));
-		UIManager.put("FormattedTextField.foreground", new Color(0, 0, 0));
-
-		UIManager.put("ComboBox:\"ComboBox.listRenderer\".background",
-				new Color(0, 68, 102));
-		UIManager.put(
-				"ComboBox:\"ComboBox.listRenderer\"[Selected].background",
-				new Color(0, 0, 0));
-
-		try {
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e) {
-			// If Nimbus is not available, you can set the GUI to another look
-			// and feel.
-		}
-
-		UIManager.getLookAndFeelDefaults().put(
-				"Table:\"Table.cellRenderer\".background",
-				new ColorUIResource(new Color(74, 144, 178)));
-		UIManager.getLookAndFeelDefaults().put("Table.background",
-				new ColorUIResource(new Color(74, 144, 178)));
-
-	}
+	/*
+	 * public static void setLookAndFeel2() {
+	 * 
+	 * UIManager.put("nimbusBase", new Color(0, 68, 102));
+	 * UIManager.put("nimbusBlueGrey", new Color(60, 145, 144));
+	 * UIManager.put("control", new Color(43, 82, 102)); UIManager.put("text",
+	 * new Color(255, 255, 255)); UIManager.put("Table.alternateRowColor", new
+	 * Color(0, 68, 102)); UIManager.put("TextField.font", new Font("Font",
+	 * Font.BOLD, 12)); UIManager.put("TextField.textForeground", new Color(0,
+	 * 0, 0)); UIManager.put("PasswordField.foreground", new Color(0, 0, 0));
+	 * UIManager.put("TextArea.foreground", new Color(0, 0, 0));
+	 * UIManager.put("FormattedTextField.foreground", new Color(0, 0, 0));
+	 * UIManager.put("ComboBox:\"ComboBox.listRenderer\".background", new
+	 * Color(0, 68, 102)); UIManager.put(
+	 * "ComboBox:\"ComboBox.listRenderer\"[Selected].background", new Color(0,
+	 * 0, 0));
+	 * 
+	 * try { for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+	 * if ("Nimbus".equals(info.getName())) {
+	 * UIManager.setLookAndFeel(info.getClassName()); break; } } } catch
+	 * (Exception e) { }
+	 * 
+	 * UIManager.getLookAndFeelDefaults().put(
+	 * "Table:\"Table.cellRenderer\".background", new ColorUIResource(new
+	 * Color(74, 144, 178)));
+	 * UIManager.getLookAndFeelDefaults().put("Table.background", new
+	 * ColorUIResource(new Color(74, 144, 178)));
+	 * 
+	 * }
+	 */
 }

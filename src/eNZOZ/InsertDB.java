@@ -60,7 +60,7 @@ public class InsertDB {
 			System.out.println("Done all.");
 			// conn.setAutoCommit(false);
 			// insertTest();
-			// conn.commit();
+			
 
 			// throw new SQLException();
 
@@ -79,9 +79,9 @@ public class InsertDB {
 
 	private void deleteApps() {
 		String[] queries = { "DELETE FROM konsultacje",
-				"DELETE FROM pozycjeNaReceptach", "DELETE FROM recepty",
-				"DELETE FROM pozycjeNaSkierowaniach",
-				"DELETE FROM skierowania", "DELETE FROM rozpoznaneChoroby",
+				"DELETE FROM pozycjenareceptach", "DELETE FROM recepty",
+				"DELETE FROM pozycjenaskierowaniach",
+				"DELETE FROM skierowania", "DELETE FROM rozpoznanechoroby",
 				"DELETE FROM wizyty" };
 		try {
 			conn.setAutoCommit(false);
@@ -135,7 +135,7 @@ public class InsertDB {
 
 	private void insertRequests() {
 
-		String query = "SELECT idWizyty, data FROM wizytyArchiwum";
+		String query = "SELECT idWizyty, data FROM wizytyarchiwum";
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		ArrayList<String> daty = new ArrayList<>();
@@ -222,7 +222,7 @@ public class InsertDB {
 
 			for (int poradnia : idPoradni) {// int
 											// j=0;j<iloscPozycjiNaRecepcie;j++){
-				query = "INSERT INTO pozycjeNaSkierowaniach (idSkierowania, idPoradni, Komentarz) VALUES (?,?,?)";
+				query = "INSERT INTO pozycjenaskierowaniach (idSkierowania, idPoradni, Komentarz) VALUES (?,?,?)";
 				try {
 					PreparedStatement st = conn.prepareStatement(query);
 					st.setInt(1, idSkier);
@@ -253,7 +253,7 @@ public class InsertDB {
 
 	private void insertPrescriptions() {
 
-		String query = "SELECT idWizyty, data FROM wizytyArchiwum";
+		String query = "SELECT idWizyty, data FROM wizytyarchiwum";
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		ArrayList<String> daty = new ArrayList<>();
@@ -369,7 +369,7 @@ public class InsertDB {
 	}
 
 	private void insertInterviews() {
-		String query = "SELECT idWizyty, data FROM wizytyArchiwum";
+		String query = "SELECT idWizyty, data FROM wizytyarchiwum";
 
 		ArrayList<Integer> ids = new ArrayList<>();
 
@@ -494,17 +494,17 @@ public class InsertDB {
 
 		// lekarze
 		// TODO: id = select id from typyPracownikow
-		String idLekarza = "1";
+		String IdLekarza = "1";
 		// imiê, nazwisko, pesel, telefon, ulica, nr domu, nr mieszkania, kod,
 		// miejscowosc
 		String[] adolega = { "Aleksandra", "Do³êga", "90020509589",
 				"800199111", "Mariana Smoluchowskiego", "34", "6", "50-372",
-				"Wroc³aw", idLekarza, "adolega" };
+				"Wroc³aw", IdLekarza, "adolega" };
 		String[] amis = { "Aleksandra", "Miœ", "80021509589", "770189122",
 				"Kazimierza Pu³askiego", "4A", "16", "50-300", "Wroc³aw",
-				idLekarza, "amis" };
+				IdLekarza, "amis" };
 		String[] jkowalski = { "Jan", "Kowalski", "76090509580", "823199123",
-				"Prosta", "13", "2", "52-172", "Wroc³aw", idLekarza,
+				"Prosta", "13", "2", "52-172", "Wroc³aw", IdLekarza,
 				"jkowalski" };
 		lista.add(adolega);
 		lista.add(amis);
@@ -877,12 +877,12 @@ public class InsertDB {
 
 		// dodaj internistów
 		int i = 1;
-		for (int idLekarza : lekarze) {
+		for (int IdLekarza : lekarze) {
 			query = "INSERT INTO lekarze (idOsoby, PWZ, specjalnoœæ) VALUES (?,?,?)";
 			// PreparedStatement st;
 			try {
 				st = conn.prepareStatement(query);
-				st.setInt(1, idLekarza);
+				st.setInt(1, IdLekarza);
 				st.setInt(2, i * 1111111);
 				i++;
 				st.setString(3, specjalnosc);
@@ -949,7 +949,7 @@ public class InsertDB {
 		PreparedStatement st;
 		String query;
 		for (int pacjent : pacjenci) {
-			query = "INSERT INTO pacjenci (idPacjenta, idLekarza) VALUES (?,?)";
+			query = "INSERT INTO pacjenci (IdPacjenta, IdLekarza) VALUES (?,?)";
 
 			try {
 				st = conn.prepareStatement(query);
@@ -968,8 +968,8 @@ public class InsertDB {
 		ArrayList<Integer> pacjenci = dajPacjentow();
 
 		int lekarzeSize = lekarze.size(), pacjenciSize = pacjenci.size();
-		int idPacjenta, idLekarza;
-		String termin, query = "INSERT INTO wizyty (idPacjenta, idLekarza, data, status) VALUES (?,?,?,?)";
+		int IdPacjenta, IdLekarza;
+		String termin, query = "INSERT INTO wizyty (IdPacjenta, IdLekarza, data, status) VALUES (?,?,?,?)";
 		Random random = new Random();
 
 		ArrayList<TempWizyta> dane = new ArrayList<TempWizyta>();
@@ -977,11 +977,11 @@ public class InsertDB {
 		HashSet<String> hasze2 = new HashSet<String>();
 		String hasz1, hasz2;
 		for (int i = 0; i < 3000; i++) {
-			idPacjenta = pacjenci.get(random.nextInt(pacjenciSize));
-			idLekarza = lekarze.get(i % lekarzeSize);
-			termin = dajRandomowyTimestamp(idLekarza % 2 == 0);
-			hasz1 = idPacjenta + "" + termin;
-			hasz2 = idLekarza + "" + termin;
+			IdPacjenta = pacjenci.get(random.nextInt(pacjenciSize));
+			IdLekarza = lekarze.get(i % lekarzeSize);
+			termin = dajRandomowyTimestamp(IdLekarza % 2 == 0);
+			hasz1 = IdPacjenta + "" + termin;
+			hasz2 = IdLekarza + "" + termin;
 			if (hasze1.contains(hasz1) || hasze2.contains(hasz2)) {
 				System.out
 						.println("takie same hasze: " + hasz1 + " ; " + hasz2);
@@ -989,8 +989,8 @@ public class InsertDB {
 			}
 			hasze1.add(hasz1);
 			hasze2.add(hasz2);
-			// Object[] obj={idPacjenta, idLekarza, termin};
-			TempWizyta obj = new TempWizyta(idPacjenta, idLekarza, termin);
+			// Object[] obj={IdPacjenta, IdLekarza, termin};
+			TempWizyta obj = new TempWizyta(IdPacjenta, IdLekarza, termin);
 			dane.add(obj);
 		}
 
@@ -1018,13 +1018,13 @@ public class InsertDB {
 	private ArrayList<Integer> dajPacjentow() {
 		ArrayList<Integer> pacjenci = new ArrayList<Integer>();
 
-		String query = "SELECT idPacjenta FROM pacjenci";
+		String query = "SELECT IdPacjenta FROM pacjenci";
 
 		try {
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(query);
 			while (rs.next()) {
-				pacjenci.add(rs.getInt("idPacjenta"));
+				pacjenci.add(rs.getInt("IdPacjenta"));
 			}
 		} catch (SQLException e) {
 			System.out.println("whats up 3 ?");

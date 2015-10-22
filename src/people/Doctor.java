@@ -23,24 +23,18 @@ public class Doctor extends Employee {
 	}
 
 	public Doctor(Person person, int PWZ) {
-		// person.street,person.houseNo,person.flatNo,person.city,person.code,person.phone
-		// zbêdne
 		this(person.id, person.name, person.surname, person.PESEL,
 				person.street, person.houseNo, person.flatNo, person.city,
 				person.code, person.phone, PWZ);
 	}
 
 	public Doctor(Person person) {
-		this(person, -1); // TODO: zaznaczyæ,¿e dla testu
+		this(person, -1); // dla testu
 	}
 
 	@Override
 	public String toString() {
 		return super.getName();
 	}
-
-	/*
-	 * public void setPWZ(int PWZ) { this.PWZ=PWZ; }
-	 */
 
 }

@@ -15,32 +15,27 @@ import GUI_items.NonEditableDefaultTableModel;
 
 public class AppointmentPanel extends JPanel {
 
-	JTable appointmentsTable;
-	// String[] columnNames={"Data","Pacjent","Lekarz"};
-	// ArrayList<Wizyta> appointments;
-	// private String previewString = "Podgl¹d";
-	JButton button; // preview;
+	private JTable appointmentsTable;
+	private JButton button;
 
 	public AppointmentPanel() {
-		// appointments=new ArrayList<Wizyta>();
+
 		appointmentsTable = new JTable();
 		appointmentsTable.setFont(new Font("Arial", Font.PLAIN, 18));
 		appointmentsTable.setRowHeight(appointmentsTable.getRowHeight() * 2);
 
 		JScrollPane appScroll = new JScrollPane(appointmentsTable);
 		appScroll.setBorder(new EmptyBorder(0, 0, 0, 0));
-		button = new JButton();// previewString);
-		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		button = new JButton();
 		setLayout(new BorderLayout());
 		add(appScroll, BorderLayout.CENTER);
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(button);// preview);
+		buttonPanel.add(button);
 		add(buttonPanel, BorderLayout.SOUTH);
 
 	}
 
-	public void setData(Object[][] data, String[] columnNames) {// ArrayList<Wizyta>
-																// apps) {
+	public void setData(Object[][] data, String[] columnNames) {
 
 		DefaultTableModel model = new NonEditableDefaultTableModel(data,
 				columnNames);

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Patient extends Person {
 
-	Doctor mainDoctor;
-	ArrayList<Illness> constantIllnesses;
+	private Doctor mainDoctor;
+	private ArrayList<Illness> constantIllnesses;
 
 	public Patient(int id, String name, String surname, String pESEL,
 			String street, String houseNo, String flatNo, String city,
@@ -21,9 +21,7 @@ public class Patient extends Person {
 	}
 
 	public Patient(Person person, ArrayList<Illness> illnesses) {
-		this(person.id, person.name, person.surname, person.PESEL,
-				person.street, person.houseNo, person.flatNo, person.city,
-				person.code, person.phone);
+		super(person);
 		constantIllnesses = illnesses;
 	}
 

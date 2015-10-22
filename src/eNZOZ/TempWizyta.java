@@ -2,31 +2,31 @@ package eNZOZ;
 
 public class TempWizyta implements Comparable<TempWizyta> {
 
-	private int idPacjenta;
-	private int idLekarza;
+	private int IdPacjenta;
+	private int IdLekarza;
 	private String termin;
 
-	public TempWizyta(int idPacjenta, int idLekarza, String termin) {
-		this.setIdPacjenta(idPacjenta);
-		this.setIdLekarza(idLekarza);
+	public TempWizyta(int IdPacjenta, int IdLekarza, String termin) {
+		this.setIdPacjenta(IdPacjenta);
+		this.setIdLekarza(IdLekarza);
 		this.setTermin(termin);
 		
 	}
 
 	public int getIdPacjenta() {
-		return idPacjenta;
+		return IdPacjenta;
 	}
 
-	public void setIdPacjenta(int idPacjenta) {
-		this.idPacjenta = idPacjenta;
+	public void setIdPacjenta(int IdPacjenta) {
+		this.IdPacjenta = IdPacjenta;
 	}
 
 	public int getIdLekarza() {
-		return idLekarza;
+		return IdLekarza;
 	}
 
-	public void setIdLekarza(int idLekarza) {
-		this.idLekarza = idLekarza;
+	public void setIdLekarza(int IdLekarza) {
+		this.IdLekarza = IdLekarza;
 	}
 
 	public String getTermin() {

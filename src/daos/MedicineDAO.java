@@ -12,10 +12,10 @@ import database.DBHandler;
 
 public class MedicineDAO {
 
-	// Connection conn;
+	
 
 	public MedicineDAO() {
-		// conn = DBHandler.getDatabaseConnection();
+		
 	}
 
 	public ArrayList<Medicine> getAllMedicines() throws SQLException {
@@ -23,7 +23,7 @@ public class MedicineDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT idLeku, nazwa, postac, dawka, opakowanie FROM leki";
+		String queryString = "SELECT IdLeku, Nazwa, Postac, Dawka, Opakowanie FROM leki";
 		ArrayList<Medicine> medicines = new ArrayList<Medicine>();
 		st = conn.prepareStatement(queryString);
 
@@ -33,11 +33,11 @@ public class MedicineDAO {
 		Medicine drug = null;
 
 		while (rs.next()) {
-			id = rs.getInt("idLeku");
-			name = rs.getString("nazwa");
-			type = rs.getString("postac");
-			dose = rs.getString("dawka");
-			pckg = rs.getString("opakowanie");
+			id = rs.getInt("IdLeku");
+			name = rs.getString("Nazwa");
+			type = rs.getString("Postac");
+			dose = rs.getString("Dawka");
+			pckg = rs.getString("Opakowanie");
 
 			drug = new Medicine(id, name, type, dose, pckg);
 			medicines.add(drug);
@@ -54,7 +54,7 @@ public class MedicineDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT nazwa, postac, dawka, opakowanie FROM leki WHERE idLeku = ?";
+		String queryString = "SELECT Nazwa, Postac, Dawka, Opakowanie FROM leki WHERE IdLeku = ?";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, drugId);
@@ -65,10 +65,10 @@ public class MedicineDAO {
 		Medicine drug = null;
 
 		while (rs.next()) {
-			name = rs.getString("nazwa");
-			type = rs.getString("postac");
-			dose = rs.getString("dawka");
-			pckg = rs.getString("opakowanie");
+			name = rs.getString("Nazwa");
+			type = rs.getString("Postac");
+			dose = rs.getString("Dawka");
+			pckg = rs.getString("Opakowanie");
 			break;
 		}
 		rs.close();

@@ -2,11 +2,9 @@ package items;
 
 public class PrescriptedItem {
 
-	Medicine drug;
-	int packageCount;
-	double dosesCountPerIngestion;
-	int ingestionCount;
-	double discountPercent;
+	private Medicine drug;
+	private int packageCount, ingestionCount;
+	double dosesCountPerIngestion, discountPercent;
 
 	public PrescriptedItem(Medicine drug) {
 		this(drug, 1, 1.0, 1, 1.0);

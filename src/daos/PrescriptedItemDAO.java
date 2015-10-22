@@ -13,11 +13,11 @@ import database.DBHandler;
 
 public class PrescriptedItemDAO {
 
-	// Connection conn;
+	
 	MedicineDAO drugDAO;
 
 	public PrescriptedItemDAO() {
-		// conn = DBHandler.getDatabaseConnection();
+		
 		drugDAO = new MedicineDAO();
 	}
 
@@ -28,7 +28,7 @@ public class PrescriptedItemDAO {
 		// IdLeku iloscOpakowan iloscDawek przyjeciaNaDzien ProcentRefundacji
 
 		PreparedStatement st;
-		String queryString = "SELECT idLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji FROM pozycjeNaReceptach WHERE idRecepty = ?";
+		String queryString = "SELECT IdLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji FROM pozycjenareceptach WHERE idRecepty = ?";
 		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
 
 		// try {
@@ -40,7 +40,7 @@ public class PrescriptedItemDAO {
 		Medicine drug = null;
 
 		while (rs.next()) {
-			drugId = rs.getInt("idLeku");
+			drugId = rs.getInt("IdLeku");
 			pckgNo = rs.getInt("iloscOpakowan");
 			dosesNo = rs.getDouble("iloscDawek");
 			ingestionNo = rs.getInt("przyjeciaNaDzien");
@@ -62,8 +62,7 @@ public class PrescriptedItemDAO {
 	}
 
 	public void writePositions(int prescriptionId,
-			ArrayList<PrescriptedItem> prescribedPositions)
-			throws SQLException {
+			ArrayList<PrescriptedItem> prescribedPositions) throws SQLException {
 
 		// boolean autoCommit = conn.getAutoCommit();
 		// conn.setAutoCommit(false);
@@ -71,7 +70,7 @@ public class PrescriptedItemDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji) VALUES (?,?,?,?,?,?)";
+		String queryString = "INSERT INTO pozycjenareceptach (idRecepty, IdLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji) VALUES (?,?,?,?,?,?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, prescriptionId); // to check
@@ -86,9 +85,9 @@ public class PrescriptedItemDAO {
 		}
 
 		st.executeBatch();
-		// conn.commit();
+		
 		st.close();
-		// conn.setAutoCommit(autoCommit);
+		
 
 	}
 }

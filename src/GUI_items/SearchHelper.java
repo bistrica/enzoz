@@ -4,9 +4,9 @@ import people.Doctor;
 
 public class SearchHelper {
 
-	int day, month, year;
-	long PESEL;
-	Doctor surname;
+	private int day, month, year;
+	private long PESEL;
+	private Doctor surname;
 
 	public int getDay() {
 		return day;

@@ -9,12 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class DrugListPanel extends JPanel {
-	GridLayout GRID;
-	int counter, rows;
+
+	private GridLayout GRID;
+	private int counter, rows;
 
 	public DrugListPanel() {
-		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
 		GRID = new GridLayout(1, 2);
 		setLayout(GRID);
 		rows = 1;
@@ -45,10 +44,5 @@ public class DrugListPanel extends JPanel {
 				GRID.setRows(rows);
 			}
 	}
-	/*
-	 * public ArrayList<DrugPanel> getChildren() { ArrayList<DrugPanel> children
-	 * = new ArrayList<DrugPanel>(); for (Component panel : getComponents())
-	 * children.add((DrugPanel) panel); return children; }
-	 */
 
 }

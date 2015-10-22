@@ -2,8 +2,8 @@ package items;
 
 public class Examination {
 
-	Clinic clinic;
-	String description;
+	private Clinic clinic;
+	private String description;
 
 	public Examination(Clinic clinic, String description) {
 		this.clinic = clinic;

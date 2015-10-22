@@ -20,7 +20,7 @@ public class BPanel extends JPanel {
 		setBackground(Color.LIGHT_GRAY);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		String path1 = "/res/bg.png";
+		String path1 = "/res/bg2.png";
 
 		try {
 

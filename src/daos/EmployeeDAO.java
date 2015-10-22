@@ -14,24 +14,33 @@ public class EmployeeDAO {
 
 	PersonDAO personDAO;
 
-	// Connection conn;
+	
 
 	public EmployeeDAO() {
 		personDAO = new PersonDAO();
-		// conn = DBHandler.getDatabaseConnection();
 	}
 
-	public boolean userExists(String login, String hashedPass)
+	public boolean userExists(String login)// , String hashedPass)
 			throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
 
-		String queryString = "SELECT COUNT(*) AS ile FROM pracownicy WHERE login = ? and haslo = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
+		String queryString = "SELECT COUNT(*) AS ile FROM pracownicy WHERE login = ?";// and
+																						// haslo
+																						// =
+																						// ?";// "SELECT
+																						// idTypu
+																						// FROM
+																						// pracownicy
+																						// WHERE
+																						// login
+																						// =
+																						// ?";
 
 		PreparedStatement st = conn.prepareStatement(queryString);
 		st.setString(1, login);
-		st.setString(2, hashedPass);
-		ResultSet rs = st.executeQuery();// Update();
+		// st.setString(2, hashedPass);
+		ResultSet rs = st.executeQuery();
 		int count = -1;
 		while (rs.next()) {
 			count = rs.getInt("ile");
@@ -47,19 +56,18 @@ public class EmployeeDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT idOsoby, nazwa FROM pracownicy p JOIN typyPracownikow t ON t.idTypu=p.idTypu WHERE p.login = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
+		String queryString = "SELECT idOsoby, Nazwa FROM pracownicy p JOIN typypracownikow t ON t.idTypu=p.idTypu WHERE p.login = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
 		String type = "", doctor = "lekarz", receptionist = "rejestratorka", admin = "administrator";
 		int personId = -1;
 
 		Employee employee = null;
 		Person person = null;
 
-		// try {
 		st = conn.prepareStatement(queryString);
 		st.setString(1, login);
-		ResultSet rs = st.executeQuery();// Update();
+		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
-			type = rs.getString("nazwa");
+			type = rs.getString("Nazwa");
 			personId = rs.getInt("idOsoby");
 			break;
 		}
@@ -70,7 +78,7 @@ public class EmployeeDAO {
 		if (type.equals(doctor)) {
 
 			int PWZ = -1;
-			queryString = "SELECT PWZ FROM Lekarze WHERE idOsoby=?";
+			queryString = "SELECT PWZ FROM lekarze WHERE idOsoby=?";
 			st = conn.prepareStatement(queryString);
 			st.setInt(1, personId);
 			rs = st.executeQuery();

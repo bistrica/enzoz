@@ -10,10 +10,8 @@ import database.DBHandler;
 
 public class PersonDAO {
 
-	// private Connection conn;
-
 	public PersonDAO() {
-		// conn = DBHandler.getDatabaseConnection();
+
 	}
 
 	public Person getShortPersonData(int id) throws SQLException {
@@ -25,14 +23,13 @@ public class PersonDAO {
 		String queryString;
 		String fname = "", lname = "", PESEL = "";
 
-		// try {
-		queryString = "SELECT imie, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowosc, telefon FROM Osoby WHERE idOsoby=?";
+		queryString = "SELECT Imie, Nazwisko, PESEL, Ulica, NrDomu, NrMieszkania, KodPocztowy, Miejscowosc, Telefon FROM osoby WHERE IdOsoby=?";
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
-			fname = rs.getString("imie");
-			lname = rs.getString("nazwisko");
+			fname = rs.getString("Imie");
+			lname = rs.getString("Nazwisko");
 			PESEL = rs.getString("PESEL");
 
 			break;
@@ -42,9 +39,6 @@ public class PersonDAO {
 		st.close();
 		person = new Person(id, fname, lname, PESEL);
 
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
 		return person;
 	}
 
@@ -57,21 +51,20 @@ public class PersonDAO {
 		String queryString;
 		String fname = "", lname = "", PESEL = "", homeNo = "", flatNo = "", code = "", street = "", city = "", phone = "";
 
-		// try {
-		queryString = "SELECT imie, nazwisko, PESEL, ulica, nrDomu, nrMieszkania, kodPocztowy, miejscowosc, telefon FROM Osoby WHERE idOsoby=?";
+		queryString = "SELECT Imie, Nazwisko, PESEL, Ulica, NrDomu, NrMieszkania, KodPocztowy, Miejscowosc, Telefon FROM osoby WHERE IdOsoby=?";
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
-			fname = rs.getString("imie");
-			lname = rs.getString("nazwisko");
+			fname = rs.getString("Imie");
+			lname = rs.getString("Nazwisko");
 			PESEL = rs.getString("PESEL");
-			street = rs.getString("ulica");
-			homeNo = rs.getString("nrDomu");
-			flatNo = rs.getString("nrMieszkania");
-			code = rs.getString("kodPocztowy");
-			city = rs.getString("miejscowosc");
-			phone = rs.getString("telefon");
+			street = rs.getString("Ulica");
+			homeNo = rs.getString("NrDomu");
+			flatNo = rs.getString("NrMieszkania");
+			code = rs.getString("KodPocztowy");
+			city = rs.getString("Miejscowosc");
+			phone = rs.getString("Telefon");
 
 			break;
 		}
@@ -81,9 +74,6 @@ public class PersonDAO {
 		person = new Person(id, fname, lname, PESEL, street, homeNo, flatNo,
 				city, code, phone);
 
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
 		return person;
 	}
 
@@ -91,13 +81,13 @@ public class PersonDAO {
 
 		Connection conn = DBHandler.getDatabaseConnection();
 
-		String queryString = "SELECT idOsoby FROM Osoby WHERE PESEL=?";
+		String queryString = "SELECT IdOsoby FROM osoby WHERE PESEL=?";
 		PreparedStatement st = conn.prepareStatement(queryString);
 		st.setLong(1, pESEL);
 		ResultSet rs = st.executeQuery();
 		int id = -1;
 		while (rs.next()) {
-			id = rs.getInt("idOsoby");
+			id = rs.getInt("IdOsoby");
 		}
 		return id;
 

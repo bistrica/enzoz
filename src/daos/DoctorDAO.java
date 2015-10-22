@@ -24,7 +24,7 @@ public class DoctorDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT idOsoby, imie, nazwisko, PESEL FROM Osoby WHERE idOsoby IN (SELECT IdOsoby FROM Lekarze)";
+		String queryString = "SELECT IdOsoby, Imie, Nazwisko, PESEL FROM osoby WHERE IdOsoby IN (SELECT idOsoby FROM lekarze)";
 		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
 		st = conn.prepareStatement(queryString);
 
@@ -34,9 +34,9 @@ public class DoctorDAO {
 		Doctor doctor = null;
 
 		while (rs.next()) {
-			id = rs.getInt("idOsoby");
-			name = rs.getString("imie");
-			surname = rs.getString("nazwisko");
+			id = rs.getInt("IdOsoby");
+			name = rs.getString("Imie");
+			surname = rs.getString("Nazwisko");
 			PESEL = rs.getString("PESEL");
 			doctor = new Doctor(id, name, surname, PESEL);
 			doctors.add(doctor);

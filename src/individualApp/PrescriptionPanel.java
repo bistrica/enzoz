@@ -34,13 +34,6 @@ import exceptions.BadDataException;
 
 public class PrescriptionPanel extends JPanel {
 
-	/*
-	 * private String dosesString="Iloœæ dawek/porcjê"; private String
-	 * discountString="Refundacja"; private String
-	 * packageString="Iloœæ opakowañ"; private String
-	 * ingestionString="Iloœæ za¿yæ/dzieñ";
-	 */
-
 	private HashSet<Medicine> allSet;
 	private JList<Medicine> all;
 	private DrugListPanel prescriptedMedicines;
@@ -52,7 +45,7 @@ public class PrescriptionPanel extends JPanel {
 	private String addString = "Dodaj lek";
 	private JButton addMedicine;
 
-	JButton addNewMedicine;
+	private JButton addNewMedicine;
 	private int itemsInitialNo;
 	private IndividualAppView parentView;
 
@@ -184,8 +177,6 @@ public class PrescriptionPanel extends JPanel {
 		medicines.add(addMedicine, BorderLayout.SOUTH);
 
 		medicinesDialog.add(medicines);
-		// medicinesDialog.pack();
-
 		int size = 450;
 		medicinesDialog.setSize(size, size);
 
@@ -194,12 +185,6 @@ public class PrescriptionPanel extends JPanel {
 		medicinesDialog.setLocation((dim.width - size) / 2,
 				(dim.height - size) / 2);
 
-		// medicinesDialog.setModalityType(ModalityType.DOCUMENT_MODAL);//
-		// APPLICATION_MODAL);
-
-		// medicinesDialog.addWindowListener(new WindowAdapter() {
-
-		// });
 	}
 
 	private void openMedicinesDialog() {

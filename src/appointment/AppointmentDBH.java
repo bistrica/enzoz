@@ -2,7 +2,6 @@ package appointment;
 
 import items.Appointment;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -18,16 +17,14 @@ import exceptions.TodayException;
 
 public class AppointmentDBH {
 
-	Connection conn = null;
-	AppointmentDAO appDAO;
-	ArrayList<Appointment> tempApps;
-	// OsobaDAO personDAO;
-	DoctorDAO doctorDAO;
+	private AppointmentDAO appDAO;
+	private ArrayList<Appointment> tempApps;
+
+	private DoctorDAO doctorDAO;
 	private SearchHelper previousHelper;
 	private String doctorString = "dane lekarzy";
 
 	public AppointmentDBH() {
-		conn = DBHandler.getDatabaseConnection();
 		appDAO = new AppointmentDAO();
 		doctorDAO = new DoctorDAO();
 	}
@@ -46,7 +43,7 @@ public class AppointmentDBH {
 				DBHandler.resetTrialsNo();
 				throw new TodayException();
 			} else {
-				System.out.println("ONCE MORE");
+
 				DBHandler.incrementTrialsNo();
 				apps = getTodayAppointments(doctor);
 			}
@@ -70,11 +67,11 @@ public class AppointmentDBH {
 				DBHandler.resetTrialsNo();
 				throw new ArchiveException();
 			} else {
-				System.out.println("ONCE MORE");
+
 				DBHandler.incrementTrialsNo();
 				apps = getArchiveAppointments(recentSearch);
 			}
-			// throw new ArchiveException();
+
 		}
 		DBHandler.resetTrialsNo();
 		tempApps = apps;
@@ -85,7 +82,6 @@ public class AppointmentDBH {
 			throws PreviewCannotBeCreatedException {
 		try {
 			appDAO.updateData(app);
-			// isPossible = appDAO.updateData(app);
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -94,9 +90,9 @@ public class AppointmentDBH {
 				DBHandler.resetTrialsNo();
 				throw new PreviewCannotBeCreatedException();
 			} else {
-				System.out.println("ONCE MORE");
+
 				DBHandler.incrementTrialsNo();
-				openPreview(app);// IfPossible(app);
+				openPreview(app);
 			}
 
 		}
@@ -120,9 +116,8 @@ public class AppointmentDBH {
 			} else {
 				System.out.println("ONCE MORE");
 				DBHandler.incrementTrialsNo();
-				apps = searchData(searchData);// getArchiveAppointments();
+				apps = searchData(searchData);
 			}
-			// throw new ArchiveException();
 		}
 		DBHandler.resetTrialsNo();
 		tempApps = apps;
@@ -141,9 +136,8 @@ public class AppointmentDBH {
 				DBHandler.resetTrialsNo();
 				throw new LoadDataException(doctorString);
 			} else {
-				System.out.println("ONCE MORE");
 				DBHandler.incrementTrialsNo();
-				doctors = getDoctors();// getArchiveAppointments();
+				doctors = getDoctors();
 			}
 		}
 		DBHandler.resetTrialsNo();

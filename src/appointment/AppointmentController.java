@@ -23,42 +23,31 @@ import exceptions.TodayException;
 
 public class AppointmentController {
 
-	boolean includeSearch;
-	AppointmentDBH am;
-	AppointmentView av;
-	Doctor doctor;
-	ArrayList<Appointment> appsInChildWindows;
+	private boolean includeSearch, currentAppOpen;
+	private AppointmentDBH am;
+	private AppointmentView av;
+	private Doctor doctor;
+	private ArrayList<Appointment> appsInChildWindows, appointmentsToday,
+			appointmentsArchive;
 
-	String[] colNames = { "Pacjent", "PESEL", "Godzina" };
-	ArrayList<Appointment> appointmentsToday;
-	ArrayList<Appointment> appointmentsArchive;
+	private String[] todayColumnNames = { "Pacjent", "PESEL", "Godzina" };
+	private String[] archiveColumnNames = { "Data", "Nazwisko pacjenta",
+			"PESEL pacjenta", "Lekarz" };
 
-	String[] columnNames = { "Data", "Nazwisko pacjenta", "PESEL pacjenta",
-			"Lekarz" };
-	// private String notEditableString =
-	// "Nie mo¿na w tej chwili zobaczyæ wizyty. Wizyta jest edytowana przez innego u¿ytkownika.";
-	// private String titleBarString = "Wizyta w trakcie edycji";
-	private String errorString = "Wyst¹pi³ b³¹d";
-	private String wrongDataTitleString = "B³êdne dane";
-	private String wrongDataString = "WprowadŸ poprawne dane.";
-
-	protected long SLEEP_DURATION = 300000;// 6000;
-
-	boolean currentAppOpen;
-	protected String currentAppOpenString = "Wizyta otwarta";
-	protected String currentAppOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.";
+	private long SLEEP_DURATION = 300000;
+	private String currentAppOpenString = "Wizyta otwarta",
+			currentAppOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby mój rozpocz¹æ kolejn¹.",
+			searchErrorString = "Wyst¹pi³ b³¹d przy wyszukiwaniu danych. Spróbuj póŸniej.",
+			openAppsString = "Otwarte wizyty",
+			cannotCloseString = "Nie mo¿na opuœciæ okna, poniewa¿ jest otwarte okno ze szczegó³ami wizyty. Zamknij okno wizyty i spróbuj ponownie.",
+			errorString = "Wyst¹pi³ b³¹d",
+			wrongDataTitleString = "B³êdne dane",
+			wrongDataString = "WprowadŸ poprawne dane.";
 
 	ArrayList<Doctor> doctors;
-	protected String searchErrorString = "Wyst¹pi³ b³¹d przy wyszukiwaniu danych. Spróbuj póŸniej.";
-	private LoginController loginController;
-	protected String openAppsString = "Otwarte wizyty";
-	protected String cannotCloseString = "Nie mo¿na opuœciæ okna, poniewa¿ jest otwarte okno ze szczegó³ami wizyty. Zamknij okno wizyty i spróbuj ponownie.";
-	boolean refreshRunning;
 
-	/*
-	 * public AppointmentController(String login) { // TODO Auto-generated
-	 * constructor stub }
-	 */
+	private LoginController loginController;
+	boolean refreshRunning;
 
 	public AppointmentController(Doctor user, LoginController caller) {
 		currentAppOpen = false;
@@ -90,14 +79,8 @@ public class AppointmentController {
 				if (error)
 					av.displayInfo(errorMessage, errorString);
 
-				// refreshData();
-
 				setListeners();
 
-				// TODO: odkomentowaæ
-
-				// TODO:usun¹æ
-				// createAppointment(appointments.get(0));
 			}
 		});
 
@@ -123,8 +106,6 @@ public class AppointmentController {
 					if (DBHandler.isClosed())
 						break;
 					refreshDataInvoke();
-					System.out.println("refreshed");
-					// if (iav.)
 
 				}
 			}
@@ -139,10 +120,9 @@ public class AppointmentController {
 		surnames[0] = new Doctor(0, "", "", "");
 		int i = 1;
 		for (Doctor doctor : doctors)
-			surnames[i++] = doctor;// doctor.getImie() + " " +
-									// doctor.getNazwisko();
+			surnames[i++] = doctor;
 		return surnames;
-		// av.setDoctorsSurnames(surnames);
+
 	}
 
 	private void setListeners() {
@@ -151,7 +131,7 @@ public class AppointmentController {
 			@Override
 			public void windowClosing(WindowEvent e) {
 
-				logout();// false);
+				logout();
 			}
 
 		});
@@ -159,7 +139,7 @@ public class AppointmentController {
 		av.setLogOutListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				logout();// false);
+				logout();
 			}
 		});
 
@@ -192,7 +172,7 @@ public class AppointmentController {
 					appointmentsArchive = includeSearch ? am.searchData(av
 							.getSearchData()) : am
 							.getArchiveAppointments(includeSearch);
-					av.setArchiveAppointments(columnNames,
+					av.setArchiveAppointments(archiveColumnNames,
 							convertArchiveAppointments(), true);
 				} catch (ArchiveException e1) {
 					av.displayInfo(searchErrorString, errorString);
@@ -213,8 +193,6 @@ public class AppointmentController {
 								currentAppOpenString);
 						return;
 					}
-
-					// currentAppOpen = true;
 					boolean editable = true;
 					createAppointment(appointmentsToday.get(index), editable);
 				}
@@ -248,15 +226,13 @@ public class AppointmentController {
 		});
 	}
 
-	protected void logout() {// boolean closeDatabase) {
+	protected void logout() {
 		if (av.sureToCloseWindow())
 			if (appsInChildWindows.isEmpty()) {
 				refreshRunning = false;
-				av.dispose();// setVisible(false);
-				// stopRefreshing();
+				av.dispose();
 				loginController.logOut();
-				// if (closeDatabase)
-				// DBHandler.close();
+
 			} else
 				av.displayInfo(cannotCloseString, openAppsString);
 	}
@@ -270,8 +246,8 @@ public class AppointmentController {
 			@Override
 			public void run() {
 
-				av.setTodayAppointments(colNames, convertAppointments());
-				av.setArchiveAppointments(columnNames,
+				av.setTodayAppointments(todayColumnNames, convertAppointments());
+				av.setArchiveAppointments(archiveColumnNames,
 						convertArchiveAppointments(), false);
 			}
 		});
@@ -279,21 +255,18 @@ public class AppointmentController {
 
 	private void refreshData() {
 
-		System.out.println("RF " + Thread.currentThread().getName());
 		getAppointments(false);
 		getArchiveAppointments(false);
-		av.setTodayAppointments(colNames, convertAppointments());
-		av.setArchiveAppointments(columnNames, convertArchiveAppointments(),
-				false);
+		av.setTodayAppointments(todayColumnNames, convertAppointments());
+		av.setArchiveAppointments(archiveColumnNames,
+				convertArchiveAppointments(), false);
 
 	}
 
 	private void getArchiveAppointments(boolean invoked) {
 		ArrayList<Appointment> tempAppArchive = new ArrayList<Appointment>();
-		// appointmentsArchive = new ArrayList<Wizyta>();
 		try {
 			tempAppArchive = am.getArchiveAppointments(includeSearch);
-			// appointmentsArchive = am.getArchiveAppointments();
 		} catch (ArchiveException e) {
 			if (invoked) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -310,8 +283,6 @@ public class AppointmentController {
 	}
 
 	private void createAppointment(Appointment app, boolean editable) {
-		// System.out.println("Nowa: " + app.toString());
-		// System.out.println("CONTAINS " + appsInChildWindows.contains(app));
 		System.out.println("CURR " + currentAppOpen);
 		if (!appsInChildWindows.contains(app)) {
 			appsInChildWindows.add(app);
@@ -320,7 +291,6 @@ public class AppointmentController {
 			try {
 				new IndividualAppController(this, app, editable);
 			} catch (PatientAlreadyBlockedException e) {
-				// e.printStackTrace();
 				appsInChildWindows.remove(app);
 				if (!app.isArchiveAppointment())
 					currentAppOpen = false;
@@ -330,39 +300,20 @@ public class AppointmentController {
 	}
 
 	private void tryToCreateArchiveAppointmentPreview(Appointment app) {
-		/*
-		 * boolean allowed=false; try { allowed = am.statusAllowsEditing(app); }
-		 * catch (SQLException e) { throw new PreviewCannotBeCreatedException();
-		 * }
-		 * 
-		 * if (allowed){ try { am.updateAppData(app); boolean editable=false;
-		 * createAppointment(app, editable); } catch(SQLException e) {
-		 * 
-		 * } } else av.displayInfo(notEditableString, titleBarString);
-		 */
 
 		try {
 
-			// if (am.openPreviewIfPossible(app)) {
 			am.openPreview(app);
 			boolean editable = false;
 			createAppointment(app, editable);
-			// } else
-			// av.displayInfo(notEditableString, titleBarString);
 		} catch (PreviewCannotBeCreatedException e) {
 			av.displayInfo(e.getMessage(), errorString);
 		}
 
 	}
 
-	/*
-	 * private String[] getColumnsNames() { return colNames;
-	 * 
-	 * }
-	 */
-
 	private Object[][] convertAppointments() {
-		Object[][] converted = new Object[appointmentsToday.size()][colNames.length];
+		Object[][] converted = new Object[appointmentsToday.size()][todayColumnNames.length];
 		int i = 0;
 		for (Appointment app : appointmentsToday) {
 			Patient patient = app.getPatient();
@@ -406,13 +357,9 @@ public class AppointmentController {
 	}
 
 	public void removeChildWindow(Appointment childWindowApp) {
-		// if (!childWindowApp.isArchiveAppointment())
-		// currentAppOpen = false;
-		// System.out.println("REM C" + Thread.currentThread().getName());
 		refreshData();
-		// System.out.println("SIZE PRE " + appsInChildWindows.size());
 		appsInChildWindows.remove(childWindowApp);
-		// System.out.println("SIZE AFTER " + appsInChildWindows.size());
+
 	}
 
 	public boolean isCurrentAppOpen() {

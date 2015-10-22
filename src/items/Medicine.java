@@ -2,8 +2,8 @@ package items;
 
 public class Medicine {
 
-	String name, formulation, dose, packageDescription;
-	int id;
+	private String name, formulation, dose, packageDescription;
+	private int id;
 
 	public Medicine(int id, String name, String formulation, String dose,
 			String packageDesc) {
@@ -17,7 +17,6 @@ public class Medicine {
 
 	@Override
 	public boolean equals(Object obj) {
-		// return toString().equals(obj.toString());
 		return (obj != null && obj instanceof Medicine && ((Medicine) obj).id == id);
 	}
 

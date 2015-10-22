@@ -17,25 +17,20 @@ import GUI_items.SearchHelper;
 
 public class ArchivePanel extends AppointmentPanel {
 
-	private static final int PESEL_LENGTH = 11;
-	private static final int DOCTOR_NAME_LENGTH = 50;
-	private static final int DAY_MONTH_LENGTH = 2;
-	private static final int YEAR_LENGTH = 4;
+	private static final int PESEL_LENGTH = 11, DAY_MONTH_LENGTH = 2,
+			YEAR_LENGTH = 4;
 
-	int MIN_YEAR = 2000;
-	JTextField year, month, day, patientPESEL;
-	JComboBox<Doctor> doctorSurname;
-	String yearString = "Rok", monthString = "Miesi¹c", dayString = "Dzieñ",
-			PESELString = "PESEL pacjenta", surnameString = "Nazwisko lekarza";
+	private int MIN_YEAR = 2000;
+	private JTextField year, month, day, patientPESEL;
+	private JComboBox<Doctor> doctorSurname;
+	private String yearString = "Rok", monthString = "Miesi¹c",
+			dayString = "Dzieñ", PESELString = "PESEL pacjenta",
+			surnameString = "Nazwisko lekarza", searchString = "Szukaj";
 	private JButton searchButton;
-	private String searchString = "Szukaj";
-
-	// private ArrayList<String> surnames;
 
 	public ArchivePanel(Doctor[] doctors) {
 		super();
 		JPanel searchPane = new JPanel();
-		// searchPane.setLayout(new BoxLayout(searchPane, BoxLayout.Y_AXIS));
 
 		JLabel yearLab = new JLabel(yearString), monthLab = new JLabel(
 				monthString), dayLab = new JLabel(dayString), patientLab = new JLabel(
@@ -52,8 +47,7 @@ public class ArchivePanel extends AppointmentPanel {
 		patientPESEL = new JTextField(PESEL_LENGTH);
 		patientPESEL.setDocument(new LengthFilter(PESEL_LENGTH, true));
 		patientPESEL.setMaximumSize(patientPESEL.getPreferredSize());
-		doctorSurname = new JComboBox<Doctor>(doctors);// JTextField(20);
-		// doctorSurname.setDocument(new LengthFilter(50, false));
+		doctorSurname = new JComboBox<Doctor>(doctors);
 		doctorSurname.setMaximumSize(doctorSurname.getPreferredSize());
 
 		JPanel datePane = new JPanel();
@@ -75,22 +69,12 @@ public class ArchivePanel extends AppointmentPanel {
 
 		searchButton = new JButton(searchString);
 
-		/*
-		 * datePane.setAlignmentX(Component.RIGHT_ALIGNMENT);// 0.0
-		 * docPane.setAlignmentX(Component.RIGHT_ALIGNMENT);// 0.0
-		 * patPane.setAlignmentX(Component.RIGHT_ALIGNMENT);// 0.0
-		 */
-
 		searchPane.add(datePane);
 		searchPane.add(patPane);
 		searchPane.add(docPane);
 		searchPane.add(searchButton);
 		searchPane.setMinimumSize(searchPane.getPreferredSize());
-		// searchPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-		// patPane.setBackground(Color.RED);
-		// docPane.setBackground(Color.GREEN);
-		// datePane.setBackground(Color.BLACK);
-		// searchPane.setAutoscrolls(true);
+
 		add(searchPane, BorderLayout.NORTH);
 
 	}
@@ -106,17 +90,11 @@ public class ArchivePanel extends AppointmentPanel {
 
 	public boolean validateFields() {
 
-		/*
-		 * String surname = doctorSurname.getText(); if
-		 * (!surname.trim().equals("")) { if (!surnames.contains(surname)) //
-		 * ;// { return false; // } }
-		 */
-
 		System.out.println();
 		int y = -1, m = -1, d = -1;
-		// long p = -1;
+
 		try { // niepotrzebne, bo tylko cyfry
-			if (!year.getText().isEmpty())// equals(""))
+			if (!year.getText().isEmpty())
 				y = Integer.parseInt(year.getText());
 			if (!month.getText().isEmpty())
 				m = Integer.parseInt(month.getText());
@@ -134,25 +112,20 @@ public class ArchivePanel extends AppointmentPanel {
 
 		}
 
-		// System.out.println("AFT 1");
 		if ((m != -1 && m < 1) || m > 12 || (d != -1 && d < 1) || d > 31)
 			return false;
 
-		System.out.println("AFT  <>");
 		if (m == 2 && d > 29)
 			return false;
 
-		System.out.println("AFT 20 FEB");
 		if ((m == 4 || m == 6 || m == 9 || m == 11) && d == 31)
 			return false;
 
-		System.out.println("AFT 31");
 		Calendar cal = Calendar.getInstance();
 		int currYear = cal.get(Calendar.YEAR);
 		if (y > currYear || (y != -1 && y < MIN_YEAR))
 			return false;
 
-		System.out.println("YEARS");
 		if (y != -1) {
 			cal.set(Calendar.YEAR, y);
 			boolean leapYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
@@ -163,32 +136,6 @@ public class ArchivePanel extends AppointmentPanel {
 		return true;
 	}
 
-	/*
-	 * JTable appointmentsTable; // String[]
-	 * columnNames={"Data","Pacjent","Lekarz"}; // ArrayList<Wizyta>
-	 * appointments; private String previewString = "Podgl¹d"; JButton preview;
-	 * 
-	 * public ArchivePanel() { // appointments=new ArrayList<Wizyta>();
-	 * appointmentsTable = new JTable(); JScrollPane appScroll = new
-	 * JScrollPane(appointmentsTable); preview = new JButton(previewString);
-	 * 
-	 * add(appScroll); add(preview);
-	 * 
-	 * }
-	 * 
-	 * public void setData(Object[][] data, String[] columnNames) {//
-	 * ArrayList<Wizyta> // apps) {
-	 * 
-	 * DefaultTableModel model = new NonEditableDefaultTableModel(data,
-	 * columnNames); appointmentsTable.setModel(model); revalidate(); }
-	 * 
-	 * public void setPreviewButtonListener(ActionListener al) {
-	 * preview.addActionListener(al); }
-	 * 
-	 * public int getArchiveAppIndex() { return
-	 * appointmentsTable.getSelectedRow(); }
-	 */
-
 	public SearchHelper getSearchData() {
 		SearchHelper helper = new SearchHelper();
 		Doctor docSurname = (Doctor) doctorSurname.getSelectedItem();
@@ -196,7 +143,6 @@ public class ArchivePanel extends AppointmentPanel {
 			helper.setSurname(null);
 		else {
 			helper.setSurname(docSurname);
-			System.out.println("Doc " + docSurname);
 		}
 		String dayStr = day.getText().trim(), monthStr = month.getText().trim(), yearStr = year
 				.getText().trim(), PESELStr = patientPESEL.getText().trim();

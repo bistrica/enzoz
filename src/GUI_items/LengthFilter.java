@@ -7,8 +7,8 @@ import javax.swing.text.PlainDocument;
 
 public class LengthFilter extends PlainDocument implements Document {
 
-	int maxLength;
-	boolean onlyNumbers;
+	private int maxLength;
+	private boolean onlyNumbers;
 
 	public LengthFilter(int maxLength, boolean onlyNumbers) {
 		this.maxLength = maxLength;
@@ -28,7 +28,6 @@ public class LengthFilter extends PlainDocument implements Document {
 		if (offs < maxLength && super.getLength() < maxLength)
 			super.insertString(offs, str, a);
 
-		// super.
 	}
 
 }

@@ -13,11 +13,10 @@ import database.DBHandler;
 
 public class PrescriptionDAO {
 
-	// Connection conn;
 	private PrescriptedItemDAO prescriptionPositionDAO;
 
 	public PrescriptionDAO() {
-		// conn = DBHandler.getDatabaseConnection();
+
 		prescriptionPositionDAO = new PrescriptedItemDAO();
 	}
 
@@ -26,7 +25,7 @@ public class PrescriptionDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT idRecepty FROM recepty WHERE idWizyty = ? ORDER BY data DESC LIMIT 1";
+		String queryString = "SELECT idRecepty FROM recepty WHERE IdWizyty = ? ORDER BY Data DESC LIMIT 1";
 		int idPresc = -1;
 		ArrayList<PrescriptedItem> positions = new ArrayList<PrescriptedItem>();
 
@@ -43,10 +42,6 @@ public class PrescriptionDAO {
 		st.close();
 		positions = prescriptionPositionDAO.getPrescriptedPositions(idPresc);
 
-		/*
-		 * } catch (SQLException e) { e.printStackTrace(); }
-		 */
-
 		return new Prescription(positions);
 	}
 
@@ -57,17 +52,15 @@ public class PrescriptionDAO {
 			return;
 
 		Connection conn = DBHandler.getDatabaseConnection();
-		// boolean autoCommit = conn.getAutoCommit();
-		// conn.setAutoCommit(false);
 
 		PreparedStatement st;
-		String queryString = "INSERT INTO recepty (idWizyty) VALUES (?)";
+		String queryString = "INSERT INTO recepty (IdWizyty) VALUES (?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);
 		st.executeUpdate();
 
-		queryString = "SELECT idRecepty FROM recepty WHERE idWizyty = ? ORDER BY data DESC LIMIT 1 ";
+		queryString = "SELECT idRecepty FROM recepty WHERE IdWizyty = ? ORDER BY Data DESC LIMIT 1 ";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);
@@ -84,13 +77,8 @@ public class PrescriptionDAO {
 
 		ArrayList<PrescriptedItem> prescribedPositions = prescription
 				.getPozycje();
-		// try {
 		prescriptionPositionDAO.writePositions(prescId, prescribedPositions);
-		/*
-		 * } catch (SQLException e) { System.out.println("rollback");
-		 * conn.rollback(); e.printStackTrace(); throw e; } finally {
-		 * conn.setAutoCommit(autoCommit); }
-		 */
+
 	}
 
 }

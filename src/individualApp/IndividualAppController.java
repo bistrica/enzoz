@@ -26,31 +26,23 @@ import exceptions.SaveDataException;
 
 public class IndividualAppController {
 
-	Appointment appointment;
+	private Appointment appointment;
 
-	IndividualAppDBH iam;
-	IndividualAppView iav;
-	private String errorString = "Wyst¹pi³ b³¹d";
-	AppointmentController parent;
-	boolean userAllowedToEdit;
+	private IndividualAppDBH iam;
+	private IndividualAppView iav;
+	private String errorString = "Wyst¹pi³ b³¹d",
+			dataInUseString = "Dane w trakcie edycji",
+			dataEditedMessageString = "Nie mo¿na dokonaæ edycji wizyty, gdy¿ dane pacjenta s¹ w trakcie modyfikacji.",
+			anotherWindowOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby móc rozpocz¹æ kolejn¹.",
+			anotherWindowOpenString = "Wizyta otwarta",
+			lackingInterviewString = "Treœæ konsultacji nie mo¿e byæ pusta.",
+			notEnoughDataString = "Brak danych",
+			lackingDescriptionString = "Treœæ skierowania nie mo¿e byæ pusta.",
+			dataSavedString = "Zmiany zosta³y zapisane.",
+			confirmString = "Potwierdzenie";
 
-	private String dataInUseString = "Dane w trakcie edycji";
-
-	private String dataEditedMessageString = "Nie mo¿na dokonaæ edycji wizyty, gdy¿ dane pacjenta s¹ w trakcie modyfikacji.";
-
-	private String anotherWindowOpenMessageString = "Obecnie jest ju¿ otwarta wizyta. Zamknij wizytê, aby móc rozpocz¹æ kolejn¹.";
-
-	private String anotherWindowOpenString = "Wizyta otwarta";
-
-	private String lackingInterviewString = "Treœæ konsultacji nie mo¿e byæ pusta.";
-
-	private String notEnoughDataString = "Brak danych";
-
-	private String lackingDescriptionString = "Treœæ skierowania nie mo¿e byæ pusta.";
-
-	protected String dataSavedString = "Zmiany zosta³y zapisane.";
-
-	protected String confirmString = "Potwierdzenie";
+	private AppointmentController parent;
+	private boolean userAllowedToEdit;
 
 	public IndividualAppController(AppointmentController parent,
 			Appointment app, boolean previewMode)
@@ -60,40 +52,31 @@ public class IndividualAppController {
 
 		iam = new IndividualAppDBH();
 
-		// boolean isDoctorAbleToBlockPatient = (DBHandler.getUser()
-		// .equals(appointment.getLekarz()));
-		// TODO: is blocked?
 		if (!app.isArchiveAppointment()) { // zablokuj, jeœli jest obecn¹ now¹
 											// wizyt¹
 			try {
-				if (!iam.isPossibleToEdit(appointment)) {// tryToBlockPatientForEdit(appointment))
-															// {
+
+				if (!iam.isPossibleToEdit(appointment)) {
 					throw new PatientAlreadyBlockedException();
 				}
 			} catch (DataCannotBeEditedException e) {
-				parent.displayError(e.getMessage());// TODO: invoke?
+				parent.displayError(e.getMessage());
 				e.printStackTrace();
+				return;
 			}
-			// return;
+
 		}
 
-		// java.awt.EventQueue.
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
-
-				//
 
 				userAllowedToEdit = false;
 				try {
 					userAllowedToEdit = DBHandler.getCurrentUser().equals(
 							appointment.getDoctor())
 							&& !parent.isCurrentAppOpen();
-					System.out.println("US " + userAllowedToEdit);
-					// if (userAllowedToEdit && parent.isCurrentAppOpen())
-					// userAllowedToEdit=false;
-					// System.out.println("ALLOWED USER? " + userAllowedToEdit);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -120,14 +103,19 @@ public class IndividualAppController {
 					iav.setInterview(appointment.getInterview().getContent());
 					iav.setTemporaryIllnesses(appointment
 							.getRecognizedIllnesses());
-					/*
-					 * iav.setConstantIllnesses(appointment.getPacjent()
-					 * .getChorobyPrzewlek³e());
-					 */
+
 					iav.setPrescription(appointment.getPrescription()
 							.getPozycje());
 					iav.setExaminations(appointment.getExaminations());
 				} else {
+					try {
+						iam.setPatientConstantIllnesses(appointment
+								.getPatient());
+					} catch (LoadDataException e) {
+						e.printStackTrace();
+						iav.displayInfo(e.getMessage(), errorString);
+						return;
+					}
 					iav.setConstantIllnesses(appointment.getPatient()
 							.getConstantIllnesses());
 				}
@@ -170,7 +158,7 @@ public class IndividualAppController {
 
 				if (iav.sureToCloseWindow()) {
 					System.out.println("REMM");
-					if (iav.editMode) {
+					if (iav.getEditMode()) {
 
 						try {
 							iam.rewriteStatus(appointment);
@@ -180,8 +168,6 @@ public class IndividualAppController {
 							iav.displayInfo(e1.getMessage(), errorString);
 						}
 					}
-
-					// if (iav.editMode || !appointment.isArchiveAppointment())
 
 					parent.removeChildWindow(appointment);
 					iav.close();

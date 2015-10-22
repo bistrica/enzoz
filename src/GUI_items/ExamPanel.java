@@ -25,14 +25,11 @@ public class ExamPanel extends JPanel {
 	private JTextArea description;
 	private JComboBox<Clinic> clinics;
 	private String removeString = "Usuñ skierowanie";
-	JButton removeButton;
+	private JButton removeButton;
 
-	private String descLabelString;
-
-	private String clinicLabelString;
+	private String descLabelString, clinicLabelString;
 
 	public ExamPanel(Clinic[] clinics) {
-		// this.position=pos;
 
 		this.clinics = new JComboBox<Clinic>(clinics);
 
@@ -42,12 +39,9 @@ public class ExamPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Container cont = thisPanel.getParent(); // ew. tu change
+				Container cont = thisPanel.getParent();
 				cont.remove(thisPanel);
-				cont.revalidate();// repaint();
-				// System.out.println(cont + "*"
-				// + Thread.currentThread().getName());
-
+				cont.revalidate();
 			}
 		});
 

@@ -8,10 +8,12 @@ import items.Medicine;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import people.Patient;
 import daos.AppointmentDAO;
 import daos.ClinicDAO;
 import daos.IllnessDAO;
 import daos.MedicineDAO;
+import daos.PatientDAO;
 import database.DBHandler;
 import exceptions.DataCannotBeEditedException;
 import exceptions.LoadDataException;
@@ -23,17 +25,21 @@ public class IndividualAppDBH {
 	IllnessDAO illnessDAO;
 	MedicineDAO drugDAO;
 	ClinicDAO clinicDAO;
+	PatientDAO patientDAO;
+
 	private String illnessesString = "dane chorób";
 	private String medicinesString = "dane leków";
 	private String clinicsString = "dane poradni";
 	private ArrayList<Medicine> medicines;
 	private ArrayList<Illness> illnesses;
+	private String constantIllnessesString = "dane chorób przewlek³ych pacjenta";
 
 	public IndividualAppDBH() {
 		illnessDAO = new IllnessDAO();
 		drugDAO = new MedicineDAO();
 		clinicDAO = new ClinicDAO();
 		appDAO = new AppointmentDAO();
+		patientDAO = new PatientDAO();
 	}
 
 	public ArrayList<Illness> getAllIllnesses() throws LoadDataException {
@@ -52,7 +58,7 @@ public class IndividualAppDBH {
 				throw new LoadDataException(illnessesString);
 
 			} else {
-				System.out.println("ONCE MORE IND");
+				
 				DBHandler.incrementTrialsNo();
 				illnesses = getAllIllnesses();
 			}
@@ -78,7 +84,7 @@ public class IndividualAppDBH {
 				throw new LoadDataException(medicinesString);
 
 			} else {
-				System.out.println("ONCE MORE IND");
+				
 				DBHandler.incrementTrialsNo();
 				medicines = getAllMedicines();
 			}
@@ -100,7 +106,7 @@ public class IndividualAppDBH {
 				throw new LoadDataException(clinicsString);
 
 			} else {
-				System.out.println("ONCE MORE IND");
+				
 				DBHandler.incrementTrialsNo();
 				cli = getAllClinics();
 			}
@@ -193,6 +199,30 @@ public class IndividualAppDBH {
 
 		}
 		DBHandler.resetTrialsNo();
+	}
+
+	public void setPatientConstantIllnesses(Patient patient)
+			throws LoadDataException {
+		ArrayList<Illness> ill = new ArrayList<Illness>();
+		try {
+			ill = patientDAO.getPatientConstantIllnesses(patient.getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
+				DBHandler.resetTrialsNo();
+				throw new LoadDataException(constantIllnessesString);
+
+			} else {
+				
+				DBHandler.incrementTrialsNo();
+				setPatientConstantIllnesses(patient);
+				return;
+			}
+		}
+
+		DBHandler.resetTrialsNo();
+		patient.setConstantIllnesses(ill);
 	}
 
 }

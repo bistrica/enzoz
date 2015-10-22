@@ -17,7 +17,6 @@ public class LoginController {
 
 	private LoginView view;
 	private LoginDBH model;
-	// private DBHandler dbh;
 
 	private String emptyFieldString = "Pola nie mog¹ byæ puste!",
 			moduleNotImplementedString = "U¿ytkownik nie jest lekarzem. Modu³ nie zosta³ zaimplementowany.";
@@ -25,9 +24,6 @@ public class LoginController {
 	public LoginController(LoginView lv, LoginDBH lm) {
 		view = lv;
 		model = lm;
-
-		// TODO: skasowaæ liniê
-		loginTest();
 
 		LoginController caller = this;
 
@@ -79,27 +75,19 @@ public class LoginController {
 
 	}
 
-	// TODO: skasowaæ
-
-	public void loginTest() {
-
-		Employee user;
-		String login;
-		String pass = login = "adolega";
-		try {
-			user = model.tryToLog(login, pass);
-		} catch (BadDataException | ConnectionException | LibraryException ex) {
-			view.displayError(ex.getMessage());
-			return;
-		}
-		view.setVisible(false);
-		System.out.println("U: " + user);
-		if (user instanceof Doctor)
-			new AppointmentController((Doctor) user, this);
-		else
-			view.displayError(moduleNotImplementedString);
-
-	}
+	/*
+	 * public void loginTest() {
+	 * 
+	 * Employee user; String login; String pass = login = "adolega"; try { user
+	 * = model.tryToLog(login, pass); } catch (BadDataException |
+	 * ConnectionException | LibraryException ex) {
+	 * view.displayError(ex.getMessage()); return; } view.setVisible(false);
+	 * System.out.println("U: " + user); if (user instanceof Doctor) new
+	 * AppointmentController((Doctor) user, this); else
+	 * view.displayError(moduleNotImplementedString);
+	 * 
+	 * }
+	 */
 
 	public void logOut() {
 		view.clear();

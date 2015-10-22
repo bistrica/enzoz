@@ -11,7 +11,7 @@ import javax.swing.border.TitledBorder;
 
 public class InterviewPanel extends JPanel {
 
-	JTextArea interview;
+	private JTextArea interview;
 	private String interviewString = "Treœæ konsultacji";
 
 	public InterviewPanel() {
@@ -21,10 +21,7 @@ public class InterviewPanel extends JPanel {
 				new TitledBorder(interviewString)));
 		interview = new JTextArea();
 		interview.setLineWrap(true);
-		// interview.setSize(getWidth(), getHeight());
 		JScrollPane interviewScroll = new JScrollPane(interview);
-		// interviewScroll.setSize();////getParent().getWidth(),
-		// getParent().getHeight());
 		add(interviewScroll);
 
 	}

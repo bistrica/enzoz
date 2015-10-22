@@ -2,8 +2,9 @@ package people;
 
 public class Person {
 
-	int id;
-	String name, surname, PESEL, street, houseNo, flatNo, city, code, phone;
+	protected int id;
+	protected String name, surname, PESEL, street, houseNo, flatNo, city, code,
+			phone;
 
 	public Person(int id, String name, String surname, String pESEL) {
 
@@ -11,6 +12,12 @@ public class Person {
 		this.name = name;
 		this.surname = surname;
 		PESEL = pESEL;
+	}
+
+	public Person(Person person) {
+		this(person.id, person.name, person.surname, person.PESEL,
+				person.street, person.houseNo, person.flatNo, person.city,
+				person.code, person.phone);
 	}
 
 	public Person(int id, String name, String surname, String pESEL,

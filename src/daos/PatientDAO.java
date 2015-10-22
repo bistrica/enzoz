@@ -8,54 +8,46 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import people.Person;
 import people.Patient;
+import people.Person;
 import database.DBHandler;
 
 public class PatientDAO {
 
-	// Connection conn;
-
-	PersonDAO personDAO;
-	IllnessDAO illnessDAO;
+	private PersonDAO personDAO;
+	private IllnessDAO illnessDAO;
 
 	public PatientDAO() {
-		// conn = DBHandler.getDatabaseConnection();
+
 		personDAO = new PersonDAO();
 		illnessDAO = new IllnessDAO();
 	}
 
 	public Patient getPatientData(int id) throws SQLException {
 
-		// Connection conn = DBHandler.getDatabaseConnection();
-
 		Person person = personDAO.getPersonData(id);
 		ArrayList<Illness> illnesses = getPatientConstantIllnesses(id);
-		// System.out.println("ill: " + illnesses);
 		return new Patient(person, illnesses);
 
 	}
 
-	private ArrayList<Illness> getPatientConstantIllnesses(int id)
+	public ArrayList<Illness> getPatientConstantIllnesses(int id)
 			throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
-		// System.out.println("GPCI");
 		ArrayList<Illness> illnesses = new ArrayList<Illness>();
 		PreparedStatement st;
-		String queryString = "SELECT idChoroby FROM chorobyPrzewlekle WHERE idPacjenta = ?";// "SELECT idTypu FROM pracownicy WHERE login = ?";
+		String queryString = "SELECT IdChoroby FROM chorobyprzewlekle WHERE IdPacjenta = ?";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, id);
-		ResultSet rs = st.executeQuery();// Update();
+		ResultSet rs = st.executeQuery();
 		int illId;
 		while (rs.next()) {
-			illId = rs.getInt("idChoroby");
+			illId = rs.getInt("IdChoroby");
 			Illness illness = null;
 			illness = illnessDAO.getIllnessData(illId);
-			System.out.println("CH " + illness);
 			illnesses.add(illness);
-			// System.out.println("const: "+illness.getId());
 		}
 		rs.close();
 		st.close();
