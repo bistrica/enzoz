@@ -27,20 +27,14 @@ public class InsertDB {
 
 			// Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String login = "adolega";
-			String haslo = "adolega";
+			String haslo = "adolega", host = "192.168.56.1", baza = "enzoz";
 
-			conn = DriverManager
-					.getConnection(
-							"jdbc:mysql://mysql.cba.pl:3306/enzoz_cba_pl?useUnicode=true&characterEncoding=UTF-8",
-							login, haslo);// login, haslo);
-
-			/*
-			 * conn =
-			 * DriverManager.getConnection("jdbc:mysql://localhost/enzoz?" +
-			 * "user=ola&password=ola");
-			 */
+			conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
+					+ baza + "?useUnicode=true&characterEncoding=UTF-8", login,
+					haslo);
 
 			System.out.println("Uda³o siê po³¹czyæ z baz¹ danych...");
+
 			// insertDoctors();
 			// insertData();
 			// insertCodes();
@@ -49,18 +43,21 @@ public class InsertDB {
 			// insertTypes();
 			// insertEmployees();
 			// insertPatients();
-			/*
-			 * deleteApps(); insertApps(); System.out.println("Done apps.");
-			 * insertInterviews(); System.out.println("Done int.");
-			 * insertPrescriptions(); System.out.println("Done pre.");
-			 * insertRequests();
-			 */
+
+			deleteApps();
+			insertApps();
+			System.out.println("Done apps.");
+			insertInterviews();
+			System.out.println("Done int.");
+			insertPrescriptions();
+			System.out.println("Done pre.");
+			insertRequests();
+
 			// insertDuplicateConstantIllness();
 
 			System.out.println("Done all.");
 			// conn.setAutoCommit(false);
 			// insertTest();
-			
 
 			// throw new SQLException();
 
@@ -338,7 +335,7 @@ public class InsertDB {
 			int[] idLekow = getRandomIds(iloscPozycjiNaRecepcie, leki);
 
 			for (int lek : idLekow) {// int j=0;j<iloscPozycjiNaRecepcie;j++){
-				query = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloœæOpakowañ, iloœæDawek, przyjêciaNaDzieñ, procentRefundacji) VALUES (?,?,?,?,?,?)";
+				query = "INSERT INTO pozycjeNaReceptach (idRecepty, idLeku, iloscOpakowan, iloscDawek, przyjeciaNaDzien, procentRefundacji) VALUES (?,?,?,?,?,?)";
 				try {
 					PreparedStatement st = conn.prepareStatement(query);
 					st.setInt(1, idRec);
@@ -396,7 +393,7 @@ public class InsertDB {
 			String data = daty.get(i);
 			String konsultacja = getRandomInterview(id);
 
-			query = "INSERT INTO konsultacje (idWizyty, treœæ, data) VALUES (?,?,?)";
+			query = "INSERT INTO konsultacje (idWizyty, tresc, data) VALUES (?,?,?)";
 			try {
 				PreparedStatement st = conn.prepareStatement(query);
 				st.setInt(1, id);
@@ -429,7 +426,7 @@ public class InsertDB {
 
 		// todo: columny!
 		for (String[] s : lista) {
-			String query = "INSERT INTO osoby (imiê,nazwisko,pesel,telefon,ulica,nrdomu,nrmieszkania,kodpocztowy,miejscowoœæ) VALUES ('"
+			String query = "INSERT INTO osoby (imie,nazwisko,pesel,telefon,ulica,nrdomu,nrmieszkania,kodpocztowy,miejscowosc) VALUES ('"
 					+ s[0]
 					+ "', '"
 					+ s[1]
@@ -542,7 +539,7 @@ public class InsertDB {
 	private void insertPharmindex() {
 		ArrayList<String[]> lista = dajLeki();
 		System.out.println("dano");
-		String query = "INSERT INTO leki (nazwa, postaæ, dawka, opakowanie) VALUES (?,?,?,?)";
+		String query = "INSERT INTO leki (nazwa, postac, dawka, opakowanie) VALUES (?,?,?,?)";
 		try {
 			int ind = 0;
 			for (String[] s : lista) {
@@ -963,6 +960,59 @@ public class InsertDB {
 
 	}
 
+	// private void insertApps() {
+	// ArrayList<Integer> lekarze = dajLekarzy();
+	// ArrayList<Integer> pacjenci = dajPacjentow();
+	//
+	// int lekarzeSize = lekarze.size(), pacjenciSize = pacjenci.size();
+	// int IdPacjenta, IdLekarza;
+	// String termin, query =
+	// "INSERT INTO wizyty (IdPacjenta, IdLekarza, data, status) VALUES (?,?,?,?)";
+	// Random random = new Random();
+	//
+	// ArrayList<TempWizyta> dane = new ArrayList<TempWizyta>();
+	// HashSet<String> hasze1 = new HashSet<String>();
+	// HashSet<String> hasze2 = new HashSet<String>();
+	// String hasz1, hasz2;
+	// for (int i = 0; i < 3000; i++) {
+	// IdPacjenta = pacjenci.get(random.nextInt(pacjenciSize));
+	// IdLekarza = lekarze.get(i % lekarzeSize);
+	// termin = dajRandomowyTimestamp(IdLekarza % 2 == 0);
+	// hasz1 = IdPacjenta + "" + termin;
+	// hasz2 = IdLekarza + "" + termin;
+	// if (hasze1.contains(hasz1) || hasze2.contains(hasz2)) {
+	// System.out
+	// .println("takie same hasze: " + hasz1 + " ; " + hasz2);
+	// continue;
+	// }
+	// hasze1.add(hasz1);
+	// hasze2.add(hasz2);
+	// // Object[] obj={IdPacjenta, IdLekarza, termin};
+	// TempWizyta obj = new TempWizyta(IdPacjenta, IdLekarza, termin);
+	// dane.add(obj);
+	// }
+	//
+	// Collections.sort(dane);
+	// for (TempWizyta e : dane)
+	// System.out.println(e.getTermin());
+	// // if (true) return;
+	//
+	// for (TempWizyta o : dane) {
+	// PreparedStatement st;
+	// try {
+	// st = conn.prepareStatement(query);
+	// st.setInt(1, o.getIdPacjenta());// (Integer)o[0]);
+	// st.setInt(2, o.getIdLekarza());// (Integer)o[1]);
+	// st.setString(3, o.getTermin());// (String)o[2]);
+	// st.setString(4, "oczekuj¹ca");
+	// st.executeUpdate();
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// }
+
 	private void insertApps() {
 		ArrayList<Integer> lekarze = dajLekarzy();
 		ArrayList<Integer> pacjenci = dajPacjentow();
@@ -976,22 +1026,29 @@ public class InsertDB {
 		HashSet<String> hasze1 = new HashSet<String>();
 		HashSet<String> hasze2 = new HashSet<String>();
 		String hasz1, hasz2;
-		for (int i = 0; i < 3000; i++) {
-			IdPacjenta = pacjenci.get(random.nextInt(pacjenciSize));
-			IdLekarza = lekarze.get(i % lekarzeSize);
-			termin = dajRandomowyTimestamp(IdLekarza % 2 == 0);
-			hasz1 = IdPacjenta + "" + termin;
-			hasz2 = IdLekarza + "" + termin;
-			if (hasze1.contains(hasz1) || hasze2.contains(hasz2)) {
-				System.out
-						.println("takie same hasze: " + hasz1 + " ; " + hasz2);
-				continue;
+
+		for (String timestampS : getTimestamps()) {
+
+			for (int lekarz : lekarze) {
+				for (int i = 0; i < 3000; i++) {
+					IdPacjenta = pacjenci.get(random.nextInt(pacjenciSize));
+					IdLekarza = lekarz;
+					termin = dajRandomowyTimestamp(IdLekarza % 2 == 0);
+					hasz1 = IdPacjenta + "" + termin;
+					hasz2 = IdLekarza + "" + termin;
+					if (hasze1.contains(hasz1) || hasze2.contains(hasz2)) {
+						System.out.println("takie same hasze: " + hasz1 + " ; "
+								+ hasz2);
+						continue;
+					}
+					hasze1.add(hasz1);
+					hasze2.add(hasz2);
+					// Object[] obj={IdPacjenta, IdLekarza, termin};
+					TempWizyta obj = new TempWizyta(IdPacjenta, IdLekarza,
+							termin);
+					dane.add(obj);
+				}
 			}
-			hasze1.add(hasz1);
-			hasze2.add(hasz2);
-			// Object[] obj={IdPacjenta, IdLekarza, termin};
-			TempWizyta obj = new TempWizyta(IdPacjenta, IdLekarza, termin);
-			dane.add(obj);
 		}
 
 		Collections.sort(dane);
@@ -1013,6 +1070,11 @@ public class InsertDB {
 			}
 		}
 
+	}
+
+	private Object getTimestamps() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private ArrayList<Integer> dajPacjentow() {

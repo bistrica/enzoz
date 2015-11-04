@@ -61,7 +61,7 @@ public class IndividualAppController {
 				}
 			} catch (DataCannotBeEditedException e) {
 				parent.displayError(e.getMessage());
-				e.printStackTrace();
+				// e.printStackTrace();
 				return;
 			}
 
@@ -90,10 +90,16 @@ public class IndividualAppController {
 					iav.setClinicsList(iam.getAllClinics());
 				} catch (LoadDataException e) {
 
-					e.printStackTrace();
+					// e.printStackTrace();
 					iav.displayInfo(e.getMessage(), errorString);
 					return;
 				}
+
+				/*
+				 * try { iam.setPatientAddress(appointment.getPatient()); }
+				 * catch (LoadDataException e) { e.printStackTrace();
+				 * iav.displayInfo(e.getMessage(), errorString); }
+				 */
 
 				iav.setInfo(appointment.getPatient().getMainInfo(), appointment
 						.getPatient().getAddressInfo(), appointment
@@ -112,7 +118,7 @@ public class IndividualAppController {
 						iam.setPatientConstantIllnesses(appointment
 								.getPatient());
 					} catch (LoadDataException e) {
-						e.printStackTrace();
+						// e.printStackTrace();
 						iav.displayInfo(e.getMessage(), errorString);
 						return;
 					}
@@ -157,7 +163,6 @@ public class IndividualAppController {
 			public void windowClosing(WindowEvent e) {
 
 				if (iav.sureToCloseWindow()) {
-					System.out.println("REMM");
 					if (iav.getEditMode()) {
 
 						try {
@@ -241,7 +246,7 @@ public class IndividualAppController {
 			prescriptionData = iav.getPrescriptionData(isEdited);
 		} catch (BadDataException e) {
 			iav.displayInfo(e.getMessage(), errorString);
-			e.printStackTrace();
+			// e.printStackTrace();
 			return false;
 		}
 
@@ -261,7 +266,7 @@ public class IndividualAppController {
 			iam.saveAppointment(newOrEditedApp);
 		} catch (SaveDataException e) {
 			iav.displayInfo(e.getMessage(), errorString);
-			e.printStackTrace();
+			// e.printStackTrace();
 			return false;
 		}
 

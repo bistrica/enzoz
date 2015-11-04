@@ -37,7 +37,7 @@ public class AppointmentDBH {
 		try {
 			apps = appDAO.getTodayAppointments(doctor);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				DBHandler.resetTrialsNo();
@@ -61,7 +61,7 @@ public class AppointmentDBH {
 		try {
 			apps = appDAO.getArchiveAppointments(searchData);// getArchiveAppointments();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				DBHandler.resetTrialsNo();
@@ -84,7 +84,7 @@ public class AppointmentDBH {
 			appDAO.updateData(app);
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			// e.printStackTrace();
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				DBHandler.resetTrialsNo();
@@ -108,7 +108,7 @@ public class AppointmentDBH {
 			previousHelper = searchData;
 			apps = appDAO.getArchiveAppointments(searchData);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				DBHandler.resetTrialsNo();
@@ -130,7 +130,7 @@ public class AppointmentDBH {
 		try {
 			doctors = doctorDAO.getDoctors();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				DBHandler.resetTrialsNo();

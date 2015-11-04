@@ -11,11 +11,12 @@ public class DBHandler {
 
 	private Employee currentUser;
 	private Connection conn;
-	private String host = // "alexx.linuxpl.eu"// "185.25.148.252"//
-							// "virt1452.wirt-03.netdc.pl"//
-			"192.168.56.1",
-			login, password, dbname = "enzoz", prefix = "";// "alexx_";//
-															// "virt1452_";//
+	private String host = "enzoz.linuxpl.eu",// "185.25.148.252"//
+			// "virt1452.wirt-03.netdc.pl",//
+			// "192.168.56.1",
+			login, password, dbname = "enzoz", prefix = "enzoz_";//
+	// "alexx_";//
+	// "virt1452_";//
 
 	private static DBHandler dbh = null;
 	private static int trialsNo = 0;
@@ -24,6 +25,7 @@ public class DBHandler {
 	public static int counter = 1;
 
 	private static boolean isClosed = false;
+	private static boolean isClosedPermanently = false;
 
 	public static void resetTrialsNo() {
 		trialsNo = 0;
@@ -56,6 +58,7 @@ public class DBHandler {
 		while (!valid && counter++ < 5) {
 			try {
 				Thread.sleep(1000);
+
 				dbh.conn = DriverManager
 						.getConnection(
 								"jdbc:mysql://"
@@ -64,12 +67,24 @@ public class DBHandler {
 										+ dbh.prefix
 										+ dbh.dbname
 										+ "?useUnicode=true&characterEncoding=UTF-8&useAffectedRows=true&autoReconnect=true",
-
 								dbh.prefix + dbh.login, dbh.password);
+
 				valid = dbh.conn.isValid(0);
+				if (valid) {
+					if (dbh.conn.getAutoCommit()) {
+						dbh.conn.setAutoCommit(false);
+						dbh.conn.rollback();
+						dbh.conn.setAutoCommit(true);
+					} else
+						dbh.conn.rollback();
+				}
+
+				System.out.println("valid " + valid);
 
 			} catch (SQLException e) {
-				e.printStackTrace();
+
+				System.out.println(":::" + e.getMessage());
+				// e.printStackTrace();
 				break;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -129,12 +144,16 @@ public class DBHandler {
 	}
 
 	public static void close() {
-		setClosed(true);
+		isClosed = isClosedPermanently = true;
 		try {
 			dbh.conn.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
+	}
+
+	public static boolean isClosedPermanently() {
+		return isClosedPermanently;
 	}
 
 }

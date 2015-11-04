@@ -11,7 +11,6 @@ import appointment.AppointmentController;
 import database.DBHandler;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
-import exceptions.LibraryException;
 
 public class LoginController {
 
@@ -45,8 +44,7 @@ public class LoginController {
 
 				try {
 					user = model.tryToLog(login, password);
-				} catch (BadDataException | ConnectionException
-						| LibraryException ex) {
+				} catch (BadDataException | ConnectionException ex) {
 					view.displayError(ex.getMessage());
 					return;
 				}
@@ -65,7 +63,7 @@ public class LoginController {
 			@Override
 			public void windowClosing(WindowEvent e) {
 
-				if (!DBHandler.isClosed()) {
+				if (!DBHandler.isClosedPermanently()) {
 					System.out.println("CLOSE");
 					DBHandler.close();
 				}

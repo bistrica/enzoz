@@ -67,7 +67,7 @@ public class AppointmentController {
 				try {
 					doctors = am.getDoctors();
 				} catch (LoadDataException e) {
-					e.printStackTrace();
+					// e.printStackTrace();
 					error = true;
 					errorMessage = e.getMessage();
 				}
@@ -100,11 +100,17 @@ public class AppointmentController {
 					} catch (InterruptedException e) {
 						System.out.println("stop refreshing");
 						refreshRunning = false;
-						e.printStackTrace();
+						// e.printStackTrace();
 					}
 
-					if (DBHandler.isClosed())
-						break;
+					if (DBHandler.isClosed()) {
+						continue;
+					}
+
+					if (DBHandler.isClosedPermanently()) {
+						System.out.println("BREAK THREAD");
+						return;
+					}
 					refreshDataInvoke();
 
 				}

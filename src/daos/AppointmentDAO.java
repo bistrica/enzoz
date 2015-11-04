@@ -52,7 +52,7 @@ public class AppointmentDAO {
 		PreparedStatement st;
 
 		String queryString = "SELECT w.IdWizyty, w.IdPacjenta, w.Data, w.status, "
-				+ "o.Imie, o.Nazwisko, o.PESEL "
+				+ "o.Imie, o.Nazwisko, o.PESEL, o.Ulica, o.NrDomu, o.NrMieszkania, o.KodPocztowy, o.Miejscowosc, o.Telefon "
 				+ "FROM wizytydzis AS w "
 				+ "JOIN pacjenci AS p ON p.IdPacjenta=w.IdPacjenta "
 				+ "JOIN osoby AS o ON o.IdOsoby=p.IdPacjenta "
@@ -69,7 +69,10 @@ public class AppointmentDAO {
 			// .getPatientData(rs.getInt("IdPacjenta"));
 			Patient patient = new Patient(rs.getInt("w.IdPacjenta"),
 					rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
-					rs.getString("o.PESEL"));
+					rs.getString("o.PESEL"), rs.getString("o.Ulica"),
+					rs.getString("o.NrDomu"), rs.getString("o.NrMieszkania"),
+					rs.getString("o.Miejscowosc"),
+					rs.getString("o.KodPocztowy"), rs.getString("o.Telefon"));
 			GregorianCalendar appDate = convertToDate(rs.getString("w.Data"));
 
 			Appointment app = new Appointment(appId, appDate);
@@ -94,7 +97,6 @@ public class AppointmentDAO {
 			appDate.setTime(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
-
 		}
 
 		return appDate;
@@ -317,10 +319,11 @@ public class AppointmentDAO {
 	public void writeToDatabase(Appointment app) throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
-		Savepoint svp = conn.setSavepoint();
 
 		if (conn.getAutoCommit())
 			conn.setAutoCommit(false);
+
+		Savepoint svp = conn.setSavepoint();
 
 		int appId = app.getId();
 

@@ -82,8 +82,6 @@ public class IndividualAppView extends IconFrame {
 			menu.add(saveItem);
 		}
 
-		System.out.println("EDIT ALL " + isEditingAllowed);
-
 		if (isEnabled || isEditingAllowed) {
 			JMenuBar bar = new JMenuBar();
 			bar.add(menu);

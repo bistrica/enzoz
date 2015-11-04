@@ -8,7 +8,6 @@ import daos.EmployeeDAO;
 import database.DBHandler;
 import exceptions.BadDataException;
 import exceptions.ConnectionException;
-import exceptions.LibraryException;
 
 public class LoginDBH {
 
@@ -17,7 +16,7 @@ public class LoginDBH {
 	private String hashingFailedString = "Wyst¹pi³ b³¹d z szyfrowaniem. Skontaktuj siê z administratorem.";
 
 	public Employee tryToLog(String login, String pass)
-			throws ConnectionException, BadDataException, LibraryException {
+			throws ConnectionException, BadDataException {
 
 		Employee user = null;
 		employeeDAO = new EmployeeDAO();
