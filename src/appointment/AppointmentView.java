@@ -122,11 +122,12 @@ public class AppointmentView extends IconFrame {
 		revalidate();
 
 		if (convertedArchiveAppointments.length == 0
-				&& (showMessageIfNoApp || firstTimeOpenArchive))
+				&& (showMessageIfNoApp || firstTimeOpenArchive)) {
+			if (firstTimeOpenArchive)
+				firstTimeOpenArchive = false;
 			displayInfo(noArchiveAppsString, noAppsString);
+		}
 
-		if (firstTimeOpenArchive)
-			firstTimeOpenArchive = false;
 	}
 
 	public void setTodayAppointments(String[] columnNames,
@@ -135,11 +136,13 @@ public class AppointmentView extends IconFrame {
 		todayPanel.setData(convertedAppointments, columnNames);
 		revalidate();
 
-		if (convertedAppointments.length == 0 && firstTimeOpenToday)
-			displayInfo(noTodayAppsString, noAppsString);
-
-		if (firstTimeOpenToday)
+		if (convertedAppointments.length == 0 && firstTimeOpenToday) {
 			firstTimeOpenToday = false;
+			displayInfo(noTodayAppsString, noAppsString);
+			System.out.println("disp");
+			// if (firstTimeOpenToday)
+
+		}
 	}
 
 	public void displayInfo(String message, String titleBar) {

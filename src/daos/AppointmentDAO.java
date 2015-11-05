@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import people.Doctor;
 import people.Patient;
@@ -34,6 +35,9 @@ public class AppointmentDAO {
 	private IllnessDAO illnessDAO;
 	private boolean blockingAutoCommit;
 
+	private HashMap<Integer, Doctor> doctors;
+	private HashMap<Integer, Patient> patients;
+
 	public AppointmentDAO() {
 		patientDAO = new PatientDAO();
 		personDAO = new PersonDAO();
@@ -41,6 +45,9 @@ public class AppointmentDAO {
 		prescriptionDAO = new PrescriptionDAO();
 		examinationDAO = new ExaminationDAO();
 		illnessDAO = new IllnessDAO();
+
+		doctors = new HashMap<Integer, Doctor>();
+		patients = new HashMap<Integer, Patient>();
 	}
 
 	public ArrayList<Appointment> getTodayAppointments(Doctor doctor)
@@ -67,12 +74,20 @@ public class AppointmentDAO {
 			int appId = rs.getInt("w.IdWizyty");
 			// Patient patient = patientDAO
 			// .getPatientData(rs.getInt("IdPacjenta"));
-			Patient patient = new Patient(rs.getInt("w.IdPacjenta"),
-					rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
-					rs.getString("o.PESEL"), rs.getString("o.Ulica"),
-					rs.getString("o.NrDomu"), rs.getString("o.NrMieszkania"),
-					rs.getString("o.Miejscowosc"),
-					rs.getString("o.KodPocztowy"), rs.getString("o.Telefon"));
+			Patient patient = patients.get(rs.getShort("w.IdPacjenta"));
+			if (patient == null) {
+				patient = new Patient(rs.getInt("w.IdPacjenta"),
+
+				rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
+						rs.getString("o.PESEL"), rs.getString("o.Ulica"),
+						rs.getString("o.NrDomu"),
+						rs.getString("o.NrMieszkania"),
+						rs.getString("o.Miejscowosc"),
+						rs.getString("o.KodPocztowy"),
+						rs.getString("o.Telefon"));
+
+				patients.put(patient.getId(), patient);
+			}
 			GregorianCalendar appDate = convertToDate(rs.getString("w.Data"));
 
 			Appointment app = new Appointment(appId, appDate);
@@ -203,14 +218,22 @@ public class AppointmentDAO {
 		ResultSet rs = st.executeQuery();
 		while (rs.next()) {
 			int appId = rs.getInt("w.IdWizyty");
-			Patient patient = new Patient(rs.getInt("w.IdPacjenta"),
-					rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
-					rs.getString("o.PESEL"));
+			Patient patient = patients.get(rs.getInt("w.IdPacjenta"));
+			if (patient == null) {
+				patient = new Patient(rs.getInt("w.IdPacjenta"),
+						rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
+						rs.getString("o.PESEL"));
+				patients.put(patient.getId(), patient);
+			}
 			// personDAO.getShortPersonData(rs.getInt("IdPacjenta")));//
 			// patientDAO.getShortPatientData(rs.getInt("IdPacjenta"));
-			Doctor doctor = new Doctor(rs.getInt("w.IdLekarza"),
-					rs.getString("l.Imie"), rs.getString("l.Nazwisko"),
-					rs.getString("l.PESEL"));
+			Doctor doctor = doctors.get(rs.getInt("w.IdLekarza"));
+			if (doctor == null) {
+				doctor = new Doctor(rs.getInt("w.IdLekarza"),
+						rs.getString("l.Imie"), rs.getString("l.Nazwisko"),
+						rs.getString("l.PESEL"));
+				doctors.put(doctor.getId(), doctor);
+			}
 			// new Doctor(personDAO.getShortPersonData(rs.getInt("IdLekarza")));
 			GregorianCalendar appDate = convertToDate(rs.getString("w.Data"));
 			Appointment app = new Appointment(appId, appDate);
@@ -286,13 +309,21 @@ public class AppointmentDAO {
 		while (rs.next()) {
 			int appId = rs.getInt("w.IdWizyty");
 
-			Patient patient = new Patient(rs.getInt("w.IdPacjenta"),
-					rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
-					rs.getString("o.PESEL"));
+			Patient patient = patients.get(rs.getInt("w.IdPacjenta"));
+			if (patient == null) {
+				patient = new Patient(rs.getInt("w.IdPacjenta"),
+						rs.getString("o.Imie"), rs.getString("o.Nazwisko"),
+						rs.getString("o.PESEL"));
+				patients.put(patient.getId(), patient);
+			}
 
-			Doctor doctor = new Doctor(rs.getInt("w.IdLekarza"),
-					rs.getString("l.Imie"), rs.getString("l.Nazwisko"),
-					rs.getString("l.PESEL"));
+			Doctor doctor = doctors.get(rs.getInt("w.IdLekarza"));
+			if (doctor == null) {
+				doctor = new Doctor(rs.getInt("w.IdLekarza"),
+						rs.getString("l.Imie"), rs.getString("l.Nazwisko"),
+						rs.getString("l.PESEL"));
+				doctors.put(doctor.getId(), doctor);
+			}
 			// Patient patient =
 			// new Patient(personDAO.getShortPersonData(rs
 			// .getInt("IdPacjenta")));//
@@ -315,6 +346,156 @@ public class AppointmentDAO {
 		return apps;
 
 	}
+
+	// private ArrayList<Appointment> getArchiveAppointments() throws
+	// SQLException {
+	//
+	// Connection conn = DBHandler.getDatabaseConnection();
+	//
+	// ArrayList<Appointment> apps = new ArrayList<Appointment>();
+	// PreparedStatement st;
+	//
+	// int year = Calendar.getInstance().get(Calendar.YEAR) - 2;
+	//
+	// String queryString =
+	// "SELECT IdWizyty, IdPacjenta, IdLekarza, Data, status FROM wizytyarchiwum WHERE YEAR(Data)>"
+	// + year + " ORDER BY Data DESC";
+	//
+	// // try {
+	//
+	// st = conn.prepareStatement(queryString);
+	// ResultSet rs = st.executeQuery();
+	// while (rs.next()) {
+	// int appId = rs.getInt("IdWizyty");
+	//
+	// Patient patient = patients.get(rs.getInt("IdPacjenta"));
+	// if (patient == null) {
+	//
+	// patient = new Patient(personDAO.getShortPersonData(rs
+	// .getInt("IdPacjenta")));
+	// patients.put(patient.getId(), patient);
+	// System.out.println("POBRANO P " + patient);
+	// }
+	// // patientDAO.getShortPatientData(rs.getInt("idPacjenta"));
+	// Doctor doctor = doctors.get(rs.getInt("IdLekarza"));
+	// if (doctor == null) {
+	// doctor = new Doctor(personDAO.getShortPersonData(rs
+	// .getInt("IdLekarza")));
+	// doctors.put(doctor.getId(), doctor);
+	// System.out.println("POBRANO D " + doctor);
+	// }
+	//
+	// // TODO: check, czy wystarczy
+	// // osobaDAO || make doctorDAO
+	// GregorianCalendar appDate = convertToDate(rs.getString("Data"));
+	// Appointment app = new Appointment(appId, appDate);
+	// app.setDoctor(doctor);
+	// app.setPatient(patient);
+	// app.setStatus(rs.getString("status"));
+	// apps.add(app);
+	// }
+	//
+	// rs.close();
+	// st.close();
+	//
+	// return apps;
+	//
+	// }
+	//
+	// public ArrayList<Appointment> getArchiveAppointments(SearchHelper sh)
+	// throws SQLException {
+	//
+	// if (sh == null)
+	// return getArchiveAppointments();
+	//
+	// Connection conn = DBHandler.getDatabaseConnection();
+	//
+	// ArrayList<Appointment> apps = new ArrayList<Appointment>();
+	// PreparedStatement st;
+	//
+	// // int year = Calendar.getInstance().get(Calendar.YEAR) - 2;
+	//
+	// String queryString =
+	// "SELECT IdWizyty, IdPacjenta, IdLekarza, Data, status FROM wizytyarchiwum WHERE ";
+	// StringBuilder sb = new StringBuilder(queryString);
+	// int year = sh.getYear(), month = sh.getMonth(), day = sh.getDay();
+	// long PESEL = sh.getPESEL();
+	// Doctor doc = sh.getSurname();
+	//
+	// ArrayList<Integer> parameters = new ArrayList<Integer>();
+	// if (year != -1) {
+	// sb.append("YEAR(Data)=? AND ");
+	// parameters.add(year);
+	// }
+	// if (month != -1) {
+	// sb.append("MONTH(Data)=? AND ");
+	// parameters.add(month);
+	// }
+	// if (day != -1) {
+	// sb.append("DAY(Data)=? AND ");
+	// parameters.add(day);
+	// }
+	// if (PESEL != -1) {
+	// int patientId = personDAO.getPersonId(PESEL);
+	// sb.append("IdPacjenta=? AND ");
+	// parameters.add(patientId);
+	// }
+	// if (doc != null) {
+	// sb.append("IdLekarza=? AND ");
+	// parameters.add(doc.getId());
+	// }
+	//
+	// sb.append(" 1 ORDER BY Data DESC");
+	// queryString = sb.toString();
+	//
+	// // try {
+	//
+	// st = conn.prepareStatement(queryString);
+	// int i = 1;
+	// for (int param : parameters)
+	// st.setInt(i++, param);
+	//
+	// ResultSet rs = st.executeQuery();
+	// while (rs.next()) {
+	// int appId = rs.getInt("IdWizyty");
+	//
+	// Patient patient = patients.get(rs.getInt("IdPacjenta"));
+	// if (patient == null) {
+	//
+	// patient = new Patient(personDAO.getShortPersonData(rs
+	// .getInt("IdPacjenta")));
+	// patients.put(patient.getId(), patient);
+	// System.out.println("POBRANO P1 " + patient);
+	// }
+	// // patientDAO.getShortPatientData(rs.getInt("idPacjenta"));
+	// Doctor doctor = doctors.get(rs.getInt("IdLekarza"));
+	// if (doctor == null) {
+	// doctor = new Doctor(personDAO.getShortPersonData(rs
+	// .getInt("IdLekarza")));
+	// doctors.put(doctor.getId(), doctor);
+	// System.out.println("POBRANO D1 " + doctor);
+	// }
+	//
+	// // Patient patient = new Patient(personDAO.getShortPersonData(rs
+	// // .getInt("IdPacjenta")));//
+	// // patientDAO.getShortPatientData(rs.getInt("idPacjenta"));
+	// // Doctor doctor = new Doctor(personDAO.getShortPersonData(rs
+	// // .getInt("IdLekarza"))); // TODO: check, czy wystarczy
+	// // // osobaDAO || make doctorDAO
+	// GregorianCalendar appDate = convertToDate(rs.getString("Data"));
+	// Appointment app = new Appointment(appId, appDate);
+	// app.setDoctor(doctor);
+	// app.setPatient(patient);
+	// app.setStatus(rs.getString("status"));
+	// apps.add(app);
+	// }
+	//
+	// rs.close();
+	// st.close();
+	//
+	// return apps;
+	//
+	// }
 
 	public void writeToDatabase(Appointment app) throws SQLException {
 
@@ -356,6 +537,7 @@ public class AppointmentDAO {
 	}
 
 	private void closeAppointment(Appointment app) throws SQLException {
+		System.out.println("closeapp");
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		int appId = app.getId();
@@ -425,7 +607,7 @@ public class AppointmentDAO {
 	// jeden pacjent jednoczeœnie przyjmowany
 
 	public void unblockPatientData() throws SQLException {
-
+		System.out.println("unblock");
 		Connection conn = DBHandler.getDatabaseConnection();
 		conn.commit(); // odblokowanie SELECT LOCK IN SHARE MODE (?)
 		conn.setAutoCommit(blockingAutoCommit);
@@ -434,6 +616,9 @@ public class AppointmentDAO {
 	public void writeBackOldStatus(Appointment app) throws SQLException {
 
 		Connection conn = DBHandler.getDatabaseConnection();
+
+		if (conn.getAutoCommit())
+			conn.setAutoCommit(false);
 
 		int appId = app.getId();
 		PreparedStatement st;

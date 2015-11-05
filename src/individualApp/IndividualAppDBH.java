@@ -147,14 +147,29 @@ public class IndividualAppDBH {
 
 	public void saveAppointment(Appointment app) throws SaveDataException {
 
-		System.out.println(">>" + DBHandler.isClosed());
+		try {
+			System.out.println(">>" + DBHandler.isClosed() + " . "
+					+ DBHandler.getDatabaseConnection().isClosed());
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		try {
 			appDAO.writeToDatabase(app);
-		} catch (Exception e) {// SQLException e) {
+		} catch (SQLException e) {// SQLException e) {
 
 			// e.printStackTrace();
-			System.out.println("save" + e.getMessage());
+			System.out.println("save " + e.getMessage());
+			e.printStackTrace();
+
+			try {
+				if (!DBHandler.getDatabaseConnection().isClosed()) {
+					throw new NullPointerException();
+				}
+			} catch (SQLException ex) {
+				System.out.println("Nie mo¿na sprawdziæ.");
+			}
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				System.out.println("XXX");
@@ -163,7 +178,7 @@ public class IndividualAppDBH {
 				throw new SaveDataException();
 
 			} else {
-				System.out.println("ONCE MORE " + DBHandler.counter);
+				System.out.println("ONCE MORE ");
 				DBHandler.incrementTrialsNo();
 				saveAppointment(app);
 				return;
@@ -171,7 +186,7 @@ public class IndividualAppDBH {
 
 		}
 		// sysout
-		// DBHandler.resetTrialsNo();
+		DBHandler.resetTrialsNo();
 
 	}
 

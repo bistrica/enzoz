@@ -27,6 +27,9 @@ public class LengthFilter extends PlainDocument implements Document {
 			} catch (NumberFormatException e) {
 				return;
 			}
+		if (super.getLength() + str.length() > maxLength)
+			super.insertString(offs,
+					str.substring(0, maxLength - super.getLength()), a);
 		if (offs < maxLength && super.getLength() < maxLength)
 			super.insertString(offs, str, a);
 

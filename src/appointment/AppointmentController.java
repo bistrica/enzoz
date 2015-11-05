@@ -291,17 +291,16 @@ public class AppointmentController {
 	private void createAppointment(Appointment app, boolean editable) {
 		System.out.println("CURR " + currentAppOpen);
 		if (!appsInChildWindows.contains(app)) {
-			appsInChildWindows.add(app);
-			if (!app.isArchiveAppointment())
-				currentAppOpen = true;
+
 			try {
 				new IndividualAppController(this, app, editable);
 			} catch (PatientAlreadyBlockedException e) {
-				appsInChildWindows.remove(app);
-				if (!app.isArchiveAppointment())
-					currentAppOpen = false;
 				av.displayInfo(e.getMessage(), errorString);
+				return;
 			}
+			appsInChildWindows.add(app);
+			if (!app.isArchiveAppointment())
+				currentAppOpen = true;
 		}
 	}
 

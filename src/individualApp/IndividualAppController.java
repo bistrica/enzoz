@@ -167,13 +167,14 @@ public class IndividualAppController {
 
 						try {
 							iam.rewriteStatus(appointment);
-							parent.setCurrentAppOpen(false);
+
 						} catch (SaveDataException e1) {
 							e1.printStackTrace();
 							iav.displayInfo(e1.getMessage(), errorString);
 						}
 					}
 
+					parent.setCurrentAppOpen(false);
 					parent.removeChildWindow(appointment);
 					iav.close();
 				}

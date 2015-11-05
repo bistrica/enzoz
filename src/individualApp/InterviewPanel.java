@@ -9,10 +9,14 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import GUI_items.LengthFilter;
+
 public class InterviewPanel extends JPanel {
 
+	private int MAX_CHARS = 1500;
 	private JTextArea interview;
-	private String interviewString = "Treœæ konsultacji";
+	private String interviewString = "Treœæ konsultacji (" + MAX_CHARS
+			+ " znaków)";
 
 	public InterviewPanel() {
 
@@ -20,6 +24,7 @@ public class InterviewPanel extends JPanel {
 		setBorder(new CompoundBorder(new EmptyBorder(20, 50, 20, 50),
 				new TitledBorder(interviewString)));
 		interview = new JTextArea();
+		interview.setDocument(new LengthFilter(MAX_CHARS, false));
 		interview.setLineWrap(true);
 		JScrollPane interviewScroll = new JScrollPane(interview);
 		add(interviewScroll);

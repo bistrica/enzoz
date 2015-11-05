@@ -11,16 +11,16 @@ public class DBHandler {
 
 	private Employee currentUser;
 	private Connection conn;
-	private String host = "enzoz.linuxpl.eu",// "185.25.148.252"//
+	private String host = // "enzoz.linuxpl.eu",// "185.25.148.252"//
 			// "virt1452.wirt-03.netdc.pl",//
-			// "192.168.56.1",
-			login, password, dbname = "enzoz", prefix = "enzoz_";//
+			"192.168.56.1",
+			login, password, dbname = "enzoz", prefix = "";// "enzoz_";//
 	// "alexx_";//
 	// "virt1452_";//
 
 	private static DBHandler dbh = null;
 	private static int trialsNo = 0;
-	private static int criticalNo = 5;
+	private static int criticalNo = 3;
 
 	public static int counter = 1;
 
@@ -58,7 +58,16 @@ public class DBHandler {
 		while (!valid && counter++ < 5) {
 			try {
 				Thread.sleep(1000);
-
+				// dbh.conn.open();//close(); // &&&
+				System.out.println("cl " + dbh.conn.isClosed());
+				// if (!dbh.conn.isClosed()) {
+				// if (dbh.conn.getAutoCommit()) {
+				// dbh.conn.setAutoCommit(false);
+				// }
+				// dbh.conn.rollback();
+				// dbh.conn.close();
+				//
+				// }
 				dbh.conn = DriverManager
 						.getConnection(
 								"jdbc:mysql://"
@@ -70,21 +79,21 @@ public class DBHandler {
 								dbh.prefix + dbh.login, dbh.password);
 
 				valid = dbh.conn.isValid(0);
-				if (valid) {
-					if (dbh.conn.getAutoCommit()) {
-						dbh.conn.setAutoCommit(false);
-						dbh.conn.rollback();
-						dbh.conn.setAutoCommit(true);
-					} else
-						dbh.conn.rollback();
-				}
+				// if (valid) {
+				// if (dbh.conn.getAutoCommit()) {
+				// dbh.conn.setAutoCommit(false);
+				// dbh.conn.rollback();
+				// dbh.conn.setAutoCommit(true);
+				// } else
+				// dbh.conn.rollback();
+				// }
 
 				System.out.println("valid " + valid);
 
 			} catch (SQLException e) {
 
 				System.out.println(":::" + e.getMessage());
-				// e.printStackTrace();
+				e.printStackTrace();
 				break;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -145,11 +154,12 @@ public class DBHandler {
 
 	public static void close() {
 		isClosed = isClosedPermanently = true;
-		try {
-			dbh.conn.close();
-		} catch (SQLException e) {
-			// e.printStackTrace();
-		}
+		if (dbh != null)
+			try {
+				dbh.conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 	}
 
 	public static boolean isClosedPermanently() {
