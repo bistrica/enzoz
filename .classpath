@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="C:/Users/Olusiak/Downloads/oalnf/oalnf/oalnf.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Olusiak/Downloads/liquidlnf-0.2.9-alpha5/liquidlnf.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Olusiak/Downloads/mysql-connector-java-5.1.24-bin.jar/mysql-connector-java-5.1.24-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Olusiak/Downloads/joda-time-2.9.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

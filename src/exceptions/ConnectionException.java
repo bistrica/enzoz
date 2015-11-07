@@ -7,7 +7,7 @@ public class ConnectionException extends Exception {
 
 	public ConnectionException() {
 		super(
-				"Wyst¹pi³ b³¹d w po³¹czeniu. Spróbuj ponownie póŸniej. \nJeœli jesteœ zalogowany na innym komputerze, wyloguj siê.");
+				"Wprowadzono b³êdne dane lub wyst¹pi³ b³¹d w po³¹czeniu. Spróbuj ponownie póŸniej. \nJeœli jesteœ zalogowany na innym komputerze, wyloguj siê.");
 	}
 
 	/*

@@ -30,8 +30,9 @@ public class IndividualAppDBH {
 	private String illnessesString = "dane chorób";
 	private String medicinesString = "dane leków";
 	private String clinicsString = "dane poradni";
-	private ArrayList<Medicine> medicines;
-	private ArrayList<Illness> illnesses;
+	private static ArrayList<Medicine> medicines;
+	private static ArrayList<Illness> illnesses;
+	private static ArrayList<Clinic> clinics;
 	private String constantIllnessesString = "dane chorób przewlek³ych pacjenta";
 
 	public IndividualAppDBH() {
@@ -43,12 +44,14 @@ public class IndividualAppDBH {
 	}
 
 	public ArrayList<Illness> getAllIllnesses() throws LoadDataException {
-		if (illnesses != null)
+		if (illnesses != null) {
+			System.out.println("static");
 			return illnesses;
+		}
 
-		illnesses = new ArrayList<Illness>();
+		ArrayList<Illness> ill = new ArrayList<Illness>();
 		try {
-			illnesses = illnessDAO.getAllIllnesses();
+			ill = illnessDAO.getAllIllnesses();
 		} catch (SQLException e) {
 
 			// e.printStackTrace();
@@ -60,11 +63,12 @@ public class IndividualAppDBH {
 			} else {
 
 				DBHandler.incrementTrialsNo();
-				illnesses = getAllIllnesses();
+				ill = getAllIllnesses();
 			}
 		}
 
 		DBHandler.resetTrialsNo();
+		illnesses = ill;
 		return illnesses;
 
 	}
@@ -73,9 +77,9 @@ public class IndividualAppDBH {
 		if (medicines != null)
 			return medicines;
 
-		medicines = new ArrayList<Medicine>();
+		ArrayList<Medicine> med = new ArrayList<Medicine>();
 		try {
-			medicines = drugDAO.getAllMedicines();
+			med = drugDAO.getAllMedicines();
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
@@ -86,15 +90,19 @@ public class IndividualAppDBH {
 			} else {
 
 				DBHandler.incrementTrialsNo();
-				medicines = getAllMedicines();
+				med = getAllMedicines();
 			}
 		}
 
 		DBHandler.resetTrialsNo();
+		medicines = med;
 		return medicines;
 	}
 
 	public ArrayList<Clinic> getAllClinics() throws LoadDataException {
+		if (clinics != null)
+			return clinics;
+
 		ArrayList<Clinic> cli = new ArrayList<Clinic>();
 		try {
 			cli = clinicDAO.getAllClinics();
@@ -113,7 +121,8 @@ public class IndividualAppDBH {
 		}
 
 		DBHandler.resetTrialsNo();
-		return cli;
+		clinics = cli;
+		return clinics;
 	}
 
 	public boolean isPossibleToEdit(Appointment app)
@@ -148,28 +157,12 @@ public class IndividualAppDBH {
 	public void saveAppointment(Appointment app) throws SaveDataException {
 
 		try {
-			System.out.println(">>" + DBHandler.isClosed() + " . "
-					+ DBHandler.getDatabaseConnection().isClosed());
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try {
 			appDAO.writeToDatabase(app);
 		} catch (SQLException e) {// SQLException e) {
 
 			// e.printStackTrace();
 			System.out.println("save " + e.getMessage());
 			e.printStackTrace();
-
-			try {
-				if (!DBHandler.getDatabaseConnection().isClosed()) {
-					throw new NullPointerException();
-				}
-			} catch (SQLException ex) {
-				System.out.println("Nie mo¿na sprawdziæ.");
-			}
 
 			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
 				System.out.println("XXX");

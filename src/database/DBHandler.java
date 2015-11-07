@@ -52,7 +52,14 @@ public class DBHandler {
 
 	public static boolean reconnect() {
 
-		boolean valid = false;
+		boolean valid;
+		try {
+			valid = dbh.conn.isValid(0);
+			System.out.println("v " + valid);
+		} catch (SQLException e1) {
+			valid = false;
+			e1.printStackTrace();
+		}// false;
 
 		int counter = 0;
 		while (!valid && counter++ < 5) {

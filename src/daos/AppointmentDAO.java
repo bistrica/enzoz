@@ -74,7 +74,7 @@ public class AppointmentDAO {
 			int appId = rs.getInt("w.IdWizyty");
 			// Patient patient = patientDAO
 			// .getPatientData(rs.getInt("IdPacjenta"));
-			Patient patient = patients.get(rs.getShort("w.IdPacjenta"));
+			Patient patient = patients.get(rs.getInt("w.IdPacjenta"));
 			if (patient == null) {
 				patient = new Patient(rs.getInt("w.IdPacjenta"),
 

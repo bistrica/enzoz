@@ -11,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,8 +29,8 @@ public class InsertDB {
 		try {
 
 			// Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String login = "adolega";
-			String haslo = "adolega", host = "192.168.56.1", baza = "enzoz";
+			String login = "enzoz_adolega";
+			String haslo = "adolegaadolega", host = "enzoz.linuxpl.eu", baza = "enzoz_enzoz";
 
 			conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
 					+ baza + "?useUnicode=true&characterEncoding=UTF-8", login,
@@ -39,19 +42,21 @@ public class InsertDB {
 			// insertData();
 			// insertCodes();
 			// insertPharmindex();
-			// insertPlaces();
+
 			// insertTypes();
 			// insertEmployees();
 			// insertPatients();
 
-			deleteApps();
-			insertApps();
-			System.out.println("Done apps.");
-			insertInterviews();
-			System.out.println("Done int.");
-			insertPrescriptions();
-			System.out.println("Done pre.");
-			insertRequests();
+			// deleteApps();
+			// insertPlaces();
+			// insertCodes();
+			// insertApps();
+			// System.out.println("Done apps.");
+			// insertInterviews();
+			// System.out.println("Done int.");
+			// insertPrescriptions();
+			// System.out.println("Done pre.");
+			// insertRequests();
 
 			// insertDuplicateConstantIllness();
 
@@ -67,18 +72,28 @@ public class InsertDB {
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("VendorError: " + ex.getErrorCode());
 			System.out.println("CATCH");
-			conn.rollback();
+			// conn.rollback();
 		} finally {
 			System.out.println("FINALLY");
-			conn.setAutoCommit(true);
+			// conn.setAutoCommit(true);
 		}
 	}
 
+	// private void deletePlaces() {
+	// TODO Auto-generated method stub
+
+	// }
+
 	private void deleteApps() {
 		String[] queries = { "DELETE FROM konsultacje",
-				"DELETE FROM pozycjenareceptach", "DELETE FROM recepty",
+				"DELETE FROM pozycjenareceptach",
+				"DELETE FROM recepty",
 				"DELETE FROM pozycjenaskierowaniach",
-				"DELETE FROM skierowania", "DELETE FROM rozpoznanechoroby",
+				"DELETE FROM skierowania",
+				// "DELETE FROM poradnie",
+				"DELETE FROM pozycjerozpoznan",
+				"DELETE FROM rozpoznanechoroby",
+				"DELETE FROM chorobyprzewlekle", // "DELETE FROM choroby",
 				"DELETE FROM wizyty" };
 		try {
 			conn.setAutoCommit(false);
@@ -1027,27 +1042,35 @@ public class InsertDB {
 		HashSet<String> hasze2 = new HashSet<String>();
 		String hasz1, hasz2;
 
-		for (String timestampS : getTimestamps()) {
+		ArrayList<String> times = getTimestamps();
+		System.out.println("S " + times.size() + " ; " + lekarzeSize + " ; "
+				+ pacjenciSize);
+
+		for (String timestamp : times) {
 
 			for (int lekarz : lekarze) {
-				for (int i = 0; i < 3000; i++) {
+				// for (int i = 0; i < 5; i++) {
+				while (true) {
 					IdPacjenta = pacjenci.get(random.nextInt(pacjenciSize));
 					IdLekarza = lekarz;
-					termin = dajRandomowyTimestamp(IdLekarza % 2 == 0);
+					termin = timestamp; // dajRandomowyTimestamp(IdLekarza % 2
+										// == 0);
 					hasz1 = IdPacjenta + "" + termin;
 					hasz2 = IdLekarza + "" + termin;
 					if (hasze1.contains(hasz1) || hasze2.contains(hasz2)) {
 						System.out.println("takie same hasze: " + hasz1 + " ; "
 								+ hasz2);
 						continue;
-					}
-					hasze1.add(hasz1);
-					hasze2.add(hasz2);
-					// Object[] obj={IdPacjenta, IdLekarza, termin};
-					TempWizyta obj = new TempWizyta(IdPacjenta, IdLekarza,
-							termin);
-					dane.add(obj);
+					} else
+						break;
 				}
+				hasze1.add(hasz1);
+				hasze2.add(hasz2);
+				// Object[] obj={IdPacjenta, IdLekarza, termin};
+				TempWizyta obj = new TempWizyta(IdPacjenta, IdLekarza, termin);
+				dane.add(obj);
+				// }
+
 			}
 		}
 
@@ -1056,25 +1079,88 @@ public class InsertDB {
 			System.out.println(e.getTermin());
 		// if (true) return;
 
-		for (TempWizyta o : dane) {
-			PreparedStatement st;
-			try {
-				st = conn.prepareStatement(query);
+		try {
+			// conn.setAutoCommit(false);
+			PreparedStatement st = conn.prepareStatement(query);
+			for (TempWizyta o : dane) {
+
 				st.setInt(1, o.getIdPacjenta());// (Integer)o[0]);
 				st.setInt(2, o.getIdLekarza());// (Integer)o[1]);
 				st.setString(3, o.getTermin());// (String)o[2]);
 				st.setString(4, "oczekuj¹ca");
-				st.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
+				st.addBatch();
 			}
+			st.executeBatch();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 	}
 
-	private Object getTimestamps() {
-		// TODO Auto-generated method stub
-		return null;
+	private ArrayList<String> getTimestamps() {
+
+		ArrayList<String> timestamps = new ArrayList<String>();
+		String s = "2013-10-01";
+		String e = "2016-03-01";
+		String timestamp = "";
+		LocalDate start = LocalDate.parse(s);
+		LocalDate end = LocalDate.parse(e);
+		// ArrayList<LocalDate> totalDates = new ArrayList<>();
+		while (!start.isAfter(end)) {
+			// totalDates.add(start);
+			start = start.plusDays(1);
+			if (start.getDayOfWeek().equals(DayOfWeek.SATURDAY)
+					|| start.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+				continue;
+
+			if ((start.getMonth() == Month.DECEMBER && start.getDayOfMonth() == 25)
+					|| (start.getMonth() == Month.JANUARY && start
+							.getDayOfMonth() == 1))
+				continue;
+
+			timestamp = start.getYear() + "-" + start.getMonthValue() + "-"
+					+ start.getDayOfMonth();
+
+			int rand = 8 + (int) (Math.random() * 12);
+
+			timestamps.add(timestamp + " " + rand + ":00");
+			timestamps.add(timestamp + " " + rand + ":15");
+			timestamps.add(timestamp + " " + rand + ":30");
+			timestamps.add(timestamp + " " + rand + ":45");
+
+			// rand++;
+			// timestamps.add(timestamp+" "+rand+":00");
+			// timestamps.add(timestamp+" "+rand+":15");
+			// timestamps.add(timestamp+" "+rand+":30");
+			//
+			// timestamps.add(timestamp+" "+rand+":30");
+
+			// else if (rand<0.6){
+			// timestamps.add(timestamp+" 9:45");
+			// timestamps.add(timestamp+" 10:00");
+			// timestamps.add(timestamp+" 10:15");
+			// timestamps.add(timestamp+" 10:30");
+			//
+			// timestamps.add(timestamp+" 10:45");
+			// timestamps.add(timestamp+" 11:00");
+			// timestamps.add(timestamp+" 11:15");
+			// timestamps.add(timestamp+" 11:30");
+			// }
+			// else if (rand<0.9){
+			// timestamps.add(timestamp+" 11:45");
+			// timestamps.add(timestamp+" 12:00");
+			// timestamps.add(timestamp+" 12:15");
+			// timestamps.add(timestamp+" 12:30");
+			//
+			// timestamps.add(timestamp+" 12:45");
+			// timestamps.add(timestamp+" 13:00");
+			// timestamps.add(timestamp+" 13:15");
+			// timestamps.add(timestamp+" 13:30");
+			// }
+
+		}
+
+		return timestamps;
 	}
 
 	private ArrayList<Integer> dajPacjentow() {
