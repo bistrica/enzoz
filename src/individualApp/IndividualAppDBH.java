@@ -56,18 +56,17 @@ public class IndividualAppDBH {
 
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {// ) {
+				//
 				throw new LoadDataException(illnessesString);
 
 			} else {
-
-				DBHandler.incrementTrialsNo();
+				//
 				ill = getAllIllnesses();
 			}
 		}
 
-		DBHandler.resetTrialsNo();
+		//
 		illnesses = ill;
 		return illnesses;
 
@@ -83,18 +82,17 @@ public class IndividualAppDBH {
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {// ) {
+				//
 				throw new LoadDataException(medicinesString);
 
 			} else {
 
-				DBHandler.incrementTrialsNo();
+				//
 				med = getAllMedicines();
 			}
 		}
 
-		DBHandler.resetTrialsNo();
 		medicines = med;
 		return medicines;
 	}
@@ -109,18 +107,16 @@ public class IndividualAppDBH {
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new LoadDataException(clinicsString);
 
 			} else {
 
-				DBHandler.incrementTrialsNo();
 				cli = getAllClinics();
 			}
 		}
 
-		DBHandler.resetTrialsNo();
 		clinics = cli;
 		return clinics;
 	}
@@ -140,17 +136,17 @@ public class IndividualAppDBH {
 
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new DataCannotBeEditedException();
 			} else {
 				System.out.println("ONCE MORE");
-				DBHandler.incrementTrialsNo();
+
 				isPossible = isPossibleToEdit(app);
 			}
 
 		}
-		DBHandler.resetTrialsNo();
+
 		return isPossible;
 	}
 
@@ -164,22 +160,20 @@ public class IndividualAppDBH {
 			System.out.println("save " + e.getMessage());
 			e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
+			if (!DBHandler.reconnect()) {
 				System.out.println("XXX");
-				DBHandler.resetTrialsNo();
 
 				throw new SaveDataException();
 
 			} else {
 				System.out.println("ONCE MORE ");
-				DBHandler.incrementTrialsNo();
+
 				saveAppointment(app);
 				return;
 			}
 
 		}
 		// sysout
-		DBHandler.resetTrialsNo();
 
 	}
 
@@ -204,17 +198,16 @@ public class IndividualAppDBH {
 
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new SaveDataException();
 			} else {
 
-				DBHandler.incrementTrialsNo();
 				rewriteStatus(appointment);
 			}
 
 		}
-		DBHandler.resetTrialsNo();
+
 	}
 
 	public void setPatientConstantIllnesses(Patient patient)
@@ -225,44 +218,42 @@ public class IndividualAppDBH {
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new LoadDataException(constantIllnessesString);
 
 			} else {
 
-				DBHandler.incrementTrialsNo();
 				setPatientConstantIllnesses(patient);
 				return;
 			}
 		}
 
-		DBHandler.resetTrialsNo();
 		patient.setConstantIllnesses(ill);
 	}
 
-	public void setPatientAddress(Patient patient) throws LoadDataException {
-		// ArrayList<Illness> ill = new ArrayList<Illness>();
-		// try {
-		// ill = patientDAO.getPatientConstantIllnesses(patient.getId());
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		//
-		// if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-		// DBHandler.resetTrialsNo();
-		// throw new LoadDataException(constantIllnessesString);
-		//
-		// } else {
-		//
-		// DBHandler.incrementTrialsNo();
-		// setPatientConstantIllnesses(patient);
-		// return;
-		// }
-		// }
-		//
-		// DBHandler.resetTrialsNo();
-		// patient.setConstantIllnesses(ill);
-		//
-	}
+	// public void setPatientAddress(Patient patient) throws LoadDataException {
+	// ArrayList<Illness> ill = new ArrayList<Illness>();
+	// try {
+	// ill = patientDAO.getPatientConstantIllnesses(patient.getId());
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	//
+	// if (!DBHandler.reconnect() ) {
+	//
+	// throw new LoadDataException(constantIllnessesString);
+	//
+	// } else {
+	//
+	//
+	// setPatientConstantIllnesses(patient);
+	// return;
+	// }
+	// }
+	//
+	//
+	// patient.setConstantIllnesses(ill);
+	//
+	// }
 
 }

@@ -182,7 +182,8 @@ public class AppointmentController {
 							convertArchiveAppointments(), true);
 				} catch (ArchiveException e1) {
 					av.displayInfo(searchErrorString, errorString);
-					e1.printStackTrace();
+					// e1.printStackTrace();
+					System.exit(0);
 				}
 
 			}
@@ -280,10 +281,13 @@ public class AppointmentController {
 					@Override
 					public void run() {
 						av.displayInfo(e.getMessage(), errorString);
+						System.exit(0);
 					}
 				});
-			} else
+			} else {
 				av.displayInfo(e.getMessage(), errorString);
+				System.exit(0);
+			}
 		}
 		appointmentsArchive = tempAppArchive;
 	}
@@ -313,6 +317,7 @@ public class AppointmentController {
 			createAppointment(app, editable);
 		} catch (PreviewCannotBeCreatedException e) {
 			av.displayInfo(e.getMessage(), errorString);
+			System.exit(0);
 		}
 
 	}
@@ -353,10 +358,13 @@ public class AppointmentController {
 					@Override
 					public void run() {
 						av.displayInfo(e.getMessage(), errorString);
+						System.exit(0);
 					}
 				});
-			} else
+			} else {
 				av.displayInfo(e.getMessage(), errorString);
+				System.exit(0);
+			}
 		}
 		appointmentsToday = tempAppToday;
 	}

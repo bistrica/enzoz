@@ -14,22 +14,22 @@ public class DBHandler {
 	private String host = // "enzoz.linuxpl.eu",// "185.25.148.252"//
 			// "virt1452.wirt-03.netdc.pl",//
 			"192.168.56.1",
-			login, password, dbname = "enzoz", prefix = "";// "enzoz_";//
+			login, password, dbname = "enzoz", prefix = "";// enzoz_";//
 	// "alexx_";//
 	// "virt1452_";//
 
 	private static DBHandler dbh = null;
-	private static int trialsNo = 0;
-	private static int criticalNo = 3;
+	// private static int trialsNo = 0;
+	// private static int criticalNo = 3;
 
-	public static int counter = 1;
+	// public static int counter = 1;
 
 	private static boolean isClosed = false;
 	private static boolean isClosedPermanently = false;
 
-	public static void resetTrialsNo() {
-		trialsNo = 0;
-	}
+	/*
+	 * public static void resetTrialsNo() { trialsNo = 0; }
+	 */
 
 	public static Connection createAndGetDatabaseConnection(String login,
 			String pass) throws SQLException {
@@ -61,12 +61,12 @@ public class DBHandler {
 			e1.printStackTrace();
 		}// false;
 
-		int counter = 0;
-		while (!valid && counter++ < 5) {
+		// int counter = 0;
+		if (!valid) { // && counter++ < 5) {
 			try {
 				Thread.sleep(1000);
 				// dbh.conn.open();//close(); // &&&
-				System.out.println("cl " + dbh.conn.isClosed());
+				// System.out.println("cl " + dbh.conn.isClosed());
 				// if (!dbh.conn.isClosed()) {
 				// if (dbh.conn.getAutoCommit()) {
 				// dbh.conn.setAutoCommit(false);
@@ -97,18 +97,15 @@ public class DBHandler {
 
 				System.out.println("valid " + valid);
 
-			} catch (SQLException e) {
-
-				System.out.println(":::" + e.getMessage());
-				e.printStackTrace();
-				break;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				break;
+			} catch (SQLException | InterruptedException e) {
+				System.out.println("====EXIT=====");
+				// System.exit(0);
+				close();
+				return false;
 			}
 		}
-		setClosed(!valid); // ?
-		return valid;// dbh.conn;
+		setClosed(!valid);
+		return valid;
 
 	}
 
@@ -143,13 +140,13 @@ public class DBHandler {
 		return dbh.currentUser;
 	}
 
-	public static boolean isCriticalNoExceeded() {
-		return trialsNo == criticalNo;
-	}
+	// public static boolean isCriticalNoExceeded() {
+	// return trialsNo == criticalNo;
+	// }
 
-	public static void incrementTrialsNo() {
-		trialsNo++;
-	}
+	// public static void incrementTrialsNo() {
+	// trialsNo++;
+	// }
 
 	public static boolean isClosed() {
 		return dbh == null || isClosed;
@@ -173,4 +170,7 @@ public class DBHandler {
 		return isClosedPermanently;
 	}
 
+	public static void terminate() {
+		dbh = null;
+	}
 }

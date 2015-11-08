@@ -1,6 +1,5 @@
 package login;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import people.Employee;
@@ -11,7 +10,7 @@ import exceptions.ConnectionException;
 
 public class LoginDBH {
 
-	private Connection conn = null;
+	// private Connection conn = null;
 	private EmployeeDAO employeeDAO;
 	private String hashingFailedString = "Wyst¹pi³ b³¹d z szyfrowaniem. Skontaktuj siê z administratorem.";
 
@@ -23,7 +22,8 @@ public class LoginDBH {
 
 		try {
 
-			conn = DBHandler.createAndGetDatabaseConnection(login, pass);
+			// conn =
+			DBHandler.createAndGetDatabaseConnection(login, pass);
 
 			if (employeeDAO.userExists(login))// , hashedPass))
 				user = DBHandler.getCurrentUser();

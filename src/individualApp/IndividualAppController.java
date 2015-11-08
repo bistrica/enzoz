@@ -92,7 +92,8 @@ public class IndividualAppController {
 
 					// e.printStackTrace();
 					iav.displayInfo(e.getMessage(), errorString);
-					return;
+					System.exit(0);
+					// return;
 				}
 
 				/*
@@ -120,7 +121,8 @@ public class IndividualAppController {
 					} catch (LoadDataException e) {
 						// e.printStackTrace();
 						iav.displayInfo(e.getMessage(), errorString);
-						return;
+						System.exit(0);
+						// return;
 					}
 					iav.setConstantIllnesses(appointment.getPatient()
 							.getConstantIllnesses());
@@ -152,6 +154,7 @@ public class IndividualAppController {
 				iav.displayInfo(dataEditedMessageString, dataInUseString);
 		} catch (DataCannotBeEditedException e) {
 			iav.displayInfo(e.getMessage(), errorString);
+
 		}
 
 	}
@@ -169,8 +172,9 @@ public class IndividualAppController {
 							iam.rewriteStatus(appointment);
 
 						} catch (SaveDataException e1) {
-							e1.printStackTrace();
+							// e1.printStackTrace();
 							iav.displayInfo(e1.getMessage(), errorString);
+							System.exit(0);
 						}
 					}
 
@@ -267,6 +271,7 @@ public class IndividualAppController {
 			iam.saveAppointment(newOrEditedApp);
 		} catch (SaveDataException e) {
 			iav.displayInfo(e.getMessage(), errorString);
+			System.exit(0);
 			// e.printStackTrace();
 			return false;
 		}

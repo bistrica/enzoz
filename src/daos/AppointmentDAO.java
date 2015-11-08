@@ -300,6 +300,8 @@ public class AppointmentDAO {
 		sb.append(" 1 ORDER BY w.Data DESC");
 		queryString = sb.toString();
 
+		System.out.println("Q " + queryString);
+
 		st = conn.prepareStatement(queryString);
 		int i = 1;
 		for (int param : parameters)

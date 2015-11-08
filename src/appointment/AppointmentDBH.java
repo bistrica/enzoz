@@ -39,16 +39,14 @@ public class AppointmentDBH {
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new TodayException();
 			} else {
 
-				DBHandler.incrementTrialsNo();
 				apps = getTodayAppointments(doctor);
 			}
 		}
-		DBHandler.resetTrialsNo();
 
 		return apps;
 	}
@@ -63,17 +61,16 @@ public class AppointmentDBH {
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new ArchiveException();
 			} else {
 
-				DBHandler.incrementTrialsNo();
 				apps = getArchiveAppointments(recentSearch);
 			}
 
 		}
-		DBHandler.resetTrialsNo();
+
 		tempApps = apps;
 		return apps;
 	}
@@ -81,22 +78,22 @@ public class AppointmentDBH {
 	public void openPreview(Appointment app)
 			throws PreviewCannotBeCreatedException {
 		try {
+			if (true)
+				throw new PreviewCannotBeCreatedException();
 			appDAO.updateData(app);
 		} catch (SQLException e) {
 
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new PreviewCannotBeCreatedException();
 			} else {
 
-				DBHandler.incrementTrialsNo();
 				openPreview(app);
 			}
 
 		}
-		DBHandler.resetTrialsNo();
 
 	}
 
@@ -107,19 +104,21 @@ public class AppointmentDBH {
 		try {
 			previousHelper = searchData;
 			apps = appDAO.getArchiveAppointments(searchData);
+
+			System.out.println("a" + apps.size());
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new ArchiveException();
 			} else {
 				System.out.println("ONCE MORE");
-				DBHandler.incrementTrialsNo();
+
 				apps = searchData(searchData);
 			}
 		}
-		DBHandler.resetTrialsNo();
+
 		tempApps = apps;
 		return apps;
 	}
@@ -132,15 +131,14 @@ public class AppointmentDBH {
 		} catch (SQLException e) {
 			// e.printStackTrace();
 
-			if (!DBHandler.reconnect() || DBHandler.isCriticalNoExceeded()) {
-				DBHandler.resetTrialsNo();
+			if (!DBHandler.reconnect()) {
+
 				throw new LoadDataException(doctorString);
 			} else {
-				DBHandler.incrementTrialsNo();
+
 				doctors = getDoctors();
 			}
 		}
-		DBHandler.resetTrialsNo();
 
 		return doctors;
 	}
