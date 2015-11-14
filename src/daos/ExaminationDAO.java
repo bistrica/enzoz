@@ -75,6 +75,11 @@ public class ExaminationDAO {
 		st.setInt(1, appId);
 		st.executeUpdate();
 
+		if (exams.isEmpty()) {
+			st.close();
+			return;
+		}
+
 		queryString = "SELECT idSkierowania FROM skierowania WHERE IdWizyty = ? ORDER BY data DESC LIMIT 1 ";
 
 		st = conn.prepareStatement(queryString);

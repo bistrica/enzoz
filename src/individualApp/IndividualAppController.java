@@ -244,6 +244,11 @@ public class IndividualAppController {
 							notEnoughDataString);
 					return false;
 				}
+
+		if ((appointment.getExaminations() == null || appointment
+				.getExaminations().size() == 0) && examinations.isEmpty())
+			examinations = null;
+
 		newOrEditedApp.setExaminations(examinations);
 
 		ArrayList<PrescriptedItem> prescriptionData = null;

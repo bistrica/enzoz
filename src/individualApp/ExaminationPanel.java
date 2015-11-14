@@ -89,6 +89,7 @@ public class ExaminationPanel extends JPanel {
 
 		ArrayList<Examination> exams = new ArrayList<Examination>();
 		boolean allTheSame = true;
+		int size = 0;
 
 		for (Component panel : examsPane.getComponents()) {
 			if (panel instanceof ExamPanel) {
@@ -97,12 +98,13 @@ public class ExaminationPanel extends JPanel {
 				if (!exam.equals(examPanel.getPosition()))
 					allTheSame = false;
 				exams.add(exam);
+				size++;
 			}
 		}
 
-		if (exams.isEmpty())
-			exams = null;
-		return (onlyIfChanged && allTheSame) ? null : exams;
+		// if (exams.isEmpty())
+		// exams = null;
+		return (onlyIfChanged && allTheSame && size != 0) ? null : exams;
 	}
 
 }

@@ -366,7 +366,8 @@ public class IllnessesPanel extends JPanel {
 			illnesses.add(illness);
 		}
 
-		if (illnesses.isEmpty() || (onlyIfEdited && !changes))
+		// if (illnesses.isEmpty() ||
+		if ((onlyIfEdited && !changes))
 			illnesses = null;
 		return illnesses;
 	}

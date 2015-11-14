@@ -182,7 +182,7 @@ public class AppointmentController {
 							convertArchiveAppointments(), true);
 				} catch (ArchiveException e1) {
 					av.displayInfo(searchErrorString, errorString);
-					// e1.printStackTrace();
+					e1.printStackTrace();
 					System.exit(0);
 				}
 

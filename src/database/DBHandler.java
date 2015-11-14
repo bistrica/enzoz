@@ -14,7 +14,7 @@ public class DBHandler {
 	private String host = // "enzoz.linuxpl.eu",// "185.25.148.252"//
 			// "virt1452.wirt-03.netdc.pl",//
 			"192.168.56.1",
-			login, password, dbname = "enzoz", prefix = "";// enzoz_";//
+			login, password, dbname = "enzoz", prefix = "";// "enzoz_";//
 	// "alexx_";//
 	// "virt1452_";//
 

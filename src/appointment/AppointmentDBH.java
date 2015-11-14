@@ -78,8 +78,7 @@ public class AppointmentDBH {
 	public void openPreview(Appointment app)
 			throws PreviewCannotBeCreatedException {
 		try {
-			if (true)
-				throw new PreviewCannotBeCreatedException();
+
 			appDAO.updateData(app);
 		} catch (SQLException e) {
 

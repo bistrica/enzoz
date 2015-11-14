@@ -349,6 +349,7 @@ public class AppointmentDAO {
 
 	}
 
+	//
 	// private ArrayList<Appointment> getArchiveAppointments() throws
 	// SQLException {
 	//
@@ -404,6 +405,7 @@ public class AppointmentDAO {
 	//
 	// }
 	//
+	// //
 	// public ArrayList<Appointment> getArchiveAppointments(SearchHelper sh)
 	// throws SQLException {
 	//

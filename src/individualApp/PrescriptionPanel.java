@@ -234,8 +234,8 @@ public class PrescriptionPanel extends JPanel {
 		System.out.println(allTheSame + " POS: " + positions + " : "
 				+ positions.size());
 
-		if (positions.isEmpty())
-			positions = null;
+		// if (positions.isEmpty())
+		// positions = null;
 
 		return (onlyIfChanged && allTheSame) ? null : positions;
 

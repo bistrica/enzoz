@@ -267,6 +267,11 @@ public class IllnessDAO {
 		st.setInt(1, appId);
 		st.executeUpdate();
 
+		if (tempIllnesses.isEmpty()) {
+			st.close();
+			return;
+		}
+
 		queryString = "SELECT idRozpoznania FROM rozpoznanechoroby WHERE IdWizyty = ? ORDER BY data DESC LIMIT 1 ";
 
 		st = conn.prepareStatement(queryString);

@@ -60,6 +60,11 @@ public class PrescriptionDAO {
 		st.setInt(1, appId);
 		st.executeUpdate();
 
+		ArrayList<PrescriptedItem> prescribedPositions = prescription
+				.getPozycje();
+		if (prescribedPositions.isEmpty())
+			return;
+
 		queryString = "SELECT idRecepty FROM recepty WHERE IdWizyty = ? ORDER BY Data DESC LIMIT 1 ";
 
 		st = conn.prepareStatement(queryString);
@@ -75,8 +80,6 @@ public class PrescriptionDAO {
 		rs.close();
 		st.close();
 
-		ArrayList<PrescriptedItem> prescribedPositions = prescription
-				.getPozycje();
 		prescriptionPositionDAO.writePositions(prescId, prescribedPositions);
 
 	}
