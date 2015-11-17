@@ -158,7 +158,7 @@ public class IllnessDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "SELECT idRozpoznania FROM rozpoznanechoroby WHERE IdWizyty = ? ORDER BY data DESC LIMIT 1";
+		String queryString = "SELECT idRozpoznania FROM rozpoznaniachorob WHERE IdWizyty = ? ORDER BY data DESC LIMIT 1";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);
@@ -261,7 +261,7 @@ public class IllnessDAO {
 		Connection conn = DBHandler.getDatabaseConnection();
 
 		PreparedStatement st;
-		String queryString = "INSERT INTO rozpoznanechoroby (IdWizyty) VALUES (?)";
+		String queryString = "INSERT INTO rozpoznaniachorob (IdWizyty) VALUES (?)";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);
@@ -272,7 +272,7 @@ public class IllnessDAO {
 			return;
 		}
 
-		queryString = "SELECT idRozpoznania FROM rozpoznanechoroby WHERE IdWizyty = ? ORDER BY data DESC LIMIT 1 ";
+		queryString = "SELECT idRozpoznania FROM rozpoznaniachorob WHERE IdWizyty = ? ORDER BY data DESC LIMIT 1 ";
 
 		st = conn.prepareStatement(queryString);
 		st.setInt(1, appId);

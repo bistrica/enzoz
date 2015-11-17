@@ -29,8 +29,8 @@ public class InsertDB {
 		try {
 
 			// Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String login = "enzoz_adolega";
-			String haslo = "adolegaadolega", host = "enzoz.linuxpl.eu", baza = "enzoz_enzoz";
+			String login = "adolega";// "enzoz_adolega";
+			String haslo = "adolega", host = "localhost", baza = "enzoz";
 
 			conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
 					+ baza + "?useUnicode=true&characterEncoding=UTF-8", login,
@@ -51,13 +51,15 @@ public class InsertDB {
 			// insertPlaces();
 			// insertCodes();
 			// insertApps();
-			// System.out.println("Done apps.");
+			System.out.println("Done apps.");
 			// insertInterviews();
-			// System.out.println("Done int.");
+			System.out.println("Done int.");
 			// insertPrescriptions();
 			// System.out.println("Done pre.");
 			// insertRequests();
 
+			// insertIllnesses();
+			// insertConstIll();
 			// insertDuplicateConstantIllness();
 
 			System.out.println("Done all.");
@@ -84,17 +86,143 @@ public class InsertDB {
 
 	// }
 
+	private void insertConstIll() {
+		ArrayList<Integer> lekarze = new ArrayList<Integer>();
+		lekarze.add(301);
+		lekarze.add(302);
+		lekarze.add(303);
+
+		ArrayList<Integer> pacjenci = dajOsobyNaPacjentow(lekarze);
+
+		try {
+			PreparedStatement st = conn
+					.prepareStatement("INSERT INTO chorobyprzewlekle (IdPacjenta, IdChoroby) VALUES (?,?)");
+
+			int min = 27854;
+			int max = 39834;
+			for (int p : pacjenci) {
+				if (p % 2 == 0)
+					continue;
+				int ile = (int) Math.random() * 4 + 1;
+
+				for (int i = 0; i < ile; i++) {
+					ArrayList<Integer> choroby = new ArrayList<Integer>();
+					int id = 0;
+					while (true) {
+						id = (int) Math.random() * (max - min) + min;
+						if (!choroby.contains(id))
+							choroby.add(id);
+						break;
+					}
+					st.setInt(1, p);
+					st.setInt(2, id);
+					st.addBatch();
+				}
+
+			}
+
+			st.executeBatch();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private void insertIllnesses() {
+
+		String query = "SELECT idWizyty, data FROM wizyty where data<'2015-12-10'";
+
+		ArrayList<Integer> ids = new ArrayList<>();
+
+		ArrayList<String> daty = new ArrayList<>();
+
+		ResultSet rs;
+
+		try {
+			Statement st = conn.createStatement();
+			rs = st.executeQuery(query);
+
+			while (rs.next()) {
+				ids.add(rs.getInt("idWizyty"));
+				daty.add(rs.getString("data"));
+
+			}
+		} catch (SQLException e) {
+			System.out.println("whats up 3 ?");
+			e.printStackTrace();
+			return;
+		}
+
+		for (int i = 0; i < ids.size(); i++) {
+			int id = ids.get(i);
+			String data = daty.get(i);
+			if (id % 3 == 0)
+				continue;
+
+			try {
+				PreparedStatement st = conn
+						.prepareStatement("INSERT INTO rozpoznaniachorob (idwizyty, data) values (?,?)");
+
+				st.setInt(1, id);
+				st.setString(2, data);
+
+				st.executeUpdate();
+
+				st = conn
+						.prepareStatement("SELECT idrozpoznania FROM rozpoznaniachorob WHERE idWizyty=?");
+				st.setInt(1, id);
+
+				ResultSet rss = st.executeQuery();
+
+				int rozp = 0;
+				while (rss.next()) {
+					rozp = rss.getInt("idrozpoznania");
+					break;
+				}
+
+				st = conn
+						.prepareStatement("INSERT INTO pozycjerozpoznan (idrozpoznania, idchoroby) VALUES (?,?)");
+
+				int min = 27854;
+				int max = 39834;
+
+				int ile = (int) Math.random() * 4 + 1;
+				ArrayList<Integer> choroby = new ArrayList<Integer>();
+				for (int in = 0; in < ile; in++) {
+					int idc = 0;
+					while (true) {
+						idc = (int) Math.random() * (max - min) + min;
+						if (!choroby.contains(idc))
+							choroby.add(idc);
+						break;
+					}
+					st.setInt(1, rozp);
+					st.setInt(2, idc);
+					st.addBatch();
+				}
+
+				st.executeBatch();
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void deleteApps() {
 		String[] queries = { "DELETE FROM konsultacje",
-				"DELETE FROM pozycjenareceptach",
-				"DELETE FROM recepty",
-				"DELETE FROM pozycjenaskierowaniach",
-				"DELETE FROM skierowania",
-				// "DELETE FROM poradnie",
-				"DELETE FROM pozycjerozpoznan",
-				"DELETE FROM rozpoznanechoroby",
-				"DELETE FROM chorobyprzewlekle", // "DELETE FROM choroby",
-				"DELETE FROM wizyty" };
+		// "DELETE FROM pozycjenareceptach",
+		// "DELETE FROM recepty",
+		// "DELETE FROM pozycjenaskierowaniach",
+		// "DELETE FROM skierowania",
+		// "DELETE FROM pozycjerozpoznan",
+		// "DELETE FROM rozpoznaniachorob",
+		// "DELETE FROM chorobyprzewlekle", // "DELETE FROM choroby",
+		// "DELETE FROM wizyty"
+		};
 		try {
 			conn.setAutoCommit(false);
 			Statement st = conn.createStatement();
@@ -147,7 +275,7 @@ public class InsertDB {
 
 	private void insertRequests() {
 
-		String query = "SELECT idWizyty, data FROM wizytyarchiwum";
+		String query = "SELECT idWizyty, data FROM wizyty where data<'2015-12-10'";
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		ArrayList<String> daty = new ArrayList<>();
@@ -265,7 +393,7 @@ public class InsertDB {
 
 	private void insertPrescriptions() {
 
-		String query = "SELECT idWizyty, data FROM wizytyarchiwum";
+		String query = "SELECT idWizyty, data FROM wizyty where data<'2015-12-10'";
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		ArrayList<String> daty = new ArrayList<>();
@@ -381,7 +509,7 @@ public class InsertDB {
 	}
 
 	private void insertInterviews() {
-		String query = "SELECT idWizyty, data FROM wizytyarchiwum";
+		String query = "SELECT idWizyty, data FROM wizyty where data<'2015-12-10'";
 
 		ArrayList<Integer> ids = new ArrayList<>();
 
